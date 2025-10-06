@@ -1,8 +1,8 @@
-# Atluxia - Unified Monorepo
+# Atluxia - Unified Super-App
 
-**Nomad platform + transparent social layer**
+**Nomad platform + transparent social layer + career/education platform**
 
-Atluxia is a unified monorepo combining the digital nomad platform from `nomad-life` with the transparent social platform from `polyverse`. The repository preserves full git history from both source repositories.
+Atluxia is a unified super-app monorepo combining the digital nomad platform from `nomad-life`, the transparent social platform from `polyverse`, and the career/education platform from `everpath`. The repository preserves full git history from all three source repositories.
 
 ## 🚀 Features
 
@@ -21,6 +21,14 @@ Atluxia is a unified monorepo combining the digital nomad platform from `nomad-l
 - **Truth Agent**: AI-powered fact checking
 - **Federation**: ActivityPub integration
 
+### Everpath Stack
+- **Career Paths**: Personalized career development journeys
+- **Skill Assessments**: Interactive skill evaluation and tracking
+- **Job Matching**: AI-powered job recommendations
+- **Learning Quests**: Gamified learning experiences
+- **Portfolio Builder**: Digital portfolio and artifact management
+- **XP System**: Experience points and achievement tracking
+
 ## 🏗️ Architecture
 
 Atluxia is built as a Turborepo monorepo with the following structure:
@@ -29,7 +37,9 @@ Atluxia is built as a Turborepo monorepo with the following structure:
 atluxia/
 ├── apps/
 │   ├── nomad-web/          # Nomad platform web app
-│   └── polyverse-web/      # Social platform web app
+│   ├── polyverse-web/      # Social platform web app
+│   ├── everpath-web/       # Career/education platform web app
+│   └── everpath-admin/     # Everpath admin dashboard
 ├── services/
 │   ├── booking/            # Booking service
 │   ├── drivers/            # Drivers service
@@ -40,7 +50,9 @@ atluxia/
 │   ├── relay/              # Relay service
 │   ├── activitypub-bridge/ # ActivityPub bridge
 │   ├── truth-agent/        # Truth agent service
-│   └── truth-graph/        # Truth graph service
+│   ├── truth-graph/        # Truth graph service
+│   ├── everpath-api/       # Everpath FastAPI backend
+│   └── everpath-data/      # Everpath data processing service
 ├── packages/
 │   ├── ui/                 # Shared UI components
 │   ├── db/                 # Database schema and client
@@ -51,7 +63,9 @@ atluxia/
 │   ├── truth-archive/      # Truth archive
 │   ├── truth-archive-js/   # Truth archive JS client
 │   ├── aegisgov/           # Aegis governance
-│   └── config/             # Shared configs
+│   ├── config/             # Shared configs
+│   ├── everpath-ui/        # Everpath UI components
+│   └── everpath-tsconfig/  # Everpath TypeScript configs
 └── infra/
     ├── docker/             # Docker compose files
     └── ci/                 # CI/CD configurations
@@ -91,6 +105,8 @@ atluxia/
 4. **Access applications**
    - Nomad Web: http://localhost:3000
    - Polyverse Web: http://localhost:3001
+   - Everpath Web: http://localhost:3002
+   - Everpath Admin: http://localhost:3003
 
 ### Development Commands
 
@@ -131,14 +147,17 @@ See [ENV_MATRIX.md](./ENV_MATRIX.md) for a complete list of environment variable
 ### Service Ports
 - nomad-web: 3000
 - polyverse-web: 3001
-- opengrid: 3002
-- activitypub-bridge: 3004
-- truth-agent: 3005
-- truth-graph: 3006
-- booking: 3007
-- drivers: 3008
-- immigration: 3009
-- vehicles: 3010
+- everpath-web: 3002
+- everpath-admin: 3003
+- opengrid: 3004
+- activitypub-bridge: 3005
+- truth-agent: 3006
+- truth-graph: 3007
+- booking: 3008
+- drivers: 3009
+- immigration: 3010
+- vehicles: 3011
+- everpath-api: 8001
 - ai-router: 8000
 - relay: 8080
 
@@ -164,10 +183,10 @@ This project is licensed under the terms included in the LICENSE file.
 ## 📊 Current Status
 
 ### ✅ Completed
-- Repository unification with preserved git history
+- Repository unification with preserved git history from all three platforms
 - Package name normalization to `@atluxia` scope
 - TypeScript compilation working across all packages
-- Core services running (nomad-web, polyverse-web, immigration)
+- Core services running (nomad-web, polyverse-web, immigration, everpath-web, everpath-api)
 - Port configuration to avoid conflicts
 - Comprehensive documentation
 
@@ -182,9 +201,11 @@ This project is licensed under the terms included in the LICENSE file.
 - Set up unified authentication
 - Create Docker compose profiles
 - Implement CI/CD workflows
+- Integrate cross-platform features
 
 ## 🔗 Links
 
 - [Nomad-Life Original Repository](https://github.com/lxsolutions/nomad-life)
 - [Polyverse Original Repository](https://github.com/lxsolutions/polyverse)
+- [Everpath Original Repository](https://github.com/lxsolutions/everpath)
 - [Atluxia Repository](https://github.com/lxsolutions/atluxia)

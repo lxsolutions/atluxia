@@ -2,14 +2,14 @@
 
 ## 🎯 Overview
 
-Atluxia is now a unified monorepo successfully combining the `nomad-life` and `polyverse` repositories with preserved git history.
+Atluxia is now a unified super-app monorepo successfully combining the `nomad-life`, `polyverse`, and `everpath` repositories with preserved git history.
 
 ## ✅ Completed Tasks
 
 ### Repository Setup
 - [x] Created Atluxia monorepo with Turborepo + pnpm
-- [x] Imported both source repositories with git subtree
-- [x] Preserved full commit history from both repos
+- [x] Imported all three source repositories with git subtree
+- [x] Preserved full commit history from all repos
 - [x] Organized code into unified directory structure
 - [x] Pushed to GitHub repository: https://github.com/lxsolutions/atluxia
 
@@ -23,7 +23,10 @@ Atluxia is now a unified monorepo successfully combining the `nomad-life` and `p
 ### Service Configuration
 - [x] Configured nomad-web (Next.js 15) on port 3000
 - [x] Configured polyverse-web (Next.js 14) on port 3001
-- [x] Configured immigration service on port 3003
+- [x] Configured everpath-web (Next.js 14) on port 3002
+- [x] Configured everpath-admin (Next.js 14) on port 3003
+- [x] Configured immigration service on port 3010
+- [x] Configured everpath-api (FastAPI) on port 8001
 - [x] Health endpoints verified for running services
 - [x] Port conflicts resolved
 
@@ -44,7 +47,10 @@ Atluxia is now a unified monorepo successfully combining the `nomad-life` and `p
 ### Running Services
 - ✅ **nomad-web** - Running on port 3000
 - ✅ **polyverse-web** - Running on port 3001  
-- ✅ **immigration** - Running on port 3003 with health endpoint
+- ✅ **everpath-web** - Running on port 3002
+- ✅ **everpath-admin** - Running on port 3003
+- ✅ **immigration** - Running on port 3010 with health endpoint
+- ✅ **everpath-api** - Running on port 8001
 
 ### Package Status
 - ✅ All packages using `@atluxia` scope
@@ -113,15 +119,18 @@ pnpm dev:lite
 # Verify services
 curl http://localhost:3000          # nomad-web
 curl http://localhost:3001          # polyverse-web
-curl http://localhost:3003/immigration/health  # immigration
+curl http://localhost:3002          # everpath-web
+curl http://localhost:3003          # everpath-admin
+curl http://localhost:3010/immigration/health  # immigration
+curl http://localhost:8001/docs     # everpath-api docs
 ```
 
 ## 📊 Repository Statistics
 
-- **Total commits**: Combined history from both repos
-- **Packages**: 10+ packages with `@atluxia` scope
-- **Services**: 10+ services configured
-- **Apps**: 2 main web applications
+- **Total commits**: Combined history from all three repos
+- **Packages**: 15+ packages with `@atluxia` scope
+- **Services**: 15+ services configured
+- **Apps**: 4 main web applications
 - **CI**: GitHub Actions with test matrix
 
 ## 🔗 Repository Links
@@ -129,6 +138,7 @@ curl http://localhost:3003/immigration/health  # immigration
 - **Atluxia**: https://github.com/lxsolutions/atluxia
 - **Nomad-Life Source**: https://github.com/lxsolutions/nomad-life
 - **Polyverse Source**: https://github.com/lxsolutions/polyverse
+- **Everpath Source**: https://github.com/lxsolutions/everpath
 
 ---
 

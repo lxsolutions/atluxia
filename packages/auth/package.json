@@ -1,0 +1,21 @@
+{
+  "name": "@atluxia/auth",
+  "version": "1.0.0",
+  "description": "Shared authentication configuration for Atluxia platforms",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "next-auth": "^4.24.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0"
+  }
+}

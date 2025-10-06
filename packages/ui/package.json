@@ -1,7 +1,5 @@
-
-
 {
-  "name": "@nomad-life/ui",
+  "name": "@atluxia/ui",
   "version": "1.0.0",
   "description": "Shared UI components for Nomad Life platform",
   "private": true,
@@ -36,6 +34,9 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }
-

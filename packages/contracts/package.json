@@ -1,5 +1,5 @@
 {
-  "name": "@nomad-life/contracts",
+  "name": "@atluxia/contracts",
   "version": "1.0.0",
   "description": "Shared DTOs and types for Nomad Life platform",
   "private": true,
@@ -21,5 +21,9 @@
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

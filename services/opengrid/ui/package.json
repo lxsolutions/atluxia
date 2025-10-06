@@ -1,11 +1,5 @@
-
-
-
-
-
-
 {
-  "name": "opengrid-ui",
+  "name": "@atluxia/ui",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -25,8 +19,9 @@
     "@types/node": "^20.11.24",
     "typescript": "^5.4.5",
     "postcss": "^8.4.35"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }
-
-
-

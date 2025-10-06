@@ -1,5 +1,5 @@
 {
-  "name": "@nomad-life/core",
+  "name": "@atluxia/core",
   "version": "1.0.0",
   "description": "Shared domain logic for Nomad Life platform",
   "private": true,
@@ -24,5 +24,9 @@
     "eslint": "^8.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

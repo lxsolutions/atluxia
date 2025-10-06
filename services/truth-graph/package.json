@@ -1,5 +1,5 @@
 {
-  "name": "@polyverse/truth-graph",
+  "name": "@atluxia/truth-graph",
   "version": "0.1.0",
   "description": "Truth Graph service for PolyVerse - CRUD operations for claims, evidence, and consensus",
   "main": "dist/index.js",
@@ -34,5 +34,9 @@
     "ts-jest": "^29.0.0",
     "tsx": "^3.0.0",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

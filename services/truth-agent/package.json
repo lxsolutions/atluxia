@@ -1,5 +1,5 @@
 {
-  "name": "@polyverse/truth-agent",
+  "name": "@atluxia/truth-agent",
   "version": "0.1.0",
   "description": "PolyVerse Truth Agent v1 - Citations-first truth verification with transparency records",
   "main": "dist/index.js",
@@ -39,5 +39,9 @@
     "prettier": "^3.0.3",
     "@types/pg": "^8.10.7",
     "@types/cheerio": "^0.22.35"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

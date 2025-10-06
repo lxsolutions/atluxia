@@ -35,5 +35,9 @@
   },
   "directories": {
     "lib": "lib"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

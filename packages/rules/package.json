@@ -1,7 +1,5 @@
-
-
 {
-  "name": "@nomad-life/rules",
+  "name": "@atluxia/rules",
   "version": "1.0.0",
   "description": "Immigration rules, airport configurations, and lease clauses for Nomad Life platform",
   "private": true,
@@ -23,6 +21,9 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }
-

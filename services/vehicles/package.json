@@ -43,5 +43,9 @@
     "sharp": "^0.33.0",
     "stripe": "^14.0.0",
     "@nomad-life/db": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

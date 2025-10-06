@@ -1,5 +1,5 @@
 {
-  "name": "@polyverse/truth-archive-js",
+  "name": "@atluxia/truth-archive-js",
   "version": "0.1.0",
   "description": "JavaScript client for Truth Archive API",
   "main": "dist/index.js",
@@ -32,5 +32,9 @@
   "license": "MIT",
   "directories": {
     "test": "test"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

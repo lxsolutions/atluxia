@@ -1,14 +1,19 @@
 {
   "name": "atluxia",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Atluxia - Nomad platform + transparent social layer",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "turbo run dev --parallel",
+    "dev:lite": "cross-env ATLUXIA_PROFILE=lite turbo run dev --parallel --filter=@atluxia/nomad-web --filter=@atluxia/polyverse-web --filter=@atluxia/immigration --filter=@atluxia/opengrid",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "format": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@types/node": "^24.6.2",
     "cross-env": "^10.1.0",
@@ -18,5 +23,9 @@
     "turbo": "^2.5.8",
     "typescript": "^5.5",
     "vite": "^7.1.9"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

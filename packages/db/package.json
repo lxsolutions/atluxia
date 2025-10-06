@@ -1,5 +1,5 @@
 {
-  "name": "@nomad-life/db",
+  "name": "@atluxia/db",
   "version": "1.0.0",
   "description": "Shared database client and schema for Nomad Life platform",
   "private": true,
@@ -26,5 +26,9 @@
     "prisma": "^5.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }

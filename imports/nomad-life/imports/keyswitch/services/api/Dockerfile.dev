@@ -1,0 +1,37 @@
+
+
+
+
+
+
+
+
+
+# Development Dockerfile for API service
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package.json and install dependencies first to leverage docker cache
+COPY services/api/package.json .
+COPY services/api/package-lock.json .
+
+RUN npm install --production=false
+
+# Copy the rest of the application code
+COPY services/api/ ./
+
+# Install prisma client
+RUN cd api && npm run prisma:generate
+
+EXPOSE 3001
+
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+

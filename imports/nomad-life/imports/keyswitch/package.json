@@ -1,0 +1,25 @@
+{
+  "name": "keyswitch",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@10.9.0",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build --parallel",
+    "lint": "turbo run lint --parallel",
+    "test": "turbo run test --parallel"
+  },
+  "devDependencies": {
+    "prisma": "6.15.0",
+    "turbo": "^2.5.6"
+  },
+  "dependencies": {
+    "@prisma/client": "6.15.0",
+    "js-yaml": "^4.1.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "nomad-life",
+  "version": "1.0.0",
+  "description": "Unified Nomad Life Platform - Stays, Flights, Vehicles, Drivers",
+  "private": true,
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test --filter='@nomad-life/api-booking' --filter='@nomad-life/web'",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "db:generate": "turbo run db:generate",
+    "db:migrate": "turbo run db:migrate",
+    "db:seed": "turbo run db:seed",
+    "bootstrap": "tsx bin/bootstrap.ts"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.4",
+    "typescript": "^5.5.0",
+    "tsx": "^4.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/api-booking",
+    "services/api-drivers",
+    "services/api-immigration",
+    "services/api-vehicles"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

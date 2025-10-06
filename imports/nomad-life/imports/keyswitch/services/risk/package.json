@@ -1,0 +1,27 @@
+{
+  "name": "@keyswitch/risk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "nest start",
+    "dev": "nest start --watch"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10",
+    "@nestjs/core": "^10",
+    "@nestjs/platform-express": "^10",
+    "@prisma/client": "^6.14.0",
+    "prisma": "^6.14.0",
+    "reflect-metadata": "^0.2",
+    "rxjs": "^7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

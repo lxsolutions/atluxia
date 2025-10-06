@@ -1,0 +1,89 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# John F. Kennedy International Airport (JFK) configuration
+name: "John F. Kennedy International Airport"
+code: "JFK"
+country: "USA"
+
+# Fee structure
+fees:
+  pickup_fee: 15.95 # Daily airport fee for pickups
+  dropoff_fee: 0    # No additional fee for dropoffs at JFK
+
+# Allowed zones (geofenced areas where vehicles can be picked up/dropped off)
+zones:
+  - name: "Terminal Parking"
+    description: "Official airport parking lots with shuttle service to terminals"
+    allowed: true
+    coordinates:
+      type: "Polygon"
+      coordinates:
+        - [-73.805, 40.641]
+        - [-73.809, 40.641]
+        - [-73.809, 40.637]
+        - [-73.805, 40.637]
+
+  - name: "Rental Car Facility"
+    description: "Consolidated rental car center with shuttle service to terminals"
+    allowed: true
+    coordinates:
+      type: "Polygon"
+      coordinates:
+        - [-73.792, 40.651]
+        - [-73.800, 40.651]
+        - [-73.800, 40.648]
+        - [-73.792, 40.648]
+
+# Restrictions
+restrictions:
+  min_age: 21          # Minimum age requirement for rentals at JFK
+  max_vehicle_age: 5   # Maximum vehicle age allowed (in years)
+  prohibited_vehicles:
+    - "Commercial trucks"
+    - "Oversize vehicles"
+
+# Operating hours
+operating_hours:
+  pickup:
+    start_time: "06:30" # 24-hour format
+    end_time: "23:59"
+  dropoff:
+    start_time: "00:01"
+    end_time: "07:00"
+
+# Additional rules
+rules:
+  - "All vehicles must display current airport permit decals"
+  - "Vehicles must undergo annual safety inspections by approved providers"
+  - "Drivers must present valid ID and rental agreement at pickup"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

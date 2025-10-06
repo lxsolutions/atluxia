@@ -1,0 +1,46 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Development Dockerfile for Web App
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY apps/web/package.json .
+COPY apps/web/package-lock.json .
+
+RUN npm install --production=false
+
+COPY apps/web/ ./
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+

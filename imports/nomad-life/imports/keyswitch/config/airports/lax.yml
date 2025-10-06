@@ -1,0 +1,87 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+airport_code: LAX
+airport_name: Los Angeles International Airport
+effective_from: "2024-01-01T00:00:00Z"
+pickup_zone:
+  type: Polygon
+  coordinates:
+    - [
+        [-118.403, 33.952],
+        [-118.406, 33.952],
+        [-118.406, 33.947],
+        [-118.403, 33.947],
+        [-118.403, 33.952]
+      ]
+return_zone:
+  type: Polygon
+  coordinates:
+    - [
+        [-118.395, 33.960],
+        [-118.402, 33.960],
+        [-118.402, 33.957],
+        [-118.395, 33.957],
+        [-118.395, 33.960]
+      ]
+allowed_hours:
+  - day: monday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: tuesday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: wednesday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: thursday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: friday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: saturday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: sunday
+    start_time: "06:00"
+    end_time: "23:59"
+dropoff_grace_minutes: 30
+fees:
+  airport_access_per_trip: 12.95
+  parking_rate_per_hour: 5.00
+  curbside_violation_fee: 250.00
+  permit_fee: 350.00
+permits_required:
+  - "LAX Commercial Ground Transportation Permit"
+  - "California TCP License"
+notes: "All vehicles must display current LAX permit decals. Vehicles must undergo annual safety inspections. Curbside operations are strictly prohibited."
+rulepack_version: "1.0.0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

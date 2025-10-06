@@ -1,0 +1,331 @@
+
+
+
+
+
+
+
+
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  role       Role      @default(guest)
+  kycStatus  KYCStatus @default(not_started)
+
+  profiles           Profile[]
+  bookings           Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages Message[] // Add this field
+}
+
+enum Role {
+  guest
+  host
+  admin
+}
+
+enum KYCStatus {
+  not_started
+  in_progress
+  approved
+  rejected
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  name       String?
+  phone      String?
+  country    String?
+
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Organization {
+  id            Int           @id @default(autoincrement())
+  name          String
+
+  members        OrganizationMember[]
+  properties     Property[]
+
+  payouts Payout[] // Add this field
+}
+
+enum OrgRole {
+  member
+  manager
+  owner
+}
+
+model OrganizationMember {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  role       OrgRole  @default(member)
+  organizationId Int
+
+  user           User   @relation(fields: [userId], references: [id])
+  organization    Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+}
+
+model Property {
+  id         Int      @id @default(autoincrement())
+  orgId      Int?
+  type       PropertyType
+  address    String
+  geo        String?   // GeoJSON or lat,lng format
+  city       String
+  country    String
+  timezone   String?
+
+  organization     Organization?   @relation(fields: [orgId], references: [id])
+
+  units Unit[]
+}
+
+enum PropertyType {
+  apt
+  aparthotel
+  hotel
+  house
+}
+
+model Unit {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+
+  name       String?
+  sleeps     Int
+  bedrooms   Int
+  bathrooms  Float
+  sqft       Int?
+  floor      Int?
+
+  isActive    Boolean @default(true)
+
+  property        Property   @relation(fields: [propertyId], references: [id])
+
+  bookings Booking[]
+}
+
+model Amenity {
+  id         Int      @id @default(autoincrement())
+  unitId     Int
+  amenity    String
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+enum AmenityType {
+  wifi
+  kitchen
+  laundry
+  desk
+  gym
+  pool
+  parking
+  elevator
+  air_conditioning
+  heating
+  tv
+  balcony
+  patio
+  garden
+  pet_friendly
+  kid_friendly
+  quiet
+  wheelchair_accessible
+}
+
+model Photo {
+  id         Int      @id @default(autoincrement())
+  unitId     Int
+  url        String
+  sort       Int?     @default(0)
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+model Availability {
+  id         Int      @id @default(autoincrement())
+  unitId     Int
+  date       DateTime // Use DateTime instead of DateOnly
+
+  isBlocked  Boolean
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+
+  @@unique([unitId, date])
+}
+
+model RatePlan {
+  id                 Int      @id @default(autoincrement())
+  unitId             Int
+  currency           String
+  baseNightly        Decimal
+  weeklyDiscountPct  Float?   // Percentage (e.g., 10 for 10%)
+  monthlyDiscountPct Float?   // Percentage (e.g., 25 for 25%)
+  minNights          Int      @default(1)
+  maxNights          Int?
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+model BlackoutRange {
+  id         Int      @id @default(autoincrement())
+  unitId     Int
+  startDate  DateTime // Use DateTime instead of DateOnly
+  endDate    DateTime // Use DateTime instead of DateOnly
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+
+  @@unique([unitId, startDate])
+}
+
+model Booking {
+  id          Int       @id @default(autoincrement())
+  unitId      Int
+  userId      Int
+  checkin     DateTime // Use DateTime instead of DateOnly
+  checkout    DateTime // Use DateTime instead of DateOnly
+  status      BookingStatus
+
+  currency    String
+  subtotal    Decimal
+  fees        Decimal   @default(0)
+  taxes       Decimal   @default(0)
+  deposit     Decimal?  // Amount paid upfront
+  total       Decimal
+
+  unit         Unit   @relation(fields: [unitId], references: [id])
+  user         User   @relation(fields: [userId], references: [id])
+
+  payments Payment[]
+}
+
+enum BookingStatus {
+  pending
+  reserved
+  cancelled
+  completed
+}
+
+model Payment {
+  id               Int       @id @default(autoincrement())
+  bookingId        Int
+  stripePaymentIntent String?
+  amount           Decimal
+
+  status      PaymentStatus   @default(pending)
+  createdAt   DateTime        @default(now())
+
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  refunded
+}
+
+model Payout {
+  id               Int       @id @default(autoincrement())
+  orgId            Int
+  stripeTransferId String?
+  amount           Decimal
+
+  status      PayoutStatus   @default(pending)
+  periodMonth DateTime // Use DateTime instead of DateOnly
+  createdAt   DateTime        @default(now())
+
+  organization Organization   @relation(fields: [orgId], references: [id])
+}
+
+enum PayoutStatus {
+  pending
+  completed
+  failed
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  bookingId  Int
+  fromUserId Int
+
+  body       String
+  createdAt  DateTime   @default(now())
+
+  booking    Booking   @relation(fields: [bookingId], references: [id])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  bookingId  Int
+
+  rating     Float
+  body       String?
+  createdAt  DateTime   @default(now())
+
+  booking    Booking   @relation(fields: [bookingId], references: [id])
+}
+
+model WifiVerification {
+  id         Int      @id @default(autoincrement())
+  unitId     Int
+
+  downMbps   Float
+  upMbps     Float
+  pingMs     Float?
+  verifiedAt DateTime
+  evidenceUrl String?
+
+  unit       Unit   @relation(fields: [unitId], references: [id])
+}
+
+model NeighborhoodPOI {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+
+  type       POIType
+  name       String
+  distanceM  Float    // Distance in meters
+
+  property   Property   @relation(fields: [propertyId], references: [id])
+}
+
+enum POIType {
+  coworking
+  gym
+  grocery
+  metro
+  restaurant
+  cafe
+  park
+  hospital
+  pharmacy
+  bank
+  atm
+}
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+
+
+{
+  "name": "@nomad-life/rules",
+  "version": "1.0.0",
+  "description": "Immigration rules, airport configurations, and lease clauses for Nomad Life platform",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules dist",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "echo 'No linting needed for rules package'",
+    "validate": "node dist/validate.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@nomad-life/config": "workspace:*",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+

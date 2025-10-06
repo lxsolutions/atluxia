@@ -1,0 +1,408 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  role         UserRole      @default(RENTER)
+  name         String
+  email        String        @unique
+  phone        String?
+  lineId       String?       @unique
+  avatarUrl    String?
+  verifiedAt   DateTime?
+  locale       String        @default("en")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  agentProfile  ProfileAgent?
+  ownerProfile  ProfileOwner?
+  swipes        Swipe[]
+  favorites     Favorite[]
+  viewingRequests ViewingRequest[] @relation("ViewingRequestRenter")
+  reviews       Review[]      @relation("ReviewReviewer")
+  leases        LeaseDraft[]  @relation("LeaseRenter")
+  disputes      Dispute[]     @relation("DisputeOpenedBy")
+  messages      Message[]     @relation("MessageFromUser")
+  receivedMessages Message[]  @relation("MessageToUser")
+  threads       Thread[]      @relation("ThreadParticipants")
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+enum UserRole {
+  RENTER
+  AGENT
+  OWNER
+  ADMIN
+}
+
+model ProfileAgent {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  agencyName     String?
+  licenseNo      String?
+  bio            String?
+  responseTimeAvg Int?    // in minutes
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings       Listing[]
+  viewingRequests ViewingRequest[] @relation("ViewingRequestAgent")
+  leaseDrafts    LeaseDraft[]
+
+  @@map("profile_agents")
+}
+
+model ProfileOwner {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  portfolioCount Int     @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings      Listing[]
+  leaseDrafts   LeaseDraft[]
+
+  @@map("profile_owners")
+}
+
+model Building {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  district    String
+  latitude    Float
+  longitude   Float
+  transit     Json     // { bts: string[], mrt: string[] }
+  amenities   Json     // string[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  listings    Listing[]
+
+  @@map("buildings")
+  @@index([district])
+  @@index([latitude, longitude])
+}
+
+model Listing {
+  id             String       @id @default(cuid())
+  ownerId        String
+  agentId        String?
+  buildingId     String?
+  title          String
+  description    String
+  media          Json         // string[] - URLs to images/videos
+  bedrooms       Int
+  bathrooms      Int
+  sizeSqm        Float
+  floor          Int?
+  furnished      Boolean      @default(false)
+  priceTHB       Int
+  depositTHB     Int
+  minTermMonths  Int          @default(12)
+  availableFrom  DateTime
+  pets           Boolean?
+  utilitiesNote  String?
+  parking        Boolean?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  status         ListingStatus @default(ACTIVE)
+
+  // Relations
+  owner          ProfileOwner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  agent          ProfileAgent? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  building       Building?    @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  swipes         Swipe[]
+  favorites      Favorite[]
+  viewingRequests ViewingRequest[]
+  leases         LeaseDraft[]
+  reviews        Review[]     @relation("ReviewListing")
+  threads        Thread[]
+
+  @@map("listings")
+  @@index([ownerId])
+  @@index([agentId])
+  @@index([buildingId])
+  @@index([priceTHB])
+  @@index([status])
+  @@index([availableFrom])
+}
+
+enum ListingStatus {
+  ACTIVE
+  PAUSED
+  RENTED
+}
+
+model Swipe {
+  userId      String
+  listingId   String
+  direction   SwipeDirection
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@map("swipes")
+  @@index([userId, createdAt])
+}
+
+enum SwipeDirection {
+  LEFT
+  RIGHT
+}
+
+model Favorite {
+  userId      String
+  listingId   String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@map("favorites")
+  @@index([userId])
+}
+
+model ViewingRequest {
+  id            String   @id @default(cuid())
+  renterId      String
+  listingId     String
+  agentId       String?
+  timeslotStart DateTime
+  timeslotEnd   DateTime
+  message       String?
+  status        ViewingRequestStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  renter        User     @relation("ViewingRequestRenter", fields: [renterId], references: [id], onDelete: Cascade)
+  listing       Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  agent         ProfileAgent? @relation("ViewingRequestAgent", fields: [agentId], references: [id], onDelete: SetNull)
+
+  @@map("viewing_requests")
+  @@index([renterId])
+  @@index([listingId])
+  @@index([status])
+  @@index([timeslotStart])
+}
+
+enum ViewingRequestStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  DONE
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  reviewerId  String
+  subjectType ReviewSubjectType
+  subjectId   String
+  ratings     Json     // { communication: number, accuracy: number, fairness: number, depositReturn: number }
+  comment     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  verified    Boolean  @default(false)
+
+  reviewer    User     @relation("ReviewReviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  listing     Listing? @relation("ReviewListing", fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+  @@index([subjectType, subjectId])
+  @@index([reviewerId])
+  @@index([createdAt])
+}
+
+enum ReviewSubjectType {
+  AGENT
+  OWNER
+  LISTING
+}
+
+model TrustMetricSnapshot {
+  id          String   @id @default(cuid())
+  subjectType ReviewSubjectType
+  subjectId   String
+  score       Float
+  components  Json
+  createdAt   DateTime @default(now())
+
+  @@map("trust_metric_snapshots")
+  @@index([subjectType, subjectId])
+  @@index([createdAt])
+}
+
+model LeaseTemplate {
+  id      String   @id @default(cuid())
+  locale  String   @default("en")
+  name    String
+  clauses Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("lease_templates")
+  @@index([locale])
+}
+
+model LeaseDraft {
+  id          String   @id @default(cuid())
+  renterId    String
+  listingId   String
+  agentId     String?
+  ownerId     String
+  fields      Json
+  pdfUrl      String?
+  status      LeaseStatus @default(DRAFT)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  renter      User     @relation("LeaseRenter", fields: [renterId], references: [id], onDelete: Cascade)
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  agent       ProfileAgent? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  owner       ProfileOwner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  inspections Inspection[]
+  escrow      Escrow?
+  disputes    Dispute[]
+
+  @@map("lease_drafts")
+  @@index([renterId])
+  @@index([listingId])
+  @@index([status])
+}
+
+enum LeaseStatus {
+  DRAFT
+  SENT
+  SIGNED
+}
+
+model Inspection {
+  id               String   @id @default(cuid())
+  leaseId          String
+  type             InspectionType
+  checklist        Json
+  media            Json      // string[]
+  signedByRenterAt DateTime?
+  signedByOwnerAt  DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  lease            LeaseDraft @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+
+  @@map("inspections")
+  @@index([leaseId])
+  @@index([type])
+}
+
+enum InspectionType {
+  MOVE_IN
+  MOVE_OUT
+}
+
+model Escrow {
+  id             String   @id @default(cuid())
+  leaseId        String   @unique
+  provider       EscrowProvider @default(TEST)
+  status         EscrowStatus @default(PENDING)
+  holdAmountTHB  Int
+  events         Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  lease          LeaseDraft @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+
+  @@map("escrows")
+  @@index([leaseId])
+  @@index([status])
+}
+
+enum EscrowProvider {
+  TEST
+  OMISE
+  STRIPE
+}
+
+enum EscrowStatus {
+  PENDING
+  HELD
+  RELEASED
+  DISPUTED
+}
+
+model Dispute {
+  id           String   @id @default(cuid())
+  leaseId      String
+  openedByUserId String
+  reason       String
+  evidenceMedia Json      // string[]
+  status       DisputeStatus @default(OPEN)
+  timeline     Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lease        LeaseDraft @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  openedBy     User       @relation("DisputeOpenedBy", fields: [openedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("disputes")
+  @@index([leaseId])
+  @@index([status])
+}
+
+enum DisputeStatus {
+  OPEN
+  MEDIATION
+  RESOLVED
+  ESCALATED
+}
+
+model Message {
+  id           String   @id @default(cuid())
+  threadId     String
+  fromUserId   String
+  toUserId     String
+  body         String
+  attachments  Json      // string[]
+  createdAt    DateTime @default(now())
+
+  thread       Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  fromUser     User     @relation("MessageFromUser", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser       User     @relation("MessageToUser", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+  @@index([threadId])
+  @@index([fromUserId])
+  @@index([createdAt])
+}
+
+model Thread {
+  id             String   @id @default(cuid())
+  listingId      String?
+  participantIds Json      // string[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  listing        Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  messages       Message[]
+  participants   User[]   @relation("ThreadParticipants")
+
+  @@map("threads")
+  @@index([listingId])
+  @@index([participantIds])
+}

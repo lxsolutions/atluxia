@@ -1,0 +1,30 @@
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/core/package.json ./packages/core/
+COPY packages/db/package.json ./packages/db/
+COPY services/api-booking/package.json ./services/api-booking/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY packages/core ./packages/core
+COPY packages/db ./packages/db
+COPY services/api-booking ./services/api-booking
+
+# Build packages
+RUN pnpm run -w build
+
+WORKDIR /app/services/api-booking
+
+EXPOSE 3001
+
+CMD ["pnpm", "run", "start:dev"]

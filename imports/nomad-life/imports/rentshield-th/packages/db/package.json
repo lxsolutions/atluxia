@@ -1,0 +1,25 @@
+{
+  "name": "@rentshield/db",
+  "version": "1.0.0",
+  "description": "Database package for RentShield TH",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.15.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

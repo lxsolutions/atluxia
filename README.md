@@ -1,8 +1,8 @@
-# Atluxia
+# Atluxia - Unified Monorepo
 
 **Nomad platform + transparent social layer**
 
-Atluxia is a unified platform that combines the digital nomad lifestyle services from Nomad-Life with the transparent social platform capabilities from Polyverse.
+Atluxia is a unified monorepo combining the digital nomad platform from `nomad-life` with the transparent social platform from `polyverse`. The repository preserves full git history from both source repositories.
 
 ## 🚀 Features
 
@@ -161,7 +161,30 @@ See [ENV_MATRIX.md](./ENV_MATRIX.md) for a complete list of environment variable
 
 This project is licensed under the terms included in the LICENSE file.
 
+## 📊 Current Status
+
+### ✅ Completed
+- Repository unification with preserved git history
+- Package name normalization to `@atluxia` scope
+- TypeScript compilation working across all packages
+- Core services running (nomad-web, polyverse-web, immigration)
+- Port configuration to avoid conflicts
+- Comprehensive documentation
+
+### 🔄 In Progress
+- Database schema consolidation
+- Authentication unification
+- Service integration
+- CI/CD pipeline setup
+
+### 📋 Next Steps
+- Complete remaining service migrations
+- Set up unified authentication
+- Create Docker compose profiles
+- Implement CI/CD workflows
+
 ## 🔗 Links
 
 - [Nomad-Life Original Repository](https://github.com/lxsolutions/nomad-life)
 - [Polyverse Original Repository](https://github.com/lxsolutions/polyverse)
+- [Atluxia Repository](https://github.com/lxsolutions/atluxia)

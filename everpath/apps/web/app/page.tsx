@@ -53,7 +53,7 @@ export default function Home() {
               Start Your Journey
             </Link>
             <Link 
-              href="/auth/login"
+              href="/auth/signin"
               className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
             >
               Sign In

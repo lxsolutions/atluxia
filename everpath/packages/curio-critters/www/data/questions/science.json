@@ -1,0 +1,428 @@
+
+
+
+
+[
+  {
+    "id": "science-001",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["K", "1"],
+    "question": "What do plants need to grow?",
+    "answers": [
+      { "text": "Sunlight, water, and soil", "correct": true },
+      { "text": "Only sunlight", "correct": false },
+      { "text": "Only water", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["biology", "plants"]
+  },
+  {
+    "id": "science-002",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["3", "4"],
+    "question": "What makes things fall to the ground?",
+    "answers": [
+      { "text": "Gravity", "correct": true },
+      { "text": "Wind", "correct": false },
+      { "text": "Magic", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-003",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["5", "6"],
+    "question": "What happens when you mix red and blue?",
+    "answers": [
+      { "text": "Purple", "correct": true },
+      { "text": "Green", "correct": false },
+      { "text": "Yellow", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["chemistry", "color_mixing"]
+  },
+  {
+    "id": "science-004",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["1", "2"],
+    "question": "What do animals need to survive?",
+    "answers": [
+      { "text": "Food, water, and shelter", "correct": true },
+      { "text": "Only food", "correct": false },
+      { "text": "Only water", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["biology", "animals"]
+  },
+  {
+    "id": "science-005",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["2", "3"],
+    "question": "What is the freezing point of water?",
+    "answers": [
+      { "text": "0°C", "correct": true },
+      { "text": "100°C", "correct": false },
+      { "text": "-10°C", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-006",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["3", "4"],
+    "question": "What is the chemical symbol for water?",
+    "answers": [
+      { "text": "H₂O", "correct": true },
+      { "text": "CO₂", "correct": false },
+      { "text": "O₂", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-007",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["2", "3"],
+    "question": "What is the largest organ in the human body?",
+    "answers": [
+      { "text": "Skin", "correct": true },
+      { "text": "Heart", "correct": false },
+      { "text": "Liver", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-008",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the speed of light?",
+    "answers": [
+      { "text": "About 300,000 km/s", "correct": true },
+      { "text": "About 100 km/h", "correct": false },
+      { "text": "About 1,000 km/s", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-009",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the chemical symbol for gold?",
+    "answers": [
+      { "text": "Au", "correct": true },
+      { "text": "Ag", "correct": false },
+      { "text": "Fe", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-010",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["3", "4"],
+    "question": "What is the powerhouse of the cell?",
+    "answers": [
+      { "text": "Mitochondria", "correct": true },
+      { "text": "Nucleus", "correct": false },
+      { "text": "Ribosome", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-011",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the force that pulls objects toward each other?",
+    "answers": [
+      { "text": "Gravity", "correct": true },
+      { "text": "Magnetism", "correct": false },
+      { "text": "Electricity", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-012",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the chemical symbol for oxygen?",
+    "answers": [
+      { "text": "O₂", "correct": true },
+      { "text": "H₂", "correct": false },
+      { "text": "CO", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-013",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the process by which plants make their own food?",
+    "answers": [
+      { "text": "Photosynthesis", "correct": true },
+      { "text": "Respiration", "correct": false },
+      { "text": "Fermentation", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-014",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["6", "7"],
+    "question": "What is the boiling point of water at sea level?",
+    "answers": [
+      { "text": "100°C", "correct": true },
+      { "text": "95°C", "correct": false },
+      { "text": "105°C", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-015",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["6", "7"],
+    "question": "What is the chemical symbol for carbon dioxide?",
+    "answers": [
+      { "text": "CO₂", "correct": true },
+      { "text": "H₂O", "correct": false },
+      { "text": "O₂", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-016",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the main gas that plants absorb during photosynthesis?",
+    "answers": [
+      { "text": "Carbon Dioxide", "correct": true },
+      { "text": "Oxygen", "correct": false },
+      { "text": "Nitrogen", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-017",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the force that makes a ball bounce back up?",
+    "answers": [
+      { "text": "Elasticity", "correct": true },
+      { "text": "Gravity", "correct": false },
+      { "text": "Magnetism", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-018",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the chemical symbol for hydrogen?",
+    "answers": [
+      { "text": "H₂", "correct": true },
+      { "text": "O₂", "correct": false },
+      { "text": "He", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-019",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["3", "4"],
+    "question": "What is the process by which animals breathe?",
+    "answers": [
+      { "text": "Respiration", "correct": true },
+      { "text": "Photosynthesis", "correct": false },
+      { "text": "Digestion", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-020",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the force that makes a magnet stick to a refrigerator?",
+    "answers": [
+      { "text": "Magnetism", "correct": true },
+      { "text": "Gravity", "correct": false },
+      { "text": "Electricity", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-021",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["6", "7"],
+    "question": "What is the chemical symbol for silver?",
+    "answers": [
+      { "text": "Ag", "correct": true },
+      { "text": "Au", "correct": false },
+      { "text": "Fe", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-022",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the process by which plants release oxygen?",
+    "answers": [
+      { "text": "Photosynthesis", "correct": true },
+      { "text": "Respiration", "correct": false },
+      { "text": "Transpiration", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-023",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the force that makes a balloon float in water?",
+    "answers": [
+      { "text": "Buoyancy", "correct": true },
+      { "text": "Gravity", "correct": false },
+      { "text": "Magnetism", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-024",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the chemical symbol for iron?",
+    "answers": [
+      { "text": "Fe", "correct": true },
+      { "text": "Au", "correct": false },
+      { "text": "Ag", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-025",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["3", "4"],
+    "question": "What is the main function of the heart?",
+    "answers": [
+      { "text": "Pumping blood", "correct": true },
+      { "text": "Filtering blood", "correct": false },
+      { "text": "Storing blood", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-026",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the force that makes a car move forward?",
+    "answers": [
+      { "text": "Friction", "correct": true },
+      { "text": "Gravity", "correct": false },
+      { "text": "Magnetism", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-027",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["6", "7"],
+    "question": "What is the chemical symbol for helium?",
+    "answers": [
+      { "text": "He", "correct": true },
+      { "text": "H₂", "correct": false },
+      { "text": "Ne", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  },
+  {
+    "id": "science-028",
+    "subject": "Science",
+    "topic": "Biology",
+    "gradeLevel": ["4", "5"],
+    "question": "What is the process by which plants lose water?",
+    "answers": [
+      { "text": "Transpiration", "correct": true },
+      { "text": "Photosynthesis", "correct": false },
+      { "text": "Respiration", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["biology"]
+  },
+  {
+    "id": "science-029",
+    "subject": "Science",
+    "topic": "Physics",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the force that makes a ball roll downhill?",
+    "answers": [
+      { "text": "Gravity", "correct": true },
+      { "text": "Friction", "correct": false },
+      { "text": "Magnetism", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["physics"]
+  },
+  {
+    "id": "science-030",
+    "subject": "Science",
+    "topic": "Chemistry",
+    "gradeLevel": ["5", "6"],
+    "question": "What is the chemical symbol for nitrogen?",
+    "answers": [
+      { "text": "N₂", "correct": true },
+      { "text": "O₂", "correct": false },
+      { "text": "H₂", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["chemistry"]
+  }
+]
+
+

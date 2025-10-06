@@ -1,0 +1,12 @@
+
+
+services:
+  - type: web
+    name: curio-critters-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: PORT=56456 node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: "16"

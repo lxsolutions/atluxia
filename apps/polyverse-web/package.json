@@ -1,9 +1,9 @@
 {
-  "name": "polyverse-web",
+  "name": "@atluxia/polyverse-web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,11 +16,11 @@
     "@mui/icons-material": "^7.3.2",
     "@mui/lab": "7.0.0-beta.17",
     "@mui/material": "^7.3.2",
-    "@polyverse/pvp-sdk-js": "file:../../packages/pvp-sdk-js",
     "hls.js": "^1.5.17",
     "next": "^14.2.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "@atluxia/pvp-sdk-js": "file:../../packages/pvp-sdk-js"
   },
   "description": "The PolyVerse web client provides the primary user interface for interacting with the decentralized social network. This Next.js application allows users to create profiles, post content, manage feeds, and interact with AI services.",
   "main": "index.js",

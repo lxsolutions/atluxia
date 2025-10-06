@@ -19,7 +19,7 @@ import {
   TransparencyRecordBody,
   WikiEditBody,
   NoteBody
-} from '@polyverse/schemas';
+} from '@atluxia/schemas';
 
 export interface Event {
   id: string;

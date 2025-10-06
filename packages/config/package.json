@@ -1,8 +1,7 @@
-
 {
-  "name": "@atluxia/nomad-config",
+  "name": "@atluxia/config",
   "version": "1.0.0",
-  "description": "Shared configuration for Atluxia Nomad platform",
+  "description": "Shared configuration for Atluxia platform",
   "private": true,
   "main": "index.js",
   "scripts": {

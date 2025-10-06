@@ -12,18 +12,18 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@nomad-life/db": "workspace:*",
     "stripe": "^18.5.0",
-    "zod": "^3.0.0"
+    "zod": "^3.0.0",
+    "@atluxia/db": "workspace:*"
   },
   "devDependencies": {
-    "@nomad-life/config": "workspace:*",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^1.0.0"
+    "vitest": "^1.0.0",
+    "@atluxia/nomad-config": "workspace:*"
   },
   "engines": {
     "node": ">=20",

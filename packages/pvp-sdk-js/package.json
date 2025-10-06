@@ -1,7 +1,7 @@
 {
-  "name": "@polyverse/pvp-sdk-js",
+  "name": "@atluxia/pvp-sdk-js",
   "version": "0.1.0",
-  "description": "PolyVerse Protocol SDK for JavaScript/TypeScript",
+  "description": "Atluxia Protocol SDK for JavaScript/TypeScript",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "mocha --loader ts-node/esm test/signing.test.ts --exit"
   },
   "dependencies": {
-    "@polyverse/schemas": "workspace:*",
+    "@atluxia/schemas": "workspace:*",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
@@ -20,6 +20,10 @@
     "mocha": "^11.7.1",
     "ts-node": "^10.9.2",
     "typescript": "^4.5.2"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   },
   "license": "Apache-2.0"
 }

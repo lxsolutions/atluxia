@@ -6,7 +6,7 @@
 
 import { createPostEvent, signEvent, verifyEvent, generateKeyPair, createWikiEditEvent, createModerationDecisionEvent, createTransparencyRecordEvent, createNoteEvent } from '../src/index.js';
 import { expect } from 'chai';
-import { ModerationDecisionBody, TransparencyRecordBody } from '@polyverse/schemas';
+import { ModerationDecisionBody, TransparencyRecordBody } from '@atluxia/schemas';
 
 describe('PVP Event SDK', () => {
   let testKeys: { publicKey: string; privateKey: string };

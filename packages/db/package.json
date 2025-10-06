@@ -21,11 +21,11 @@
     "dotenv": "^17.2.1"
   },
   "devDependencies": {
-    "@nomad-life/config": "workspace:*",
     "@types/node": "^20.0.0",
     "prisma": "^5.0.0",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@atluxia/nomad-config": "workspace:*"
   },
   "engines": {
     "node": ">=20",

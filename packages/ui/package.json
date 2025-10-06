@@ -17,7 +17,6 @@
     "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {
-    "@nomad-life/config": "workspace:*",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -29,7 +28,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "tailwindcss": "^3.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@atluxia/nomad-config": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0",

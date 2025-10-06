@@ -1,0 +1,16 @@
+{
+  "name": "@atluxia/opengrid",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd coordinator && pnpm start",
+    "build": "cd coordinator && pnpm build",
+    "test": "cd coordinator && pnpm test",
+    "lint": "cd coordinator && pnpm lint",
+    "typecheck": "cd coordinator && pnpm typecheck"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}

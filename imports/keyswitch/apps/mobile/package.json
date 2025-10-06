@@ -1,0 +1,23 @@
+{
+  "name": "@keyswitch/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "expo start"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.14.0",
+    "expo": "^50",
+    "prisma": "^6.14.0",
+    "react-native": "^0.73"
+  },
+  "devDependencies": {
+    "@types/react": "^18",
+    "typescript": "^5"
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

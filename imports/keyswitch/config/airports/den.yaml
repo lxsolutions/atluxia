@@ -1,0 +1,59 @@
+
+
+airport_code: DEN
+airport_name: Denver International Airport
+effective_from: "2024-01-01T00:00:00Z"
+pickup_zone:
+  type: Polygon
+  coordinates:
+    - [
+        [-104.673, 39.856],
+        [-104.673, 39.862],
+        [-104.665, 39.862],
+        [-104.665, 39.856],
+        [-104.673, 39.856]
+      ]
+return_zone:
+  type: Polygon
+  coordinates:
+    - [
+        [-104.675, 39.854],
+        [-104.675, 39.860],
+        [-104.663, 39.860],
+        [-104.663, 39.854],
+        [-104.675, 39.854]
+      ]
+allowed_hours:
+  - day: monday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: tuesday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: wednesday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: thursday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: friday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: saturday
+    start_time: "06:00"
+    end_time: "23:59"
+  - day: sunday
+    start_time: "06:00"
+    end_time: "23:59"
+dropoff_grace_minutes: 15
+fees:
+  airport_access_per_trip: 8.95
+  parking_rate_per_hour: 3.50
+  curbside_violation_fee: 150.00
+  permit_fee: 250.00
+permits_required:
+  - "DEN Commercial Ground Transportation Permit"
+  - "Colorado PUC License"
+notes: "All vehicles must display current DEN permit decals. Curbside pickup/dropoff is strictly prohibited."
+rulepack_version: "1.0.0"
+

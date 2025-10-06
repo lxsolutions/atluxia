@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+
+# Development Dockerfile for Risk service
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY services/risk/package.json .
+COPY services/risk/package-lock.json .
+
+RUN npm install --production=false
+
+COPY services/risk/ ./
+
+EXPOSE 3001
+
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+
+# Development Dockerfile for Ingest service
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY services/ingest/package.json .
+COPY services/ingest/package-lock.json .
+
+RUN npm install --production=false
+
+COPY services/ingest/ ./
+
+EXPOSE 3001
+
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+
+
+

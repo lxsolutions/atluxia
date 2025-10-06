@@ -1,0 +1,75 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e5]:
+      - link "Nomad Life" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - link "🏠Stays" [ref=e8] [cursor=pointer]:
+          - /url: /stays
+          - generic [ref=e9] [cursor=pointer]: 🏠
+          - text: Stays
+        - link "✈️Flights" [ref=e10] [cursor=pointer]:
+          - /url: /flights
+          - generic [ref=e11] [cursor=pointer]: ✈️
+          - text: Flights
+        - link "🚗Vehicles" [ref=e12] [cursor=pointer]:
+          - /url: /vehicles
+          - generic [ref=e13] [cursor=pointer]: 🚗
+          - text: Vehicles
+        - link "🚕Drivers" [ref=e14] [cursor=pointer]:
+          - /url: /drivers
+          - generic [ref=e15] [cursor=pointer]: 🚕
+          - text: Drivers
+        - link "📋Visa" [ref=e16] [cursor=pointer]:
+          - /url: /visa
+          - generic [ref=e17] [cursor=pointer]: 📋
+          - text: Visa
+  - main [ref=e18]:
+    - generic [ref=e20]:
+      - heading "Host Dashboard" [level=1] [ref=e21]
+      - paragraph [ref=e22]: Welcome back, Test Host!
+      - generic [ref=e23]:
+        - heading "Stripe Connect Setup" [level=2] [ref=e24]
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - paragraph [ref=e28]: Account Status
+              - paragraph [ref=e29]: pending
+            - generic [ref=e30]:
+              - paragraph [ref=e31]: Payouts Enabled
+              - paragraph [ref=e32]: "No"
+            - generic [ref=e33]:
+              - paragraph [ref=e34]: Charges Enabled
+              - paragraph [ref=e35]: "No"
+            - generic [ref=e36]:
+              - paragraph [ref=e37]: Details Submitted
+              - paragraph [ref=e38]: Pending
+          - generic [ref=e39]:
+            - paragraph [ref=e40]: "Requirements:"
+            - paragraph [ref=e42]: "Currently due: tos_accepted"
+          - button "Complete Onboarding" [ref=e43] [cursor=pointer]
+      - generic [ref=e44]:
+        - link "My Listings Manage your properties" [ref=e45] [cursor=pointer]:
+          - /url: /stays/host/listings
+          - heading "My Listings" [level=3] [ref=e46] [cursor=pointer]
+          - paragraph [ref=e47] [cursor=pointer]: Manage your properties
+        - link "Bookings View upcoming reservations" [ref=e48] [cursor=pointer]:
+          - /url: /stays/host/bookings
+          - heading "Bookings" [level=3] [ref=e49] [cursor=pointer]
+          - paragraph [ref=e50] [cursor=pointer]: View upcoming reservations
+        - link "Payouts Track your earnings" [ref=e51] [cursor=pointer]:
+          - /url: /stays/host/payouts
+          - heading "Payouts" [level=3] [ref=e52] [cursor=pointer]
+          - paragraph [ref=e53] [cursor=pointer]: Track your earnings
+  - status [ref=e54]:
+    - generic [ref=e55]:
+      - img [ref=e57]
+      - generic [ref=e59]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e60] [cursor=pointer]:
+          - img [ref=e61] [cursor=pointer]
+  - alert [ref=e64]
+```

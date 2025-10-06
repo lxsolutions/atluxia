@@ -1,0 +1,83 @@
+name: my_drivers
+description: A Flutter app to save and re-book trusted Grab drivers.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # Firebase services (keeping for auth fallback)
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+
+  # Supabase - our primary backend
+  supabase_flutter: ^1.8.0
+
+  # State management (keeping Provider for now)
+  provider: ^6.1.1
+
+  # Network and storage
+  http: ^1.1.2
+  shared_preferences: ^2.2.2
+
+  # UI components
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0
+  intl: ^0.18.1
+
+  # Location services
+  geolocator: ^10.1.0
+  flutter_rating_bar: ^4.0.1
+  cached_network_image: ^3.3.0
+  shimmer: ^3.0.0
+  flutter_svg: ^2.0.9
+
+  # Maps integration
+  google_maps_flutter: ^2.5.0
+
+  # QR code and scanning
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^3.1.0
+
+  # Push notifications
+  firebase_messaging: ^14.7.16
+
+  # Deep linking
+  uni_links: ^0.5.1
+  # URL launching for SOS and dynamic links
+  url_launcher: ^6.2.4
+
+  # PDF generation for marketing materials
+  pdf: ^3.12.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.8
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/app_icon_adaptive.png"
+
+flutter_native_splash:
+  color: "#00C853"
+  image: assets/images/splash.png
+  android: true
+  ios: true

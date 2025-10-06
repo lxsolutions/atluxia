@@ -1,0 +1,47 @@
+
+
+
+
+
+
+
+
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: nomad_booking_db
+    environment:
+      POSTGRES_USER: bookinguser
+      POSTGRES_PASSWORD: bookingpassword
+      POSTGRES_DB: bookingdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    container_name: nomad_booking_web
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://bookinguser:bookingpassword@db:5432/bookingdb
+      NODE_ENV: development
+
+volumes:
+  postgres_data:
+
+
+
+
+
+
+
+

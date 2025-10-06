@@ -1,0 +1,53 @@
+
+
+
+{
+  "name": "@rentshield/web",
+  "version": "1.0.0",
+  "description": "Web application for RentShield TH",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "@rentshield/api": "*",
+    "@rentshield/db": "*",
+    "@tanstack/react-query": "^4.0.0",
+    "@trpc/client": "^10.0.0",
+    "@trpc/react-query": "^10.0.0",
+    "@trpc/server": "^10.0.0",
+    "next-auth": "^4.0.0",
+    "zod": "^3.0.0",
+    "tailwindcss": "^3.0.0",
+    "autoprefixer": "^10.0.0",
+    "postcss": "^8.0.0",
+    "@radix-ui/react-slot": "^1.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.300.0",
+    "tailwind-merge": "^1.0.0",
+    "leaflet": "^1.0.0",
+    "react-leaflet": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "@playwright/test": "^1.0.0",
+    "@types/leaflet": "^1.0.0"
+  }
+}
+
+

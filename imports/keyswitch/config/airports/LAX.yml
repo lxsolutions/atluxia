@@ -1,0 +1,46 @@
+
+
+
+
+
+
+# Los Angeles International Airport (LAX)
+name: "Los Angeles International Airport"
+code: "LAX"
+country: "USA"
+
+# Fee structure
+fees:
+  pickup_fee: 12.95
+  dropoff_fee: 12.95
+
+# Allowed zones for vehicle pickups/dropoffs
+zones:
+  - name: "Terminal 1-8"
+    coordinates:
+      - [33.9416, -118.4085]
+      - [33.9412, -118.4075]
+
+# Operating hours (UTC)
+operating_hours:
+  monday: ["05:00", "01:00"]
+  tuesday: ["05:00", "01:00"]
+  wednesday: ["05:00", "01:00"]
+  thursday: ["05:00", "01:00"]
+  friday: ["05:00", "01:00"]
+  saturday: ["06:00", "02:00"]
+  sunday: ["06:00", "02:00"]
+
+# Special rules
+rules:
+  - name: "Minimum rental duration"
+    description: "All rentals must be at least 1 hour"
+    minimum_duration_hours: 1
+
+  - name: "Vehicle restrictions"
+    description: "Only vehicles under 7 years old allowed"
+
+
+
+
+

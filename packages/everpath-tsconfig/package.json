@@ -1,5 +1,5 @@
 {
-  "name": "@everpath/tsconfig",
+  "name": "@atluxia/everpath-tsconfig",
   "version": "0.1.0",
   "private": true,
   "files": [

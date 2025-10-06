@@ -1,9 +1,9 @@
 {
-  "name": "@everpath/admin",
+  "name": "@atluxia/everpath-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,7 +12,7 @@
     "next": "^14.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@everpath/ui": "workspace:*",
+    "@atluxia/everpath-ui": "workspace:*",
     "next-auth": "^4.24.0",
     "tailwindcss": "^3.3.0",
     "@tailwindcss/forms": "^0.5.6",

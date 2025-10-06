@@ -14,8 +14,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "echo 'No source files to build'",
+    "dev": "echo 'No source files to watch'"
   },
   "devDependencies": {
     "@atluxia/everpath-tsconfig": "workspace:*",

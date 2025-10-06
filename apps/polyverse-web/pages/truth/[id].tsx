@@ -23,7 +23,8 @@ import {
   History as HistoryIcon,
   SportsEsports as ArenaIcon
 } from '@mui/icons-material';
-import { truthApi, Claim, Evidence, ConsensusReport } from '../../lib/api';
+import { Claim, Evidence, ConsensusReport } from '@atluxia/truth-archive-js';
+import { truthApi } from '../../lib/api';
 
 interface TabPanelProps {
   children?: React.ReactNode;

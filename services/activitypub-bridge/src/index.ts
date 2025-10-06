@@ -309,7 +309,7 @@ app.post('/apub/inbound', async (request, reply) => {
           'apub_error', 
           activity.actor, 
           undefined, 
-          { error: 'Failed to fetch ActivityPub objects', details: error.message },
+          { error: 'Failed to fetch ActivityPub objects', details: error instanceof Error ? error.message : String(error) },
           false
         );
         

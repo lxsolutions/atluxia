@@ -1,42 +1,39 @@
 {
   "name": "@atluxia/ui",
-  "version": "1.0.0",
-  "description": "Shared UI components for Nomad Life platform",
+  "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "build": "tsc",
-    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 5"
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/ui/*.d.ts",
+      "import": "./dist/components/ui/*.js"
+    },
+    "./lib": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/lib/index.js"
+    }
   },
-  "dependencies": {
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "lucide-react": "^0.294.0",
-    "tailwind-merge": "^2.0.0"
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@atluxia/everpath-tsconfig": "workspace:*",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "autoprefixer": "^10.0.0",
-    "eslint": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "postcss": "^8.0.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "tailwindcss": "^3.0.0",
-    "typescript": "^5.0.0",
-    "@atluxia/nomad-config": "workspace:*"
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
-  },
-  "engines": {
-    "node": ">=20",
-    "pnpm": ">=9"
   }
 }

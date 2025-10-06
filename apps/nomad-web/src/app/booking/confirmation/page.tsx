@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@nomad-life/ui/components/card'
-import { Button } from '@nomad-life/ui/components/button'
-import { Badge } from '@nomad-life/ui/components/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@atluxia/ui/components/card'
+import { Button } from '@atluxia/ui/components/button'
+import { Badge } from '@atluxia/ui/components/badge'
 
 interface BookingConfirmation {
   id: string
@@ -18,7 +18,7 @@ interface BookingConfirmation {
   confirmationNumber: string
 }
 
-export default function BookingConfirmationPage() {
+function BookingConfirmationContent() {
   const searchParams = useSearchParams()
   const [booking, setBooking] = useState<BookingConfirmation | null>(null)
   const [loading, setLoading] = useState(true)
@@ -260,5 +260,17 @@ export default function BookingConfirmationPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BookingConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading confirmation...</div>
+      </div>
+    }>
+      <BookingConfirmationContent />
+    </Suspense>
   )
 }

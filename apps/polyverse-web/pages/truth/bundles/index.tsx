@@ -1,7 +1,8 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { truthApi, ClaimBundle } from '../../../../lib/api';
+import { ClaimBundle } from '@atluxia/truth-archive-js';
+import { truthApi } from '../../../lib/api';
 
 interface BundlesPageProps {
   bundles: ClaimBundle[];
@@ -117,44 +118,53 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const bundles: ClaimBundle[] = [
       {
         id: '1',
+        title: 'Climate Change Evidence',
         name: 'Climate Change Evidence',
         description: 'Comprehensive collection of climate change research and data',
         topic: 'environment',
-        claims: ['1', '2', '3'],
+        claims: [],
         confidenceTimeline: [
           { timestamp: '2024-01-01', confidence: 0.85, lensId: 'climate-lens' },
           { timestamp: '2024-02-01', confidence: 0.87, lensId: 'climate-lens' },
           { timestamp: '2024-03-01', confidence: 0.89, lensId: 'climate-lens' },
         ],
+        created_at: '2024-01-01',
         createdAt: '2024-01-01',
+        updated_at: '2024-03-01',
         updatedAt: '2024-03-01',
       },
       {
         id: '2',
+        title: 'Vaccine Efficacy Studies',
         name: 'Vaccine Efficacy Studies',
         description: 'Analysis of vaccine effectiveness across multiple studies',
         topic: 'health',
-        claims: ['4', '5', '6'],
+        claims: [],
         confidenceTimeline: [
           { timestamp: '2024-01-01', confidence: 0.92, lensId: 'health-lens' },
           { timestamp: '2024-02-01', confidence: 0.91, lensId: 'health-lens' },
           { timestamp: '2024-03-01', confidence: 0.93, lensId: 'health-lens' },
         ],
+        created_at: '2024-01-01',
         createdAt: '2024-01-01',
+        updated_at: '2024-03-01',
         updatedAt: '2024-03-01',
       },
       {
         id: '3',
+        title: 'Economic Policy Analysis',
         name: 'Economic Policy Analysis',
         description: 'Evaluation of economic policies and their impacts',
         topic: 'economics',
-        claims: ['7', '8', '9'],
+        claims: [],
         confidenceTimeline: [
           { timestamp: '2024-01-01', confidence: 0.78, lensId: 'economics-lens' },
           { timestamp: '2024-02-01', confidence: 0.76, lensId: 'economics-lens' },
           { timestamp: '2024-03-01', confidence: 0.79, lensId: 'economics-lens' },
         ],
+        created_at: '2024-01-01',
         createdAt: '2024-01-01',
+        updated_at: '2024-03-01',
         updatedAt: '2024-03-01',
       },
     ];

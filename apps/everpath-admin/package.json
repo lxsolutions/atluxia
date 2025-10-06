@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3003",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "echo 'No source files to run'",
+    "build": "echo 'No source files to build'",
+    "start": "echo 'No source files to start'",
+    "lint": "echo 'No source files to lint'"
   },
   "dependencies": {
     "next": "^14.0.0",

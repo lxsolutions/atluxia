@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { rulesLoader } from '@nomad-life/rules';
+import { rulesLoader } from '@atluxia/rules';
 
 @Module({
   providers: [

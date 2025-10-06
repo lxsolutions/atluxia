@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@nomad-life/ui';
+import { cn } from '@atluxia/ui';
 
 const navigation = [
   {

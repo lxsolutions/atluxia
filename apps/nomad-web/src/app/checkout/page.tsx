@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@nomad-life/ui/components/card'
-import { Button } from '@nomad-life/ui/components/button'
-import { Input } from '@nomad-life/ui/components/input'
-import { Label } from '@nomad-life/ui/components/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@atluxia/ui/components/card'
+import { Button } from '@atluxia/ui/components/button'
+import { Input } from '@atluxia/ui/components/input'
+import { Label } from '@atluxia/ui/components/label'
 
 interface BookingDetails {
   propertyId: string
@@ -20,7 +20,7 @@ interface BookingDetails {
   currency: string
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const [bookingDetails, setBookingDetails] = useState<BookingDetails | null>(null)
   const [loading, setLoading] = useState(true)
@@ -301,5 +301,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading checkout...</div>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }

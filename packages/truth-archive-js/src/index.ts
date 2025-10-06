@@ -60,9 +60,15 @@ export interface Claim {
   id: string;
   title: string;
   statement: string;
+  description?: string;
+  content?: string;
   topicTags: string[];
+  tags?: string[];
   created_at: string;
+  createdAt?: string;
+  updatedAt?: string;
   author_pubkey: string;
+  creator?: string;
   sig: string;
   prevId?: string;
   lineage: string[];
@@ -72,10 +78,17 @@ export interface Claim {
   attributionRefs: string[];
   confidenceReports: ConfidenceReport[];
   version: number;
+  status?: 'draft' | 'under_review' | 'resolved' | 'disputed';
+  confidence?: number;
 }
 
 export interface Evidence {
   id: string;
+  title?: string;
+  type?: string;
+  description?: string;
+  submittedBy?: string;
+  submittedAt?: string;
   kind: 'url' | 'pdf' | 'transcript' | 'dataset' | 'primary_source' | 'secondary_source' | 'tertiary_source';
   source: string;
   quote?: string;
@@ -87,6 +100,7 @@ export interface Evidence {
   sig: string;
   stance: 'supports' | 'contradicts' | 'mixed' | 'unclear' | 'neutral';
   quality_score: number;
+  qualityScore?: number;
 }
 
 export interface Counterclaim {
@@ -151,10 +165,43 @@ export interface JuryVerdict {
   created_at: string;
 }
 
+export interface ConsensusReport {
+  id: string;
+  claimId: string;
+  consensusScore: number;
+  verdict: 'true' | 'false' | 'unknown';
+  confidence: number;
+  reasoning: string;
+  timestamp: number;
+  computedAt?: string;
+  lensId?: string;
+  juryVerdicts: JuryVerdict[];
+}
+
 export interface SearchResult {
   claims: Claim[];
   total: number;
   query: string;
+}
+
+export interface ClaimBundle {
+  id: string;
+  title: string;
+  name?: string;
+  topic?: string;
+  description?: string;
+  claims: Claim[];
+  created_at: string;
+  createdAt?: string;
+  updated_at?: string;
+  updatedAt?: string;
+  tags?: string[];
+  curator?: string;
+  confidenceTimeline?: Array<{
+    lensId: string;
+    timestamp: string;
+    confidence: number;
+  }>;
 }
 
 export interface PlayfulSignal {

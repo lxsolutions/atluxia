@@ -4,8 +4,8 @@ import {
   VisaPathOption,
   ChecklistItem,
   VisaApplication
-} from '@nomad-life/contracts';
-import { rulesLoader } from '@nomad-life/rules';
+} from '@atluxia/contracts';
+import { rulesLoader } from '@atluxia/rules';
 
 @Injectable()
 export class ImmigrationService {

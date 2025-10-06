@@ -5,7 +5,7 @@ import {
   VisaPathOption,
   ChecklistItem,
   VisaApplication
-} from '@nomad-life/contracts';
+} from '@atluxia/contracts';
 
 @Controller('immigration')
 export class ImmigrationController {

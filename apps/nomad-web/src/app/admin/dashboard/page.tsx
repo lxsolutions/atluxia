@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@nomad-life/ui/components/card'
-import { Button } from '@nomad-life/ui/components/button'
-import { Badge } from '@nomad-life/ui/components/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@atluxia/ui/components/card'
+import { Button } from '@atluxia/ui/components/button'
+import { Badge } from '@atluxia/ui/components/badge'
 
 interface BalanceSummary {
   available: { amount: number; currency: string }

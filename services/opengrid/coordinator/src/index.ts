@@ -4,14 +4,12 @@
 
 import express from 'express';
 import { JobController } from './controllers/jobController';
-import { ProviderController } from './controllers/providerController';
 
 const app = express();
 app.use(express.json());
 
 // Initialize controllers
 const jobController = new JobController();
-const providerController = new ProviderController();
 
 // Set up routes
 app.post('/api/v1/jobs', (req, res) => jobController.submitJob(req, res));

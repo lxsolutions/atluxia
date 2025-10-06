@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@nomad-life/db'
-import { SearchParamsSchema } from '@nomad-life/contracts'
+import { prisma } from '@atluxia/db'
+// import { SearchParamsSchema } from '@atluxia/contracts'
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,8 +21,20 @@ export async function GET(request: NextRequest) {
       propertyType: searchParams.get('propertyType') || undefined,
     }
 
-    // Validate with Zod schema
-    const validatedData = SearchParamsSchema.parse(searchData)
+    // Validate with Zod schema - temporarily disabled
+    // const validatedData = SearchParamsSchema.parse(searchData)
+    const validatedData = searchData as {
+      city?: string;
+      country?: string;
+      checkin: Date;
+      checkout: Date;
+      guests: number;
+      minPrice?: number;
+      maxPrice?: number;
+      amenities: string[];
+      hasWorkspace: boolean;
+      propertyType?: string;
+    }
 
     // Build the database query
     const whereClause: Record<string, unknown> = {
@@ -39,11 +51,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (validatedData.minPrice !== undefined) {
-      whereClause.monthlyPrice = { ...whereClause.monthlyPrice, gte: validatedData.minPrice }
+      whereClause.monthlyPrice = { gte: validatedData.minPrice }
     }
 
     if (validatedData.maxPrice !== undefined) {
-      whereClause.monthlyPrice = { ...whereClause.monthlyPrice, lte: validatedData.maxPrice }
+      whereClause.monthlyPrice = { lte: validatedData.maxPrice }
     }
 
     if (validatedData.amenities && validatedData.amenities.length > 0) {

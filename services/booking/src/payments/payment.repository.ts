@@ -16,6 +16,7 @@ export class PaymentRepository {
     stripeCustomerId?: string;
     amount: number;
     currency?: string;
+    status?: string;
     paymentMethod?: string;
     metadata?: any;
   }): Promise<Payment> {
@@ -26,6 +27,7 @@ export class PaymentRepository {
         stripeCustomerId: data.stripeCustomerId,
         amount: data.amount,
         currency: data.currency || 'USD',
+        status: data.status || 'pending',
         paymentMethod: data.paymentMethod,
         metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
       },

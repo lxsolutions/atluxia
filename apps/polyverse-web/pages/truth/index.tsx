@@ -23,7 +23,8 @@ import {
   Warning as WarningIcon,
   Schedule as ScheduleIcon
 } from '@mui/icons-material';
-import { truthApi, Claim } from '../../lib/api';
+import { Claim } from '@atluxia/truth-archive-js';
+import { truthApi } from '../../lib/api';
 
 interface TruthIndexProps {
   claims: Claim[];

@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters Advanced RPG - Ultimate Dragon Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(180deg, #2d1b69 0%, #11998e 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ffd700;
+        }
+
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+
+        /* Advanced HUD */
+        .advanced-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 8px;
+            z-index: 100;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .level-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .level-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .xp-container {
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .xp-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid #ffd700;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4aa);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 8px rgba(0,255,136,0.5);
+        }
+
+        .xp-text {
+            font-size: 8px;
+            color: #ffd700;
+            text-align: center;
+            margin-top: 1px;
+        }
+
+        .resources {
+            display: flex;
+            gap: 8px;
+            font-size: 10px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        /* Combat Stats */
+        .combat-stats {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+
+        .combat-stat {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .health-fill { background: linear-gradient(90deg, #ff4444, #ff6666); }
+        .mana-fill { background: linear-gradient(90deg, #4444ff, #6666ff); }
+        .stamina-fill { background: linear-gradient(90deg, #44ff44, #66ff66); }
+
+        /* Enhanced Creature */
+        .creature-battle-area {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .creature-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .advanced-creature {
+            font-size: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.6));
+            position: relative;
+            animation: battleIdle 3s infinite ease-in-out;
+        }
+
+        .advanced-creature:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(255,215,0,0.9));
+        }
+
+        .advanced-creature:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes battleIdle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-12px) rotate(2deg); }
+            50% { transform: translateY(-6px) rotate(0deg); }
+            75% { transform: translateY(-18px) rotate(-2deg); }
+        }
+
+        .creature-status {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #ffd700;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .creature-title {
+            font-size: 14px;
+            color: #ff6b9d;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Equipment Display */
+        .equipment-display {
+            position: absolute;
+            top: 15%;
+            left: 5px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .equipment-slot {
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ffd700;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .equipment-slot:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+        }
+
+        .equipment-slot.equipped {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            box-shadow: 0 0 12px rgba(255,215,0,0.6);
+        }
+
+        .equipment-level {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: #ff6b9d;
+            color: white;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* Advanced Stats Panel */
+        .advanced-stats {
+            position: absolute;
+            top: 15%;
+            right: 5px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 8px;
+            min-width: 70px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+            font-size: 10px;
+        }
+
+        .stat-icon {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .stat-value {
+            color: #ffd700;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        /* Advanced Abilities */
+        .abilities-panel {
+            position: absolute;
+            bottom: 140px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ability-button {
+            width: 45px;
+            height: 45px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ability-button:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+        }
+
+        .ability-button.ready {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            box-shadow: 0 0 12px rgba(76,175,80,0.6);
+            animation: abilityReady 2s infinite ease-in-out;
+        }
+
+        @keyframes abilityReady {
+            0%, 100% { box-shadow: 0 0 12px rgba(76,175,80,0.6); }
+            50% { box-shadow: 0 0 20px rgba(76,175,80,0.9); }
+        }
+
+        .ability-button.locked {
+            background: rgba(0,0,0,0.6);
+            border-color: #666;
+            opacity: 0.5;
+        }
+
+        .ability-cooldown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            border-radius: 6px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .ability-hotkey {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: #666;
+            color: white;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 3px;
+        }
+
+        /* Adventure Areas */
+        .adventure-areas {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px;
+        }
+
+        .area-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid transparent;
+            min-width: 55px;
+            position: relative;
+        }
+
+        .area-button:hover {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(255,215,0,0.3);
+        }
+
+        .area-button.available {
+            border-color: #4caf50;
+            background: rgba(76,175,80,0.1);
+        }
+
+        .area-button.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .area-icon {
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+
+        .area-label {
+            font-size: 8px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .area-level {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            background: #ff6b9d;
+            color: white;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .danger-indicator {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            border-radius: 50%;
+            animation: dangerPulse 1s infinite;
+        }
+
+        @keyframes dangerPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        /* Battle System */
+        .battle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .battle-arena {
+            background: linear-gradient(145deg, #2d1b69, #11998e);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            max-width: 340px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: battleStart 0.8s ease-out;
+        }
+
+        @keyframes battleStart {
+            0% { opacity: 0; transform: scale(0.5) rotateY(180deg); }
+            100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+        }
+
+        .battle-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .battle-content {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .battle-area {
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .enemy-display {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: enemyFloat 2s infinite ease-in-out;
+        }
+
+        @keyframes enemyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .enemy-health {
+            width: 200px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .enemy-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff6666);
+            transition: width 0.5s ease;
+        }
+
+        .battle-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .battle-button {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .battle-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .battle-button.magic {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+        }
+
+        .battle-button.defend {
+            background: linear-gradient(135deg, #2196f3, #03a9f4);
+        }
+
+        .battle-button.escape {
+            background: linear-gradient(135deg, #666, #888);
+        }
+
+        /* Enhanced Effects */
+        .damage-number {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: damageFloat 1.5s ease-out forwards;
+            z-index: 2500;
+        }
+
+        .damage-player { color: #ff4444; }
+        .damage-enemy { color: #00ff88; }
+        .heal-number { color: #44ff44; }
+        .miss-number { color: #888; }
+
+        @keyframes damageFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1.5);
+            }
+        }
+
+        .screen-shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Quest System */
+        .quest-tracker {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 8px;
+            max-width: 150px;
+            font-size: 10px;
+            color: #ffd700;
+        }
+
+        .quest-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ff6b9d;
+        }
+
+        .quest-objective {
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quest-progress {
+            width: 60px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .quest-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-screen">
+            <!-- Advanced HUD -->
+            <div class="advanced-hud">
+                <div class="top-bar">
+                    <div class="level-section">
+                        <div class="level-badge" id="levelBadge">Lv. 12</div>
+                        <div class="xp-container">
+                            <div class="xp-bar">
+                                <div class="xp-fill" id="xpFill" style="width: 73%"></div>
+                            </div>
+                            <div class="xp-text" id="xpText">7,300 / 10,000</div>
+                        </div>
+                    </div>
+                    <div class="resources">
+                        <div class="resource-item">
+                            <span>💰</span>
+                            <span id="goldAmount">5,847</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>💎</span>
+                            <span id="gemAmount">127</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>⚡</span>
+                            <span id="energyAmount">89</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="combat-stats">
+                    <div class="combat-stat">
+                        <div class="health-fill" id="healthFill" style="width: 85%"></div>
+                    </div>
+                    <div class="combat-stat">
+                        <div class="mana-fill" id="manaFill" style="width: 92%"></div>
+                    </div>
+                    <div class="combat-stat">
+                        <div class="stamina-fill" id="staminaFill" style="width: 76%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipment Display -->
+            <div class="equipment-display">
+                <div class="equipment-slot equipped" title="Legendary Crown of Wisdom">
+                    👑
+                    <div class="equipment-level">+15</div>
+                </div>
+                <div class="equipment-slot equipped" title="Dragon Scale Armor">
+                    🛡️
+                    <div class="equipment-level">+12</div>
+                </div>
+                <div class="equipment-slot equipped" title="Flaming Sword of Power">
+                    ⚔️
+                    <div class="equipment-level">+18</div>
+                </div>
+                <div class="equipment-slot equipped" title="Ring of Ancient Magic">
+                    💍
+                    <div class="equipment-level">+8</div>
+                </div>
+            </div>
+
+            <!-- Advanced Stats -->
+            <div class="advanced-stats">
+                <div class="stat-row">
+                    <span class="stat-icon">❤️</span>
+                    <span>HP</span>
+                    <span class="stat-value" id="healthStat">1,247</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🔥</span>
+                    <span>ATK</span>
+                    <span class="stat-value" id="attackStat">456</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🛡️</span>
+                    <span>DEF</span>
+                    <span class="stat-value" id="defenseStat">298</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">⚡</span>
+                    <span>SPD</span>
+                    <span class="stat-value" id="speedStat">167</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🧠</span>
+                    <span>INT</span>
+                    <span class="stat-value" id="intelligenceStat">523</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🍀</span>
+                    <span>LCK</span>
+                    <span class="stat-value" id="luckStat">89</span>
+                </div>
+            </div>
+
+            <!-- Quest Tracker -->
+            <div class="quest-tracker">
+                <div class="quest-title">📜 Active Quest</div>
+                <div class="quest-objective">
+                    <span>🐉</span>
+                    <span>Defeat 5 Shadow Beasts</span>
+                </div>
+                <div class="quest-progress">
+                    <div class="quest-progress-fill" style="width: 60%"></div>
+                </div>
+                <div style="font-size: 8px; margin-top: 3px;">Progress: 3/5</div>
+            </div>
+
+            <!-- Enhanced Creature -->
+            <div class="creature-battle-area">
+                <div class="creature-container">
+                    <div class="creature-status" id="creatureStatus">Sparkle the Legendary</div>
+                    <div class="advanced-creature" id="advancedCreature" onclick="interactWithDragon()">🐉</div>
+                    <div class="creature-title" id="creatureTitle">Ancient Dragon Warrior • Lv. 12</div>
+                </div>
+            </div>
+
+            <!-- Advanced Abilities -->
+            <div class="abilities-panel">
+                <div class="ability-button ready" onclick="useAdvancedAbility('fireball')" title="Dragon Fire">
+                    🔥
+                    <div class="ability-cooldown" id="fireball-cooldown"></div>
+                    <div class="ability-hotkey">1</div>
+                </div>
+                <div class="ability-button ready" onclick="useAdvancedAbility('heal')" title="Healing Light">
+                    ✨
+                    <div class="ability-cooldown" id="heal-cooldown"></div>
+                    <div class="ability-hotkey">2</div>
+                </div>
+                <div class="ability-button ready" onclick="useAdvancedAbility('shield')" title="Magic Shield">
+                    🛡️
+                    <div class="ability-cooldown" id="shield-cooldown"></div>
+                    <div class="ability-hotkey">3</div>
+                </div>
+                <div class="ability-button ready" onclick="useAdvancedAbility('lightning')" title="Lightning Storm">
+                    ⚡
+                    <div class="ability-cooldown" id="lightning-cooldown"></div>
+                    <div class="ability-hotkey">4</div>
+                </div>
+                <div class="ability-button ready" onclick="useAdvancedAbility('ultimate')" title="Dragon's Wrath">
+                    💥
+                    <div class="ability-cooldown" id="ultimate-cooldown"></div>
+                    <div class="ability-hotkey">5</div>
+                </div>
+            </div>
+
+            <!-- Adventure Areas -->
+            <div class="adventure-areas">
+                <div class="area-button available" onclick="enterArea('forest')" id="forestArea">
+                    <div class="area-icon">🌲</div>
+                    <div class="area-label">Mystic Forest</div>
+                    <div class="area-level">Lv. 8-12</div>
+                </div>
+                <div class="area-button available" onclick="enterArea('volcano')" id="volcanoArea">
+                    <div class="area-icon">🌋</div>
+                    <div class="area-label">Fire Volcano</div>
+                    <div class="area-level">Lv. 10-15</div>
+                    <div class="danger-indicator"></div>
+                </div>
+                <div class="area-button available" onclick="enterArea('castle')" id="castleArea">
+                    <div class="area-icon">🏰</div>
+                    <div class="area-label">Shadow Castle</div>
+                    <div class="area-level">Lv. 12-18</div>
+                </div>
+                <div class="area-button locked" onclick="enterArea('abyss')" id="abyssArea">
+                    <div class="area-icon">🕳️</div>
+                    <div class="area-label">Dark Abyss</div>
+                    <div class="area-level">Lv. 20+</div>
+                </div>
+                <div class="area-button" onclick="enterArea('shop')" id="shopArea">
+                    <div class="area-icon">🏪</div>
+                    <div class="area-label">Magic Shop</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle System -->
+        <div class="battle-overlay" id="battleOverlay">
+            <div class="battle-arena" id="battleArena">
+                <!-- Battle content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Advanced Game State
+        let advancedGameState = {
+            player: {
+                name: "Sparkle",
+                level: 12,
+                xp: 7300,
+                xpToNext: 10000,
+                class: "Dragon Warrior",
+                prestige: 0
+            },
+            stats: {
+                health: 1247,
+                maxHealth: 1470,
+                mana: 892,
+                maxMana: 970,
+                stamina: 456,
+                maxStamina: 600,
+                attack: 456,
+                defense: 298,
+                speed: 167,
+                intelligence: 523,
+                luck: 89
+            },
+            resources: {
+                gold: 5847,
+                gems: 127,
+                energy: 89
+            },
+            abilities: {
+                fireball: { level: 5, cooldown: 0, manaCost: 25, damage: 180 },
+                heal: { level: 4, cooldown: 0, manaCost: 30, healing: 150 },
+                shield: { level: 3, cooldown: 0, manaCost: 20, defense: 100 },
+                lightning: { level: 6, cooldown: 0, manaCost: 40, damage: 250 },
+                ultimate: { level: 2, cooldown: 0, manaCost: 80, damage: 500 }
+            },
+            quests: {
+                active: {
+                    title: "Shadow Beast Hunter",
+                    description: "Defeat 5 Shadow Beasts in the Mystic Forest",
+                    progress: 3,
+                    target: 5,
+                    rewards: { xp: 1500, gold: 500 }
+                }
+            },
+            battleState: null
+        };
+
+        // Enemy database with educational content
+        const enemyDatabase = {
+            forest: [
+                {
+                    name: "Shadow Wolf",
+                    emoji: "🐺",
+                    level: 10,
+                    health: 300,
+                    attack: 85,
+                    xpReward: 120,
+                    goldReward: 45,
+                    educationalChallenge: {
+                        type: "math",
+                        question: "The Shadow Wolf has 15 pack members. If 6 go hunting and 4 stay to guard, how many are left to rest?",
+                        answers: [5, 9, 10, 11],
+                        correct: 0,
+                        bonus: "Critical hit for correct answer!"
+                    }
+                },
+                {
+                    name: "Ancient Treant",
+                    emoji: "🌳",
+                    level: 12,
+                    health: 450,
+                    attack: 95,
+                    xpReward: 180,
+                    goldReward: 65,
+                    educationalChallenge: {
+                        type: "science",
+                        question: "What do trees need to make their own food through photosynthesis?",
+                        answers: ["Sunlight, water, and carbon dioxide", "Only water", "Only sunlight", "Soil and rocks"],
+                        correct: 0,
+                        bonus: "Nature's blessing increases your magic power!"
+                    }
+                }
+            ],
+            volcano: [
+                {
+                    name: "Fire Salamander",
+                    emoji: "🦎",
+                    level: 13,
+                    health: 380,
+                    attack: 110,
+                    xpReward: 200,
+                    goldReward: 75,
+                    educationalChallenge: {
+                        type: "reading",
+                        question: "Read the ancient rune: 'Only those who show courage in the face of danger shall pass.' What does this mean?",
+                        answers: ["Be brave when things are scary", "Run away from danger", "Danger is fun", "Only strong people matter"],
+                        correct: 0,
+                        bonus: "Your courage inspires your dragon!"
+                    }
+                }
+            ],
+            castle: [
+                {
+                    name: "Shadow Knight",
+                    emoji: "⚔️",
+                    level: 15,
+                    health: 600,
+                    attack: 130,
+                    xpReward: 300,
+                    goldReward: 120,
+                    educationalChallenge: {
+                        type: "math",
+                        question: "The Shadow Knight's armor has 8 pieces. Each piece weighs 12 pounds. What's the total weight?",
+                        answers: [96, 84, 108, 72],
+                        correct: 0,
+                        bonus: "Perfect calculation gives you tactical advantage!"
+                    }
+                }
+            ]
+        };
+
+        // Enhanced creature interaction
+        function interactWithDragon() {
+            const creature = document.getElementById('advancedCreature');
+            
+            // Enhanced animation
+            creature.style.animation = 'none';
+            creature.offsetHeight;
+            creature.style.animation = 'battleIdle 1s ease';
+            
+            // Gain rewards
+            const xpGain = 50 + Math.floor(Math.random() * 30);
+            const goldGain = 25 + Math.floor(Math.random() * 20);
+            
+            advancedGameState.player.xp += xpGain;
+            advancedGameState.resources.gold += goldGain;
+            
+            // Check for level up
+            if (advancedGameState.player.xp >= advancedGameState.player.xpToNext) {
+                levelUp();
+            }
+            
+            // Show damage numbers
+            showDamageNumber(`+${xpGain} XP`, "damage-enemy");
+            showDamageNumber(`+${goldGain} Gold`, "heal-number");
+            
+            updateAdvancedDisplay();
+        }
+
+        // Level up system
+        function levelUp() {
+            advancedGameState.player.level++;
+            advancedGameState.player.xp -= advancedGameState.player.xpToNext;
+            advancedGameState.player.xpToNext = Math.floor(advancedGameState.player.xpToNext * 1.4);
+            
+            // Stat increases
+            advancedGameState.stats.maxHealth += 75;
+            advancedGameState.stats.health = advancedGameState.stats.maxHealth;
+            advancedGameState.stats.maxMana += 45;
+            advancedGameState.stats.mana = advancedGameState.stats.maxMana;
+            advancedGameState.stats.attack += 25;
+            advancedGameState.stats.defense += 18;
+            advancedGameState.stats.speed += 12;
+            advancedGameState.stats.intelligence += 35;
+            advancedGameState.stats.luck += 8;
+            
+            // Screen shake effect
+            document.querySelector('.game-screen').classList.add('screen-shake');
+            setTimeout(() => {
+                document.querySelector('.game-screen').classList.remove('screen-shake');
+            }, 500);
+            
+            showDamageNumber("LEVEL UP!", "heal-number");
+            
+            // Unlock new areas
+            checkAreaUnlocks();
+        }
+
+        // Use advanced abilities
+        function useAdvancedAbility(abilityName) {
+            const ability = advancedGameState.abilities[abilityName];
+            
+            if (ability.cooldown > 0 || advancedGameState.stats.mana < ability.manaCost) {
+                return;
+            }
+            
+            // Use mana
+            advancedGameState.stats.mana -= ability.manaCost;
+            
+            // Ability effects
+            switch(abilityName) {
+                case 'fireball':
+                    showDamageNumber(`🔥 ${ability.damage} DMG`, "damage-enemy");
+                    break;
+                case 'heal':
+                    advancedGameState.stats.health = Math.min(
+                        advancedGameState.stats.maxHealth,
+                        advancedGameState.stats.health + ability.healing
+                    );
+                    showDamageNumber(`✨ +${ability.healing} HP`, "heal-number");
+                    break;
+                case 'shield':
+                    showDamageNumber(`🛡️ +${ability.defense} DEF`, "heal-number");
+                    break;
+                case 'lightning':
+                    showDamageNumber(`⚡ ${ability.damage} DMG`, "damage-enemy");
+                    break;
+                case 'ultimate':
+                    showDamageNumber(`💥 ${ability.damage} ULTIMATE!`, "damage-enemy");
+                    break;
+            }
+            
+            // Set cooldown
+            ability.cooldown = 5 + ability.level;
+            startAbilityCooldown(abilityName);
+            
+            updateAdvancedDisplay();
+        }
+
+        // Start ability cooldown
+        function startAbilityCooldown(abilityName) {
+            const cooldownElement = document.getElementById(`${abilityName}-cooldown`);
+            const button = cooldownElement.parentElement;
+            
+            button.classList.remove('ready');
+            cooldownElement.style.display = 'flex';
+            cooldownElement.textContent = advancedGameState.abilities[abilityName].cooldown;
+            
+            const interval = setInterval(() => {
+                advancedGameState.abilities[abilityName].cooldown--;
+                cooldownElement.textContent = advancedGameState.abilities[abilityName].cooldown;
+                
+                if (advancedGameState.abilities[abilityName].cooldown <= 0) {
+                    cooldownElement.style.display = 'none';
+                    button.classList.add('ready');
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        // Enter adventure area
+        function enterArea(area) {
+            if (area === 'shop') {
+                showDamageNumber("Shop coming soon!", "heal-number");
+                return;
+            }
+            
+            if (area === 'abyss' && advancedGameState.player.level < 20) {
+                showDamageNumber("Level 20 required!", "miss-number");
+                return;
+            }
+            
+            const enemies = enemyDatabase[area];
+            if (enemies && enemies.length > 0) {
+                const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+                startBattle(randomEnemy);
+            }
+        }
+
+        // Battle system
+        function startBattle(enemy) {
+            advancedGameState.battleState = {
+                enemy: { ...enemy, currentHealth: enemy.health },
+                turn: 'player',
+                battleLog: []
+            };
+            
+            const overlay = document.getElementById('battleOverlay');
+            const arena = document.getElementById('battleArena');
+            
+            arena.innerHTML = `
+                <div class="battle-title">⚔️ Battle Encounter!</div>
+                <div class="battle-content">A wild ${enemy.name} appears!</div>
+                <div class="battle-area">
+                    <div class="enemy-display">${enemy.emoji}</div>
+                    <div style="color: #ffd700; font-weight: bold;">${enemy.name} (Lv. ${enemy.level})</div>
+                    <div class="enemy-health">
+                        <div class="enemy-health-fill" id="enemyHealthFill" style="width: 100%"></div>
+                    </div>
+                    <div style="color: white; font-size: 12px;">${enemy.currentHealth} / ${enemy.health} HP</div>
+                </div>
+                <div class="battle-actions">
+                    <button class="battle-button" onclick="battleAction('attack')">⚔️ Attack</button>
+                    <button class="battle-button magic" onclick="battleAction('magic')">🔥 Magic</button>
+                    <button class="battle-button defend" onclick="battleAction('defend')">🛡️ Defend</button>
+                    <button class="battle-button escape" onclick="battleAction('escape')">🏃 Escape</button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="battle-button" onclick="showEducationalChallenge()" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #1a1a2e;">
+                        🧠 Smart Attack (Bonus Damage!)
+                    </button>
+                </div>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        // Battle actions
+        function battleAction(action) {
+            const battleState = advancedGameState.battleState;
+            const enemy = battleState.enemy;
+            
+            let playerDamage = 0;
+            let enemyDamage = 0;
+            
+            switch(action) {
+                case 'attack':
+                    playerDamage = Math.floor(advancedGameState.stats.attack * (0.8 + Math.random() * 0.4));
+                    break;
+                case 'magic':
+                    if (advancedGameState.stats.mana >= 30) {
+                        playerDamage = Math.floor(advancedGameState.stats.intelligence * (0.6 + Math.random() * 0.4));
+                        advancedGameState.stats.mana -= 30;
+                    } else {
+                        showDamageNumber("Not enough mana!", "miss-number");
+                        return;
+                    }
+                    break;
+                case 'defend':
+                    playerDamage = Math.floor(advancedGameState.stats.attack * 0.3);
+                    enemyDamage = Math.floor(enemy.attack * 0.5);
+                    break;
+                case 'escape':
+                    if (Math.random() < 0.7) {
+                        closeBattle();
+                        showDamageNumber("Escaped successfully!", "heal-number");
+                        return;
+                    } else {
+                        showDamageNumber("Can't escape!", "miss-number");
+                        enemyDamage = enemy.attack;
+                    }
+                    break;
+            }
+            
+            // Apply damage
+            if (playerDamage > 0) {
+                enemy.currentHealth -= playerDamage;
+                showDamageNumber(`-${playerDamage}`, "damage-enemy");
+            }
+            
+            // Check if enemy defeated
+            if (enemy.currentHealth <= 0) {
+                victoryBattle();
+                return;
+            }
+            
+            // Enemy attack
+            if (action !== 'defend' && enemyDamage === 0) {
+                enemyDamage = Math.floor(enemy.attack * (0.7 + Math.random() * 0.3));
+            }
+            
+            if (enemyDamage > 0) {
+                advancedGameState.stats.health -= enemyDamage;
+                showDamageNumber(`-${enemyDamage}`, "damage-player");
+            }
+            
+            // Check if player defeated
+            if (advancedGameState.stats.health <= 0) {
+                defeatBattle();
+                return;
+            }
+            
+            // Update battle display
+            updateBattleDisplay();
+            updateAdvancedDisplay();
+        }
+
+        // Show educational challenge
+        function showEducationalChallenge() {
+            const enemy = advancedGameState.battleState.enemy;
+            const challenge = enemy.educationalChallenge;
+            
+            const arena = document.getElementById('battleArena');
+            arena.innerHTML = `
+                <div class="battle-title">🧠 Smart Attack Challenge!</div>
+                <div class="battle-content">${challenge.question}</div>
+                <div class="battle-area">
+                    <div style="color: #ffd700; font-size: 14px; margin-bottom: 15px;">
+                        Answer correctly for massive bonus damage!
+                    </div>
+                    <div class="battle-actions">
+                        ${challenge.answers.map((answer, index) => 
+                            `<button class="battle-button" onclick="answerChallenge(${index})" style="font-size: 11px; padding: 8px;">${answer}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                <button class="battle-button escape" onclick="backToBattle()">Back to Battle</button>
+            `;
+        }
+
+        // Answer educational challenge
+        function answerChallenge(selectedIndex) {
+            const enemy = advancedGameState.battleState.enemy;
+            const challenge = enemy.educationalChallenge;
+            const isCorrect = selectedIndex === challenge.correct;
+            
+            let damage;
+            if (isCorrect) {
+                damage = Math.floor(advancedGameState.stats.attack * 2.5); // Massive bonus
+                showDamageNumber("PERFECT! CRITICAL HIT!", "heal-number");
+                showDamageNumber(challenge.bonus, "heal-number");
+                
+                // XP bonus for correct answer
+                advancedGameState.player.xp += 200;
+            } else {
+                damage = Math.floor(advancedGameState.stats.attack * 0.8);
+                showDamageNumber("Good try! Normal attack.", "miss-number");
+                
+                // Small XP for attempt
+                advancedGameState.player.xp += 50;
+            }
+            
+            // Apply damage
+            enemy.currentHealth -= damage;
+            showDamageNumber(`-${damage}`, "damage-enemy");
+            
+            // Check if enemy defeated
+            if (enemy.currentHealth <= 0) {
+                victoryBattle();
+                return;
+            }
+            
+            // Return to battle
+            setTimeout(() => {
+                backToBattle();
+                updateBattleDisplay();
+            }, 2000);
+        }
+
+        // Back to battle
+        function backToBattle() {
+            const enemy = advancedGameState.battleState.enemy;
+            const arena = document.getElementById('battleArena');
+            
+            arena.innerHTML = `
+                <div class="battle-title">⚔️ Battle Encounter!</div>
+                <div class="battle-content">Fighting ${enemy.name}!</div>
+                <div class="battle-area">
+                    <div class="enemy-display">${enemy.emoji}</div>
+                    <div style="color: #ffd700; font-weight: bold;">${enemy.name} (Lv. ${enemy.level})</div>
+                    <div class="enemy-health">
+                        <div class="enemy-health-fill" id="enemyHealthFill" style="width: ${(enemy.currentHealth / enemy.health) * 100}%"></div>
+                    </div>
+                    <div style="color: white; font-size: 12px;">${enemy.currentHealth} / ${enemy.health} HP</div>
+                </div>
+                <div class="battle-actions">
+                    <button class="battle-button" onclick="battleAction('attack')">⚔️ Attack</button>
+                    <button class="battle-button magic" onclick="battleAction('magic')">🔥 Magic</button>
+                    <button class="battle-button defend" onclick="battleAction('defend')">🛡️ Defend</button>
+                    <button class="battle-button escape" onclick="battleAction('escape')">🏃 Escape</button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="battle-button" onclick="showEducationalChallenge()" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #1a1a2e;">
+                        🧠 Smart Attack (Bonus Damage!)
+                    </button>
+                </div>
+            `;
+        }
+
+        // Victory in battle
+        function victoryBattle() {
+            const enemy = advancedGameState.battleState.enemy;
+            
+            // Rewards
+            advancedGameState.player.xp += enemy.xpReward;
+            advancedGameState.resources.gold += enemy.goldReward;
+            
+            // Quest progress
+            if (advancedGameState.quests.active.title === "Shadow Beast Hunter") {
+                advancedGameState.quests.active.progress++;
+            }
+            
+            showDamageNumber("VICTORY!", "heal-number");
+            showDamageNumber(`+${enemy.xpReward} XP`, "damage-enemy");
+            showDamageNumber(`+${enemy.goldReward} Gold`, "heal-number");
+            
+            setTimeout(() => {
+                closeBattle();
+            }, 2000);
+            
+            // Check for level up
+            if (advancedGameState.player.xp >= advancedGameState.player.xpToNext) {
+                levelUp();
+            }
+            
+            updateAdvancedDisplay();
+        }
+
+        // Defeat in battle
+        function defeatBattle() {
+            showDamageNumber("DEFEATED!", "damage-player");
+            
+            // Penalty
+            advancedGameState.resources.gold = Math.max(0, advancedGameState.resources.gold - 100);
+            advancedGameState.stats.health = Math.floor(advancedGameState.stats.maxHealth * 0.1);
+            
+            setTimeout(() => {
+                closeBattle();
+            }, 2000);
+            
+            updateAdvancedDisplay();
+        }
+
+        // Close battle
+        function closeBattle() {
+            document.getElementById('battleOverlay').style.display = 'none';
+            advancedGameState.battleState = null;
+        }
+
+        // Update battle display
+        function updateBattleDisplay() {
+            const enemy = advancedGameState.battleState.enemy;
+            const healthPercent = (enemy.currentHealth / enemy.health) * 100;
+            
+            const healthFill = document.getElementById('enemyHealthFill');
+            if (healthFill) {
+                healthFill.style.width = healthPercent + '%';
+            }
+        }
+
+        // Show damage numbers
+        function showDamageNumber(text, className) {
+            const number = document.createElement('div');
+            number.className = `damage-number ${className}`;
+            number.textContent = text;
+            number.style.left = (Math.random() * 200 + 100) + 'px';
+            number.style.top = (Math.random() * 100 + 200) + 'px';
+            
+            document.querySelector('.game-screen').appendChild(number);
+            
+            setTimeout(() => {
+                if (number.parentNode) {
+                    number.parentNode.removeChild(number);
+                }
+            }, 1500);
+        }
+
+        // Check area unlocks
+        function checkAreaUnlocks() {
+            if (advancedGameState.player.level >= 20) {
+                document.getElementById('abyssArea').classList.remove('locked');
+                document.getElementById('abyssArea').classList.add('available');
+            }
+        }
+
+        // Update advanced display
+        function updateAdvancedDisplay() {
+            // Update level and XP
+            document.getElementById('levelBadge').textContent = `Lv. ${advancedGameState.player.level}`;
+            document.getElementById('xpFill').style.width = `${(advancedGameState.player.xp / advancedGameState.player.xpToNext) * 100}%`;
+            document.getElementById('xpText').textContent = `${advancedGameState.player.xp.toLocaleString()} / ${advancedGameState.player.xpToNext.toLocaleString()}`;
+            
+            // Update resources
+            document.getElementById('goldAmount').textContent = advancedGameState.resources.gold.toLocaleString();
+            document.getElementById('gemAmount').textContent = advancedGameState.resources.gems;
+            document.getElementById('energyAmount').textContent = advancedGameState.resources.energy;
+            
+            // Update combat stats
+            document.getElementById('healthFill').style.width = `${(advancedGameState.stats.health / advancedGameState.stats.maxHealth) * 100}%`;
+            document.getElementById('manaFill').style.width = `${(advancedGameState.stats.mana / advancedGameState.stats.maxMana) * 100}%`;
+            document.getElementById('staminaFill').style.width = `${(advancedGameState.stats.stamina / advancedGameState.stats.maxStamina) * 100}%`;
+            
+            // Update stats
+            document.getElementById('healthStat').textContent = advancedGameState.stats.health.toLocaleString();
+            document.getElementById('attackStat').textContent = advancedGameState.stats.attack;
+            document.getElementById('defenseStat').textContent = advancedGameState.stats.defense;
+            document.getElementById('speedStat').textContent = advancedGameState.stats.speed;
+            document.getElementById('intelligenceStat').textContent = advancedGameState.stats.intelligence;
+            document.getElementById('luckStat').textContent = advancedGameState.stats.luck;
+            
+            // Update creature title
+            const titles = [
+                "Newborn Dragon", "Young Dragon", "Dragon Apprentice", "Dragon Warrior", 
+                "Dragon Knight", "Dragon Master", "Elder Dragon", "Ancient Dragon", 
+                "Legendary Dragon", "Mythical Dragon", "Transcendent Dragon", "Divine Dragon"
+            ];
+            const titleIndex = Math.min(advancedGameState.player.level - 1, titles.length - 1);
+            document.getElementById('creatureTitle').textContent = `${titles[titleIndex]} • Lv. ${advancedGameState.player.level}`;
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            
+            // Ability hotkeys
+            if (key >= '1' && key <= '5') {
+                const abilities = ['fireball', 'heal', 'shield', 'lightning', 'ultimate'];
+                const abilityIndex = parseInt(key) - 1;
+                if (abilities[abilityIndex]) {
+                    useAdvancedAbility(abilities[abilityIndex]);
+                }
+            }
+            
+            // Battle hotkeys
+            if (advancedGameState.battleState) {
+                switch(key.toLowerCase()) {
+                    case 'a':
+                        battleAction('attack');
+                        break;
+                    case 'm':
+                        battleAction('magic');
+                        break;
+                    case 'd':
+                        battleAction('defend');
+                        break;
+                    case 'e':
+                        battleAction('escape');
+                        break;
+                    case 's':
+                        showEducationalChallenge();
+                        break;
+                }
+            }
+        });
+
+        // Initialize advanced game
+        function initializeAdvancedGame() {
+            updateAdvancedDisplay();
+            checkAreaUnlocks();
+            
+            // Auto-regeneration
+            setInterval(() => {
+                // Mana regeneration
+                advancedGameState.stats.mana = Math.min(
+                    advancedGameState.stats.maxMana,
+                    advancedGameState.stats.mana + 5
+                );
+                
+                // Stamina regeneration
+                advancedGameState.stats.stamina = Math.min(
+                    advancedGameState.stats.maxStamina,
+                    advancedGameState.stats.stamina + 3
+                );
+                
+                updateAdvancedDisplay();
+            }, 3000);
+            
+            // Random events
+            setInterval(() => {
+                if (Math.random() < 0.1 && !advancedGameState.battleState) {
+                    const events = [
+                        { message: "Found ancient treasure! +200 Gold", gold: 200 },
+                        { message: "Mystical energy restored! +50 Mana", mana: 50 },
+                        { message: "Dragon's blessing! +100 XP", xp: 100 },
+                        { message: "Discovered rare gem! +5 Gems", gems: 5 }
+                    ];
+                    
+                    const event = events[Math.floor(Math.random() * events.length)];
+                    
+                    Object.keys(event).forEach(key => {
+                        if (key !== 'message') {
+                            if (key === 'gold') advancedGameState.resources.gold += event[key];
+                            else if (key === 'gems') advancedGameState.resources.gems += event[key];
+                            else if (key === 'xp') advancedGameState.player.xp += event[key];
+                            else if (key === 'mana') {
+                                advancedGameState.stats.mana = Math.min(
+                                    advancedGameState.stats.maxMana,
+                                    advancedGameState.stats.mana + event[key]
+                                );
+                            }
+                        }
+                    });
+                    
+                    showDamageNumber(event.message, "heal-number");
+                    updateAdvancedDisplay();
+                }
+            }, 25000);
+            
+            // Welcome message
+            setTimeout(() => {
+                showDamageNumber("Welcome, Dragon Master!", "heal-number");
+            }, 1000);
+        }
+
+        // Start the advanced game
+        initializeAdvancedGame();
+    </script>
+</body>
+</html>

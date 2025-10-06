@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Curio Critters - Ultimate Adventure! 🐾✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(45deg, #FF6B9D, #C44569, #F8B500, #FF9F43, #6C5CE7, #A29BFE);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Background Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-element {
+            position: absolute;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .floating-element:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 3s; }
+        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+        .floating-element:nth-child(6) { top: 70%; right: 10%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            33% { transform: translateY(-30px) rotate(120deg) scale(1.1); }
+            66% { transform: translateY(15px) rotate(240deg) scale(0.9); }
+        }
+
+        /* Main Game Container */
+        .game-container {
+            display: grid;
+            grid-template-areas: 
+                "header"
+                "main-game"
+                "bottom-nav";
+            grid-template-columns: 1fr;
+            grid-template-rows: 60px 1fr 70px;
+            height: 100vh;
+            width: 100vw;
+            gap: 4px;
+            padding: 4px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        /* Hidden Menu System */
+        .menu-button {
+            position: fixed;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .menu-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+
+        .menu-button.active {
+            background: linear-gradient(135deg, #FF6B9D, #C44569);
+            color: white;
+        }
+
+        .stats-menu-btn { top: 120px; left: 20px; }
+        .quests-menu-btn { top: 200px; left: 20px; }
+        .achievements-menu-btn { top: 280px; left: 20px; }
+        .critters-menu-btn { top: 120px; right: 20px; }
+        .story-menu-btn { top: 200px; right: 20px; }
+        .rewards-menu-btn { top: 280px; right: 20px; }
+
+        .slide-menu {
+            position: fixed;
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            padding: 25px;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            z-index: 200;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 320px;
+            max-height: 70vh;
+            overflow-y: auto;
+            top: 100px;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .slide-menu.left {
+            left: -340px;
+        }
+
+        .slide-menu.right {
+            right: -340px;
+        }
+
+        .slide-menu.open {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .slide-menu.open.left {
+            left: 20px;
+        }
+
+        .slide-menu.open.right {
+            right: 20px;
+        }
+
+        /* Header */
+        .game-header {
+            grid-area: header;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            animation: slideDown 0.8s ease-out;
+            height: 100%;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FF6B9D, #C44569);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .player-details h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px;
+            color: #2D3436;
+            margin: 0;
+        }
+
+        .player-level {
+            font-size: 12px;
+            color: #636E72;
+            font-weight: 600;
+        }
+
+        .resources {
+            display: flex;
+            gap: 20px;
+        }
+
+        .resource {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .resource:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.95);
+        }
+
+        .resource-icon {
+            font-size: 18px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .resource-amount {
+            font-weight: 700;
+            color: #2D3436;
+            font-size: 14px;
+        }
+
+        /* Enhanced Game World */
+        .interactive-objects {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .interactive-objects > * {
+            pointer-events: all;
+        }
+
+        .collectible {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: collectibleFloat 3s ease-in-out infinite;
+            z-index: 15;
+        }
+
+        .collectible:hover {
+            transform: scale(1.3);
+            filter: brightness(1.3);
+        }
+
+        @keyframes collectibleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(180deg); }
+        }
+
+        .coin {
+            font-size: 25px;
+            animation-delay: 0s;
+        }
+
+        .gem {
+            font-size: 30px;
+            animation-delay: 1s;
+        }
+
+        .star-collectible {
+            font-size: 20px;
+            animation-delay: 2s;
+        }
+
+        .power-up {
+            font-size: 35px;
+            animation: powerUpPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes powerUpPulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.2); filter: brightness(1.5); }
+        }
+
+        /* NPCs and Characters */
+        .npc {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 20;
+            font-size: 50px;
+        }
+
+        .npc:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .npc.talking {
+            animation: npcTalk 1s ease-in-out infinite;
+        }
+
+        @keyframes npcTalk {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(-2deg); }
+            75% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        /* Speech Bubbles */
+        .speech-bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #FF6B9D;
+            border-radius: 20px;
+            padding: 15px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #2D3436;
+            max-width: 200px;
+            z-index: 25;
+            animation: bubbleAppear 0.5s ease-out;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #FF6B9D;
+        }
+
+        @keyframes bubbleAppear {
+            from { opacity: 0; transform: scale(0.8) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Mini-Game Areas */
+        .mini-game-zone {
+            position: absolute;
+            border: 3px dashed rgba(255,255,255,0.8);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            animation: zoneGlow 3s ease-in-out infinite;
+        }
+
+        .mini-game-zone:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        @keyframes zoneGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,255,255,0.6); }
+        }
+
+        /* Weather Effects */
+        .weather-effect {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, #74B9FF);
+            animation: rainFall 1s linear infinite;
+        }
+
+        @keyframes rainFall {
+            from { transform: translateY(-100vh); }
+            to { transform: translateY(100vh); }
+        }
+
+        .snow-flake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            animation: snowFall 8s linear infinite;
+        }
+
+        @keyframes snowFall {
+            from { transform: translateY(-100vh) rotate(0deg); }
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        @keyframes collectibleCollected {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Game Area */
+        .main-game {
+            grid-area: main-game;
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Interactive Game World */
+        .game-world {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #74B9FF, #0984E3, #00CEC9, #00B894);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 400px;
+        }
+
+        .world-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sky-layer {
+            background: linear-gradient(to bottom, #74B9FF 0%, #81ECEC 100%);
+            animation: skyShift 20s ease-in-out infinite;
+        }
+
+        @keyframes skyShift {
+            0%, 100% { background: linear-gradient(to bottom, #74B9FF 0%, #81ECEC 100%); }
+            50% { background: linear-gradient(to bottom, #FD79A8 0%, #FDCB6E 100%); }
+        }
+
+        .clouds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50px;
+            animation: cloudFloat 15s linear infinite;
+        }
+
+        .cloud:before {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50px;
+        }
+
+        .cloud1 {
+            width: 80px;
+            height: 40px;
+            top: 10%;
+            left: -100px;
+            animation-duration: 20s;
+        }
+
+        .cloud1:before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud2 {
+            width: 60px;
+            height: 30px;
+            top: 20%;
+            left: -80px;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        .cloud2:before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 15px;
+        }
+
+        @keyframes cloudFloat {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* Character */
+        .character {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: characterIdle 3s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        .character:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .character:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        @keyframes characterIdle {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Interactive Elements */
+        .interactive-element {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: elementPulse 2s ease-in-out infinite;
+        }
+
+        .interactive-element:hover {
+            transform: scale(1.2);
+            filter: brightness(1.2);
+        }
+
+        @keyframes elementPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tree {
+            top: 40%;
+            left: 20%;
+            font-size: 60px;
+            animation-delay: 0s;
+        }
+
+        .flower {
+            bottom: 25%;
+            right: 30%;
+            font-size: 40px;
+            animation-delay: 1s;
+        }
+
+        .butterfly {
+            top: 30%;
+            right: 20%;
+            font-size: 30px;
+            animation: butterflyFly 4s ease-in-out infinite;
+        }
+
+        @keyframes butterflyFly {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -10px) rotate(5deg); }
+            50% { transform: translate(-10px, -20px) rotate(-5deg); }
+            75% { transform: translate(-20px, 10px) rotate(5deg); }
+        }
+
+        .treasure {
+            bottom: 35%;
+            left: 70%;
+            font-size: 35px;
+            animation-delay: 2s;
+        }
+
+        /* Menu Content Styles */
+        .menu-content {
+            margin-bottom: 20px;
+        }
+
+        .menu-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px;
+            color: #2D3436;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-menu-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,107,157,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-menu-btn:hover {
+            background: rgba(255,107,157,0.4);
+            transform: scale(1.1);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            grid-area: bottom-nav;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.8s ease-out;
+            height: 100%;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #FF6B9D, #C44569);
+            border: none;
+            border-radius: 20px;
+            padding: 15px 25px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #FD79A8, #E84393);
+        }
+
+        .nav-button:active {
+            transform: translateY(-1px);
+        }
+
+        .nav-button.active {
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        /* Activity Cards */
+        .activity-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+        }
+
+        .activity-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 14px;
+            color: #2D3436;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-description {
+            font-size: 11px;
+            color: #636E72;
+            line-height: 1.4;
+        }
+
+        /* Progress Bars */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00B894, #00CEC9);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            animation: progressGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes progressGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(0,184,148,0.5); }
+            50% { box-shadow: 0 0 15px rgba(0,184,148,0.8); }
+        }
+
+        /* Particle Effects */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particleFloat 3s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: scale(0.8) translateY(50px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .game-container {
+                grid-template-columns: 280px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-areas: 
+                    "header"
+                    "main-game"
+                    "bottom-nav";
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 1fr 100px;
+            }
+            
+            .sidebar, .right-panel {
+                display: none;
+            }
+        }
+
+        /* Touch Feedback */
+        .touch-feedback {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .touch-feedback::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .touch-feedback:active::after {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-element">⭐</div>
+        <div class="floating-element">💫</div>
+        <div class="floating-element">🌟</div>
+        <div class="floating-element">✨</div>
+        <div class="floating-element">💖</div>
+        <div class="floating-element">🦋</div>
+    </div>
+
+    <!-- Hidden Menu Buttons -->
+    <div class="menu-button stats-menu-btn touch-feedback" onclick="toggleMenu('stats')">📊</div>
+    <div class="menu-button quests-menu-btn touch-feedback" onclick="toggleMenu('quests')">🎯</div>
+    <div class="menu-button achievements-menu-btn touch-feedback" onclick="toggleMenu('achievements')">🏆</div>
+    <div class="menu-button critters-menu-btn touch-feedback" onclick="toggleMenu('critters')">🐾</div>
+    <div class="menu-button story-menu-btn touch-feedback" onclick="toggleMenu('story')">📖</div>
+    <div class="menu-button rewards-menu-btn touch-feedback" onclick="toggleMenu('rewards')">🎁</div>
+
+    <!-- Slide-out Menus -->
+    <div id="statsMenu" class="slide-menu left">
+        <button class="close-menu-btn" onclick="closeMenu('stats')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">📊 Koko's Stats</h3>
+            <div class="activity-card">
+                <div class="activity-title">💖 Happiness</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <div class="activity-description">85/100 - Super Happy!</div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-title">🏃 Energy</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%"></div>
+                </div>
+                <div class="activity-description">78/100 - Ready to play!</div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-title">🧠 Intelligence</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+                <div class="activity-description">92/100 - Genius level!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="questsMenu" class="slide-menu left">
+        <button class="close-menu-btn" onclick="closeMenu('quests')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">🎯 Daily Quests</h3>
+            <div class="activity-card touch-feedback" onclick="startQuest('play')">
+                <div class="activity-title">🎈 Play Time</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <div class="activity-description">Play 3 mini-games (2/3)</div>
+            </div>
+            <div class="activity-card touch-feedback" onclick="startQuest('learn')">
+                <div class="activity-title">📚 Learning Adventure</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33%"></div>
+                </div>
+                <div class="activity-description">Complete 3 lessons (1/3)</div>
+            </div>
+            <div class="activity-card touch-feedback" onclick="startQuest('explore')">
+                <div class="activity-title">🗺️ Explorer</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                </div>
+                <div class="activity-description">Visit 5 locations (4/5)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="achievementsMenu" class="slide-menu left">
+        <button class="close-menu-btn" onclick="closeMenu('achievements')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">🏆 Achievements</h3>
+            <div class="activity-card touch-feedback" onclick="openAchievements()">
+                <div class="activity-title">🌟 Recent Unlock</div>
+                <div class="activity-description">🎨 Creative Genius - Complete 10 art activities!</div>
+            </div>
+            <div class="activity-card touch-feedback" onclick="openAchievements()">
+                <div class="activity-title">📈 Progress</div>
+                <div class="activity-description">5/25 achievements unlocked</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="crittersMenu" class="slide-menu right">
+        <button class="close-menu-btn" onclick="closeMenu('critters')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">🐾 My Critters</h3>
+            <div class="activity-card touch-feedback" onclick="openCritterCollection()">
+                <div class="activity-title">🐨 Koko</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="activity-description">Level 8 Adult Explorer</div>
+            </div>
+            <div class="activity-card touch-feedback" onclick="unlockCritter('bella')">
+                <div class="activity-title">🐰 Bella (Locked)</div>
+                <div class="activity-description">Complete friendship quest to unlock!</div>
+            </div>
+            <div class="activity-card touch-feedback" onclick="openBreedingLab()">
+                <div class="activity-title">🧬 Breeding Lab</div>
+                <div class="activity-description">Discover new critter combinations!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="storyMenu" class="slide-menu right">
+        <button class="close-menu-btn" onclick="closeMenu('story')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">📖 Story Mode</h3>
+            <div class="activity-card touch-feedback" onclick="openStoryMode()">
+                <div class="activity-title">🌳 Chapter 1</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33%"></div>
+                </div>
+                <div class="activity-description">Welcome to Eucalyptus Grove (Scene 1/3)</div>
+            </div>
+            <div class="activity-card touch-feedback">
+                <div class="activity-title">🌈 Chapter 2 (Locked)</div>
+                <div class="activity-description">Complete Chapter 1 to unlock!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rewardsMenu" class="slide-menu right">
+        <button class="close-menu-btn" onclick="closeMenu('rewards')">✕</button>
+        <div class="menu-content">
+            <h3 class="menu-title">🎁 Daily Rewards</h3>
+            <div class="activity-card touch-feedback" onclick="claimDailyReward()">
+                <div class="activity-title">🎉 Day 3 Bonus</div>
+                <div class="activity-description">Claim your daily reward!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <div class="player-info">
+                <div class="player-avatar">🐨</div>
+                <div class="player-details">
+                    <h2>Koko's Adventure</h2>
+                    <div class="player-level">Level 8 Explorer</div>
+                </div>
+            </div>
+            <div class="resources">
+                <div class="resource touch-feedback" onclick="showResourceInfo('stickers')">
+                    <span class="resource-icon">🎁</span>
+                    <span class="resource-amount" id="stickers">1250</span>
+                </div>
+                <div class="resource touch-feedback" onclick="showResourceInfo('hearts')">
+                    <span class="resource-icon">💕</span>
+                    <span class="resource-amount" id="hearts">670</span>
+                </div>
+                <div class="resource touch-feedback" onclick="showResourceInfo('stars')">
+                    <span class="resource-icon">⭐</span>
+                    <span class="resource-amount" id="stars">2840</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Main Game Area -->
+        <main class="main-game">
+            <div class="game-world" onclick="interactWithWorld(event)">
+                <!-- Sky Layer -->
+                <div class="world-layer sky-layer"></div>
+                
+                <!-- Weather Effects -->
+                <div class="weather-effect" id="weatherContainer"></div>
+                
+                <!-- Clouds -->
+                <div class="clouds">
+                    <div class="cloud cloud1"></div>
+                    <div class="cloud cloud2"></div>
+                </div>
+
+                <!-- Interactive Objects Layer -->
+                <div class="interactive-objects">
+                    <!-- Collectibles -->
+                    <div class="collectible coin" style="top: 60%; left: 15%;" onclick="collectItem('coin', event)">🪙</div>
+                    <div class="collectible gem" style="top: 40%; left: 80%;" onclick="collectItem('gem', event)">💎</div>
+                    <div class="collectible star-collectible" style="top: 25%; left: 60%;" onclick="collectItem('star', event)">⭐</div>
+                    <div class="collectible power-up" style="top: 70%; left: 70%;" onclick="collectItem('powerup', event)">⚡</div>
+
+                    <!-- NPCs -->
+                    <div class="npc" style="top: 50%; left: 25%;" onclick="talkToNPC('bunny', event)">🐰</div>
+                    <div class="npc" style="top: 35%; left: 85%;" onclick="talkToNPC('owl', event)">🦉</div>
+                    <div class="npc" style="top: 65%; left: 45%;" onclick="talkToNPC('fox', event)">🦊</div>
+
+                    <!-- Mini-Game Zones -->
+                    <div class="mini-game-zone" style="top: 20%; left: 20%; width: 120px; height: 80px;" onclick="startMiniGame('math', event)">🔢</div>
+                    <div class="mini-game-zone" style="top: 15%; left: 75%; width: 100px; height: 100px;" onclick="startMiniGame('puzzle', event)">🧩</div>
+                    <div class="mini-game-zone" style="bottom: 20%; right: 15%; width: 110px; height: 90px;" onclick="startMiniGame('music', event)">🎵</div>
+
+                    <!-- Interactive Elements -->
+                    <div class="interactive-element tree" onclick="interactWithElement('tree', event)">🌳</div>
+                    <div class="interactive-element flower" onclick="interactWithElement('flower', event)">🌸</div>
+                    <div class="interactive-element butterfly" onclick="interactWithElement('butterfly', event)">🦋</div>
+                    <div class="interactive-element treasure" onclick="interactWithElement('treasure', event)">💎</div>
+
+                    <!-- Main Character -->
+                    <div class="character" onclick="interactWithCharacter(event)" id="mainCharacter">🐨</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-button active touch-feedback" onclick="switchMode('play')">
+                <span class="nav-icon">🎮</span>
+                <span>Play</span>
+            </button>
+            <button class="nav-button touch-feedback" onclick="switchMode('learn')">
+                <span class="nav-icon">📚</span>
+                <span>Learn</span>
+            </button>
+            <button class="nav-button touch-feedback" onclick="switchMode('create')">
+                <span class="nav-icon">🎨</span>
+                <span>Create</span>
+            </button>
+            <button class="nav-button touch-feedback" onclick="switchMode('explore')">
+                <span class="nav-icon">🗺️</span>
+                <span>Explore</span>
+            </button>
+            <button class="nav-button touch-feedback" onclick="switchMode('social')">
+                <span class="nav-icon">👫</span>
+                <span>Friends</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modals -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <div id="modalContent">
+                <!-- Modal content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            player: {
+                name: "Koko",
+                level: 8,
+                xp: 2840,
+                happiness: 85,
+                energy: 78,
+                intelligence: 92
+            },
+            resources: {
+                stickers: 1250,
+                hearts: 670,
+                stars: 2840
+            },
+            currentMode: 'play',
+            animations: true,
+            soundEnabled: true
+        };
+
+        // Initialize Game
+        function initGame() {
+            console.log("🌟 Curio Critters - Ultimate Adventure Started! 🐾");
+            createParticleEffects();
+            startBackgroundAnimations();
+            initializeWeatherEffects();
+            spawnRandomCollectibles();
+            updateUI();
+        }
+
+        // Menu System
+        let openMenus = [];
+
+        function toggleMenu(menuType) {
+            const menu = document.getElementById(menuType + 'Menu');
+            const button = document.querySelector(`.${menuType}-menu-btn`);
+            
+            if (menu.classList.contains('open')) {
+                closeMenu(menuType);
+            } else {
+                // Close other menus first
+                openMenus.forEach(openMenu => {
+                    if (openMenu !== menuType) {
+                        closeMenu(openMenu);
+                    }
+                });
+                
+                menu.classList.add('open');
+                button.classList.add('active');
+                openMenus.push(menuType);
+                
+                showNotification(`📱 ${menuType.charAt(0).toUpperCase() + menuType.slice(1)} menu opened!`);
+            }
+        }
+
+        function closeMenu(menuType) {
+            const menu = document.getElementById(menuType + 'Menu');
+            const button = document.querySelector(`.${menuType}-menu-btn`);
+            
+            menu.classList.remove('open');
+            button.classList.remove('active');
+            openMenus = openMenus.filter(m => m !== menuType);
+        }
+
+        // Enhanced Collectible System
+        function collectItem(itemType, event) {
+            event.stopPropagation();
+            
+            const rewards = {
+                coin: { stickers: 25, message: "🪙 Coin collected! +25 stickers!" },
+                gem: { hearts: 15, message: "💎 Gem found! +15 hearts!" },
+                star: { stars: 30, message: "⭐ Star collected! +30 stars!" },
+                powerup: { stickers: 50, hearts: 25, stars: 40, message: "⚡ Power-up! Mega rewards!" }
+            };
+            
+            const reward = rewards[itemType];
+            if (reward) {
+                // Award rewards
+                Object.entries(reward).forEach(([resource, amount]) => {
+                    if (gameState.resources[resource]) {
+                        gameState.resources[resource] += amount;
+                    }
+                });
+                
+                // Remove collectible
+                event.target.style.animation = 'collectibleCollected 0.5s ease-out forwards';
+                setTimeout(() => {
+                    event.target.remove();
+                    respawnCollectible(itemType);
+                }, 500);
+                
+                createInteractionEffect(event.clientX, event.clientY, event.target.textContent);
+                showNotification(reward.message);
+                updateUI();
+            }
+        }
+
+        function respawnCollectible(itemType) {
+            setTimeout(() => {
+                const collectibles = {
+                    coin: '🪙',
+                    gem: '💎',
+                    star: '⭐',
+                    powerup: '⚡'
+                };
+                
+                const newCollectible = document.createElement('div');
+                newCollectible.className = `collectible ${itemType}`;
+                newCollectible.textContent = collectibles[itemType];
+                newCollectible.style.top = Math.random() * 70 + 15 + '%';
+                newCollectible.style.left = Math.random() * 80 + 10 + '%';
+                newCollectible.onclick = (e) => collectItem(itemType, e);
+                
+                document.querySelector('.interactive-objects').appendChild(newCollectible);
+            }, Math.random() * 10000 + 5000); // Respawn after 5-15 seconds
+        }
+
+        // NPC Interaction System
+        function talkToNPC(npcType, event) {
+            event.stopPropagation();
+            
+            const npc = event.target;
+            npc.classList.add('talking');
+            
+            const dialogues = {
+                bunny: [
+                    "Hi there! I'm Bella the Bunny! 🐰",
+                    "Want to play a hopping game? 🦘",
+                    "I love carrots! Do you have any? 🥕",
+                    "Let's be friends forever! 💕"
+                ],
+                owl: [
+                    "Hoot hoot! I'm Oliver the Wise Owl! 🦉",
+                    "I know lots of fun facts! Want to learn? 📚",
+                    "The stars are beautiful tonight! ✨",
+                    "Knowledge is the greatest treasure! 🧠"
+                ],
+                fox: [
+                    "Hey! I'm Felix the Clever Fox! 🦊",
+                    "I know where all the treasures are hidden! 💎",
+                    "Want to go on an adventure? 🗺️",
+                    "I'm the fastest runner in the forest! 🏃"
+                ]
+            };
+            
+            const dialogue = dialogues[npcType];
+            const randomMessage = dialogue[Math.floor(Math.random() * dialogue.length)];
+            
+            showSpeechBubble(npc, randomMessage);
+            
+            // Award friendship points
+            gameState.resources.hearts += 5;
+            updateUI();
+            
+            setTimeout(() => {
+                npc.classList.remove('talking');
+            }, 3000);
+        }
+
+        function showSpeechBubble(npc, message) {
+            // Remove existing speech bubbles
+            document.querySelectorAll('.speech-bubble').forEach(bubble => bubble.remove());
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'speech-bubble';
+            bubble.textContent = message;
+            
+            const rect = npc.getBoundingClientRect();
+            bubble.style.position = 'fixed';
+            bubble.style.left = rect.left + 'px';
+            bubble.style.top = (rect.top - 80) + 'px';
+            
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => {
+                bubble.remove();
+            }, 3000);
+        }
+
+        // Mini-Game System
+        function startMiniGame(gameType, event) {
+            event.stopPropagation();
+            
+            const games = {
+                math: {
+                    title: "🔢 Math Magic",
+                    description: "Solve fun math problems with Koko!",
+                    reward: { stickers: 100, stars: 50 }
+                },
+                puzzle: {
+                    title: "🧩 Puzzle Master",
+                    description: "Complete colorful puzzles!",
+                    reward: { hearts: 75, stickers: 50 }
+                },
+                music: {
+                    title: "🎵 Music Maker",
+                    description: "Create beautiful melodies!",
+                    reward: { stars: 100, hearts: 50 }
+                }
+            };
+            
+            const game = games[gameType];
+            showNotification(`🎮 Starting ${game.title}! Get ready for fun!`);
+            
+            // Simulate mini-game completion
+            setTimeout(() => {
+                Object.entries(game.reward).forEach(([resource, amount]) => {
+                    gameState.resources[resource] += amount;
+                });
+                
+                showNotification(`🏆 ${game.title} completed! Great job!`);
+                updateUI();
+            }, 2000);
+        }
+
+        // Weather Effects System
+        function initializeWeatherEffects() {
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    createWeatherEffect();
+                }
+            }, 15000); // Change weather every 15 seconds
+        }
+
+        function createWeatherEffect() {
+            const weatherContainer = document.getElementById('weatherContainer');
+            const effects = ['rain', 'snow', 'sparkles'];
+            const effect = effects[Math.floor(Math.random() * effects.length)];
+            
+            // Clear previous weather
+            weatherContainer.innerHTML = '';
+            
+            if (effect === 'rain') {
+                for (let i = 0; i < 20; i++) {
+                    const drop = document.createElement('div');
+                    drop.className = 'rain-drop';
+                    drop.style.left = Math.random() * 100 + '%';
+                    drop.style.animationDelay = Math.random() * 2 + 's';
+                    weatherContainer.appendChild(drop);
+                }
+                showNotification("🌧️ It's raining! Koko loves the rain!");
+            } else if (effect === 'snow') {
+                for (let i = 0; i < 15; i++) {
+                    const flake = document.createElement('div');
+                    flake.className = 'snow-flake';
+                    flake.textContent = '❄️';
+                    flake.style.left = Math.random() * 100 + '%';
+                    flake.style.animationDelay = Math.random() * 8 + 's';
+                    weatherContainer.appendChild(flake);
+                }
+                showNotification("❄️ Snow is falling! So magical!");
+            } else {
+                for (let i = 0; i < 10; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'snow-flake';
+                    sparkle.textContent = '✨';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 6 + 's';
+                    weatherContainer.appendChild(sparkle);
+                }
+                showNotification("✨ Magical sparkles everywhere!");
+            }
+            
+            // Clear weather after 10 seconds
+            setTimeout(() => {
+                weatherContainer.innerHTML = '';
+            }, 10000);
+        }
+
+        function spawnRandomCollectibles() {
+            setInterval(() => {
+                if (Math.random() < 0.4) {
+                    const types = ['coin', 'gem', 'star', 'powerup'];
+                    const type = types[Math.floor(Math.random() * types.length)];
+                    
+                    // Check if this type already exists
+                    const existing = document.querySelector(`.collectible.${type}`);
+                    if (!existing) {
+                        respawnCollectible(type);
+                    }
+                }
+            }, 8000); // Check every 8 seconds
+        }
+
+        // Particle Effects
+        function createParticleEffects() {
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    createParticle();
+                }
+            }, 2000);
+        }
+
+        function createParticle() {
+            const particles = ['✨', '⭐', '💫', '🌟', '💖', '🦋'];
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            particle.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 3000);
+        }
+
+        // Character Interactions
+        function interactWithCharacter(event) {
+            event.stopPropagation();
+            const character = document.getElementById('mainCharacter');
+            
+            // Add bounce animation
+            character.style.animation = 'none';
+            setTimeout(() => {
+                character.style.animation = 'characterIdle 3s ease-in-out infinite';
+            }, 100);
+            
+            // Create interaction effects
+            createInteractionEffect(event.clientX, event.clientY, '💕');
+            
+            // Update happiness
+            gameState.player.happiness = Math.min(100, gameState.player.happiness + 2);
+            updateUI();
+            
+            // Show random interaction message
+            const messages = [
+                "Koko loves your attention! 💕",
+                "Koko is so happy to see you! 🌟",
+                "Koko wants to play! 🎈",
+                "Koko learned something new! 📚"
+            ];
+            showNotification(messages[Math.floor(Math.random() * messages.length)]);
+        }
+
+        function interactWithElement(elementType, event) {
+            event.stopPropagation();
+            
+            const interactions = {
+                tree: {
+                    effect: '🍃',
+                    message: "You found some leaves! Koko loves nature! 🌿",
+                    reward: { stickers: 10 }
+                },
+                flower: {
+                    effect: '🌺',
+                    message: "Beautiful flowers! Koko's happiness increased! 🌸",
+                    reward: { hearts: 5 }
+                },
+                butterfly: {
+                    effect: '🦋',
+                    message: "A magical butterfly! You earned some stars! ✨",
+                    reward: { stars: 15 }
+                },
+                treasure: {
+                    effect: '💎',
+                    message: "Treasure found! Amazing discovery! 🏆",
+                    reward: { stickers: 25, hearts: 10, stars: 20 }
+                }
+            };
+            
+            const interaction = interactions[elementType];
+            if (interaction) {
+                createInteractionEffect(event.clientX, event.clientY, interaction.effect);
+                showNotification(interaction.message);
+                
+                // Award rewards
+                Object.entries(interaction.reward).forEach(([resource, amount]) => {
+                    gameState.resources[resource] += amount;
+                });
+                
+                updateUI();
+            }
+        }
+
+        function interactWithWorld(event) {
+            // Create ripple effect at click location
+            createRippleEffect(event.clientX, event.clientY);
+            
+            // Random world interactions
+            if (Math.random() < 0.2) {
+                const surprises = [
+                    { effect: '🌟', message: "You found a hidden star!" },
+                    { effect: '🎁', message: "A surprise gift appeared!" },
+                    { effect: '🦋', message: "A butterfly landed near you!" }
+                ];
+                
+                const surprise = surprises[Math.floor(Math.random() * surprises.length)];
+                createInteractionEffect(event.clientX, event.clientY, surprise.effect);
+                showNotification(surprise.message);
+            }
+        }
+
+        // Visual Effects
+        function createInteractionEffect(x, y, emoji) {
+            const effect = document.createElement('div');
+            effect.textContent = emoji;
+            effect.style.position = 'fixed';
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            effect.style.fontSize = '24px';
+            effect.style.pointerEvents = 'none';
+            effect.style.zIndex = '1000';
+            effect.style.animation = 'particleFloat 2s ease-out forwards';
+            
+            document.body.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 2000);
+        }
+
+        function createRippleEffect(x, y) {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'fixed';
+            ripple.style.left = (x - 25) + 'px';
+            ripple.style.top = (y - 25) + 'px';
+            ripple.style.width = '50px';
+            ripple.style.height = '50px';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255,255,255,0.5)';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.zIndex = '999';
+            ripple.style.animation = 'rippleExpand 0.6s ease-out forwards';
+            
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleExpand {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // UI Functions
+        function switchMode(mode) {
+            gameState.currentMode = mode;
+            
+            // Update active button
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.nav-button').classList.add('active');
+            
+            // Show mode-specific content
+            showModeContent(mode);
+        }
+
+        function showModeContent(mode) {
+            const content = {
+                play: {
+                    title: "🎮 Play Mode",
+                    description: "Choose a fun mini-game to play with Koko!",
+                    activities: [
+                        { name: "🎯 Target Practice", desc: "Help Koko hit the targets!" },
+                        { name: "🧩 Puzzle Time", desc: "Solve puzzles together!" },
+                        { name: "🎵 Music Maker", desc: "Create beautiful melodies!" },
+                        { name: "🏃 Adventure Run", desc: "Run and collect treasures!" }
+                    ]
+                },
+                learn: {
+                    title: "📚 Learn Mode",
+                    description: "Educational adventures await!",
+                    activities: [
+                        { name: "🔢 Math Magic", desc: "Learn numbers with fun!" },
+                        { name: "🔤 Letter Land", desc: "Explore the alphabet!" },
+                        { name: "🌍 World Explorer", desc: "Discover amazing places!" },
+                        { name: "🔬 Science Lab", desc: "Conduct cool experiments!" }
+                    ]
+                },
+                create: {
+                    title: "🎨 Create Mode",
+                    description: "Express your creativity!",
+                    activities: [
+                        { name: "🖌️ Art Studio", desc: "Paint beautiful pictures!" },
+                        { name: "🏗️ Builder Mode", desc: "Build amazing structures!" },
+                        { name: "📖 Story Writer", desc: "Create your own stories!" },
+                        { name: "🎭 Costume Designer", desc: "Design outfits for Koko!" }
+                    ]
+                },
+                explore: {
+                    title: "🗺️ Explore Mode",
+                    description: "Discover new worlds!",
+                    activities: [
+                        { name: "🏔️ Mountain Peak", desc: "Climb to new heights!" },
+                        { name: "🏖️ Sunny Beach", desc: "Play in the sand!" },
+                        { name: "🌲 Magic Forest", desc: "Find hidden treasures!" },
+                        { name: "🏰 Castle Adventure", desc: "Explore the royal castle!" }
+                    ]
+                },
+                social: {
+                    title: "👫 Friends Mode",
+                    description: "Connect with other players!",
+                    activities: [
+                        { name: "👋 Say Hello", desc: "Meet new friends!" },
+                        { name: "🎁 Send Gifts", desc: "Share with others!" },
+                        { name: "🏆 Competitions", desc: "Friendly challenges!" },
+                        { name: "📸 Photo Share", desc: "Show your adventures!" }
+                    ]
+                }
+            };
+            
+            showModal(content[mode]);
+        }
+
+        function showModal(content) {
+            const modal = document.getElementById('gameModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <h2 style="font-family: 'Fredoka One', cursive; color: #2D3436; margin-bottom: 20px; text-align: center;">
+                    ${content.title}
+                </h2>
+                <p style="text-align: center; margin-bottom: 25px; color: #636E72; font-size: 14px;">
+                    ${content.description}
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    ${content.activities.map(activity => `
+                        <div class="activity-card touch-feedback" onclick="startActivity('${activity.name}')" style="margin-bottom: 0;">
+                            <div class="activity-title">${activity.name}</div>
+                            <div class="activity-description">${activity.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button onclick="closeModal()" style="
+                    background: linear-gradient(135deg, #FF6B9D, #C44569);
+                    border: none;
+                    border-radius: 15px;
+                    padding: 12px 25px;
+                    color: white;
+                    font-family: 'Nunito', sans-serif;
+                    font-weight: 700;
+                    cursor: pointer;
+                    margin: 20px auto 0;
+                    display: block;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    Close
+                </button>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        function startActivity(activityName) {
+            closeModal();
+            showNotification(`Starting ${activityName}! Get ready for fun! 🎉`);
+            
+            // Award XP for starting activities
+            gameState.player.xp += 10;
+            gameState.resources.stickers += 5;
+            updateUI();
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.background = 'linear-gradient(135deg, #00B894, #00CEC9)';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 25px';
+            notification.style.borderRadius = '25px';
+            notification.style.fontFamily = "'Nunito', sans-serif";
+            notification.style.fontWeight = '600';
+            notification.style.fontSize = '14px';
+            notification.style.zIndex = '2000';
+            notification.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+            notification.style.animation = 'slideDown 0.5s ease-out, fadeOut 0.5s ease-out 2.5s forwards';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function updateUI() {
+            document.getElementById('stickers').textContent = gameState.resources.stickers;
+            document.getElementById('hearts').textContent = gameState.resources.hearts;
+            document.getElementById('stars').textContent = gameState.resources.stars;
+        }
+
+        // Quest Functions
+        function startQuest(questType) {
+            const quests = {
+                play: "Let's play some mini-games! 🎮",
+                learn: "Time for a learning adventure! 📚",
+                explore: "Let's explore new places! 🗺️"
+            };
+            
+            showNotification(quests[questType]);
+            showModeContent(questType);
+        }
+
+        // Resource Functions
+        function showResourceInfo(resourceType) {
+            const info = {
+                stickers: "🎁 Stickers - Earn by completing activities and quests!",
+                hearts: "💕 Hearts - Show love to your critters to earn more!",
+                stars: "⭐ Stars - Unlock by achieving great things!"
+            };
+            
+            showNotification(info[resourceType]);
+        }
+
+        // Placeholder functions for existing features
+        function openCritterCollection() {
+            showNotification("🐾 Opening Critter Collection! Manage your adorable friends!");
+        }
+
+        function openBreedingLab() {
+            showNotification("🧬 Welcome to the Breeding Lab! Discover new critter combinations!");
+        }
+
+        function openStoryMode() {
+            showNotification("📖 Continuing your story adventure! Chapter 1 awaits!");
+        }
+
+        function openAchievements() {
+            showNotification("🏆 Achievement Gallery opened! Check your progress!");
+        }
+
+        function claimDailyReward() {
+            gameState.resources.stickers += 50;
+            gameState.resources.hearts += 25;
+            gameState.resources.stars += 75;
+            updateUI();
+            showNotification("🎉 Daily reward claimed! Come back tomorrow for more!");
+        }
+
+        function unlockCritter(critterName) {
+            showNotification(`🐰 ${critterName} wants to be your friend! Complete the friendship quest!`);
+        }
+
+        // Background Animations
+        function startBackgroundAnimations() {
+            // Add more dynamic background effects
+            setInterval(() => {
+                if (Math.random() < 0.1) {
+                    createRandomFloatingElement();
+                }
+            }, 5000);
+        }
+
+        function createRandomFloatingElement() {
+            const elements = ['🌟', '✨', '💫', '🦋', '🌸', '🍃'];
+            const element = document.createElement('div');
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            element.className = 'floating-element';
+            element.style.position = 'fixed';
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.top = '-50px';
+            element.style.fontSize = (Math.random() * 15 + 20) + 'px';
+            element.style.animation = 'float 10s linear forwards';
+            element.style.zIndex = '1';
+            
+            document.body.appendChild(element);
+            
+            setTimeout(() => {
+                element.remove();
+            }, 10000);
+        }
+
+        // Add fade out animation
+        const additionalStyle = document.createElement('style');
+        additionalStyle.textContent = `
+            @keyframes fadeOut {
+                0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(additionalStyle);
+
+        // Initialize the game when page loads
+        document.addEventListener('DOMContentLoaded', initGame);
+
+        // Handle modal clicks
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

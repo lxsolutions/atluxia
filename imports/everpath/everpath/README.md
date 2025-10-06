@@ -2,6 +2,10 @@
 
 A cross-platform Career & Education app for all ages that continuously closes the gap between what a user *wants to be* and where their **skills/experience** are today.
 
+## 🚀 v0 Foundations Complete!
+
+The v0 foundations are now complete and ready for development. This includes the complete monorepo infrastructure, backend API with authentication, pathing engine, frontend applications, and comprehensive documentation.
+
 ## 🎯 Vision
 
 For kids who are too young to work, EverPath focuses on **Education** (it can replace school/homeschool); for working‑age users, EverPath recommends and prepares them for the **best next jobs** and provides **learning plans** to upskill toward their desired role.

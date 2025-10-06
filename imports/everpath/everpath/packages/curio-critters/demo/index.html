@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .demo-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .quest-simulator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .creature-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 15px;
+        }
+
+        .creature-avatar {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        .creature-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .daily-quests {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .quest-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quest-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .quest-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .quest-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .quest-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .demo-controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .assessment-demo {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .answer-option.selected {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .curriculum-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .subject-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .completion-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#4CAF50 0deg 216deg, #e0e0e0 216deg 360deg);
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+        }
+
+        @media (max-width: 768px) {
+            .quest-simulator {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-button {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>🐾 Curio Critters</h1>
+            <p>Magical Creature Adventures Await!</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>🏠 Sparkle's World</h2>
+            <p>Take care of your adorable creature and explore magical places together!</p>
+            <div class="curriculum-overview">
+                <div class="subject-card">
+                    <span class="subject-icon">🍎</span>
+                    <h4>Kitchen</h4>
+                    <div class="completion-ring">75%</div>
+                    <p>Feed Sparkle yummy treats!</p>
+                </div>
+                <div class="subject-card">
+                    <span class="subject-icon">🛁</span>
+                    <h4>Bathroom</h4>
+                    <div class="completion-ring">82%</div>
+                    <p>Bubble baths & grooming fun!</p>
+                </div>
+                <div class="subject-card">
+                    <span class="subject-icon">🎮</span>
+                    <h4>Playroom</h4>
+                    <div class="completion-ring">68%</div>
+                    <p>Games & toys for Sparkle!</p>
+                </div>
+                <div class="subject-card">
+                    <span class="subject-icon">🛏️</span>
+                    <h4>Bedroom</h4>
+                    <div class="completion-ring">71%</div>
+                    <p>Cozy sleeping & decorating!</p>
+                </div>
+                <div class="subject-card">
+                    <span class="subject-icon">🌳</span>
+                    <h4>Garden</h4>
+                    <div class="completion-ring">89%</div>
+                    <p>Explore & discover together!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>🎮 Sparkle's Magical World</h2>
+            <div class="quest-simulator">
+                <div class="creature-display">
+                    <div class="creature-avatar" id="creatureAvatar">🐉</div>
+                    <h3 id="creatureName">Sparkle the Dragon</h3>
+                    <p>Level 5 • Grade 2</p>
+                    <div class="creature-stats">
+                        <div class="stat-bar">
+                            <div>💖 Happiness</div>
+                            <div>85/100</div>
+                        </div>
+                        <div class="stat-bar">
+                            <div>🧠 Intelligence</div>
+                            <div>78/100</div>
+                        </div>
+                        <div class="stat-bar">
+                            <div>⚡ Energy</div>
+                            <div>92/100</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="daily-quests">
+                    <h3>🐾 Sparkle Needs Your Help!</h3>
+                    <div class="quest-item" onclick="completeQuest(this)">
+                        <span class="quest-icon">🍎</span>
+                        <div class="quest-info">
+                            <h4>Feeding Time!</h4>
+                            <p>Sparkle is hungry! Give him the right amount of berries!</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quest-item" onclick="completeQuest(this)">
+                        <span class="quest-icon">🛁</span>
+                        <div class="quest-info">
+                            <h4>Bubble Bath Fun!</h4>
+                            <p>Sparkle got muddy playing! Time for a bubbly bath!</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quest-item" onclick="completeQuest(this)">
+                        <span class="quest-icon">🎮</span>
+                        <div class="quest-info">
+                            <h4>Playtime Games!</h4>
+                            <p>Sparkle wants to play hide and seek with you!</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quest-item" onclick="completeQuest(this)">
+                        <span class="quest-icon">🛏️</span>
+                        <div class="quest-info">
+                            <h4>Room Decorating!</h4>
+                            <p>Help make Sparkle's bedroom super cozy and pretty!</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="assessment-demo">
+            <h2>🍎 Help Sparkle Count His Berries!</h2>
+            <p>Sparkle is so excited about his snacks! Can you help him figure out how many berries he has?</p>
+            <div class="question-card">
+                <h4>🫐 Berry Counting Game</h4>
+                <p><strong>Sparkle loves berries!</strong> He found 8 yummy berries in the garden. Then he ate 3 of them because he was so hungry! How many berries does Sparkle have left to save for later?</p>
+                <div class="answer-option" onclick="selectAnswer(this)">🍓 11 berries</div>
+                <div class="answer-option" onclick="selectAnswer(this)">🫐 5 berries</div>
+                <div class="answer-option" onclick="selectAnswer(this)">🍇 3 berries</div>
+                <div class="answer-option" onclick="selectAnswer(this)">🍒 8 berries</div>
+            </div>
+        </div>
+
+        <div class="demo-controls">
+            <button class="demo-button" onclick="generateNewQuests()">🏠 Check Other Rooms</button>
+            <button class="demo-button" onclick="evolveCreature()">✨ Watch Sparkle Grow</button>
+            <button class="demo-button" onclick="showReport()">📖 Sparkle's Photo Album</button>
+        </div>
+    </div>
+
+    <script>
+        let questsCompleted = 0;
+        let creatureLevel = 5;
+        const creatures = ['🐉', '🦄', '🐸', '🦋', '🐱', '🐶'];
+        const names = ['Sparkle', 'Rainbow', 'Buddy', 'Luna', 'Max', 'Bella'];
+
+        function completeQuest(questElement) {
+            const progressBar = questElement.querySelector('.progress-fill');
+            const currentProgress = parseInt(progressBar.style.width) || 0;
+            
+            if (currentProgress < 100) {
+                const newProgress = Math.min(100, currentProgress + 25);
+                progressBar.style.width = newProgress + '%';
+                
+                if (newProgress === 100) {
+                    questElement.style.background = 'linear-gradient(135deg, #c8e6c9, #a5d6a7)';
+                    questsCompleted++;
+                    updateCreatureStats();
+                    
+                    showNotification('🎉 Adventure Complete! Sparkle gained magical power!');
+                }
+            }
+        }
+
+        function updateCreatureStats() {
+            const happiness = Math.min(100, 85 + questsCompleted * 3);
+            const intelligence = Math.min(100, 78 + questsCompleted * 4);
+            const energy = Math.max(50, 92 - questsCompleted * 2);
+            
+            const stats = document.querySelectorAll('.stat-bar div:last-child');
+            stats[0].textContent = `${happiness}/100`;
+            stats[1].textContent = `${intelligence}/100`;
+            stats[2].textContent = `${energy}/100`;
+        }
+
+        function selectAnswer(option) {
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            option.classList.add('selected');
+            
+            setTimeout(() => {
+                if (option.textContent.includes('5 stickers')) {
+                    showNotification('🎉 Amazing! Sparkle learned a new magic spell!');
+                    option.style.background = '#c8e6c9';
+                } else {
+                    showNotification('🤔 Hmm, let\'s try again! Count with Sparkle: 8 - 3 = ?');
+                    option.style.background = '#ffcdd2';
+                }
+            }, 500);
+        }
+
+        function generateNewQuests() {
+            showNotification('🏠 Sparkle wants to explore different rooms...');
+            
+            setTimeout(() => {
+                const questTitles = [
+                    'Snack Time!',
+                    'Grooming Session!',
+                    'Toy Box Fun!',
+                    'Nap Time Setup!',
+                    'Garden Adventure!'
+                ];
+                
+                const questDescriptions = [
+                    'Sparkle wants his favorite treats! Help him choose!',
+                    'Time to brush Sparkle\'s fur and make him sparkly!',
+                    'Sparkle found new toys to play with! Join the fun!',
+                    'Make Sparkle\'s bed super cozy for nap time!',
+                    'Explore the garden and find cool stuff with Sparkle!'
+                ];
+                
+                const questItems = document.querySelectorAll('.quest-item');
+                questItems.forEach((item, index) => {
+                    if (index < questTitles.length) {
+                        const title = item.querySelector('h4');
+                        const description = item.querySelector('p');
+                        title.textContent = questTitles[index];
+                        description.textContent = questDescriptions[index];
+                        
+                        const progressBar = item.querySelector('.progress-fill');
+                        progressBar.style.width = '0%';
+                        item.style.background = 'white';
+                    }
+                });
+                
+                showNotification('🐾 Sparkle is so excited to spend time with you!');
+            }, 1500);
+        }
+
+        function evolveCreature() {
+            if (questsCompleted >= 2) {
+                creatureLevel++;
+                const randomCreature = creatures[Math.floor(Math.random() * creatures.length)];
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                
+                document.getElementById('creatureAvatar').textContent = randomCreature;
+                document.getElementById('creatureName').textContent = `${randomName} the ${getCreatureType(randomCreature)}`;
+                
+                showNotification(`🎉 WOW! ${randomName} evolved into a Level ${creatureLevel} magical creature!`);
+                questsCompleted = 0;
+            } else {
+                showNotification('🌱 Complete more adventures to help your creature grow stronger!');
+            }
+        }
+
+        function getCreatureType(emoji) {
+            const types = {
+                '🐉': 'Dragon',
+                '🦄': 'Unicorn',
+                '🐸': 'Frog',
+                '🦋': 'Butterfly',
+                '🐱': 'Cat',
+                '🐶': 'Dog'
+            };
+            return types[emoji] || 'Creature';
+        }
+
+        function showReport() {
+            const reportData = {
+                totalPlayTime: '12.5 hours of fun this week',
+                activitiesCompleted: 23,
+                happinessLevel: '87%',
+                favoriteRoom: 'Kitchen',
+                exploreMore: 'Garden'
+            };
+            
+            const reportText = `📖 Sparkle's Photo Album:
+            
+🐾 Playtime Together: ${reportData.totalPlayTime}
+🎉 Fun Activities Done: ${reportData.activitiesCompleted}
+💖 Sparkle's Happiness: ${reportData.happinessLevel}
+🏠 Favorite Room: ${reportData.favoriteRoom}
+🌟 Room to Explore More: ${reportData.exploreMore}
+
+🎯 What Sparkle Wants to Do Next:
+• Try new yummy treats
+• Play 3 new games together
+• Decorate his room with cool stuff`;
+
+            alert(reportText);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 1000;
+                animation: slideIn 0.5s ease-out;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.5s ease-out reverse';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showNotification('🐾 Sparkle missed you! He\'s so happy you\'re here to play!');
+        });
+    </script>
+</body>
+</html>

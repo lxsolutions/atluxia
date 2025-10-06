@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters Ultimate Edition - The Complete Educational Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(180deg, #2d1b69 0%, #11998e 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ffd700;
+        }
+
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+
+        /* Game Mode Selector */
+        .mode-selector {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+            display: flex;
+            z-index: 200;
+        }
+
+        .mode-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border-bottom-color: #fff;
+        }
+
+        .mode-tab:not(.active) {
+            color: #ffd700;
+        }
+
+        .mode-tab:hover:not(.active) {
+            background: rgba(255,215,0,0.2);
+        }
+
+        /* Ultimate HUD */
+        .ultimate-hud {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 8px;
+            z-index: 100;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .player-avatar {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .player-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .level-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .level-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .xp-container {
+            width: 70px;
+        }
+
+        .xp-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid #ffd700;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4aa);
+            transition: width 0.5s ease;
+        }
+
+        .xp-text {
+            font-size: 7px;
+            color: #ffd700;
+            text-align: center;
+            margin-top: 1px;
+        }
+
+        .resources {
+            display: flex;
+            gap: 4px;
+            font-size: 8px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .resource-item:hover {
+            background: rgba(255,215,0,0.2);
+        }
+
+        /* Enhanced Stats */
+        .enhanced-stats {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+
+        .stat-mini {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stat-fill-mini {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .health-fill { background: linear-gradient(90deg, #ff4444, #ff6666); }
+        .mana-fill { background: linear-gradient(90deg, #4444ff, #6666ff); }
+        .stamina-fill { background: linear-gradient(90deg, #44ff44, #66ff66); }
+        .happiness-fill { background: linear-gradient(90deg, #ffd700, #ffed4e); }
+
+        /* Dragon Evolution Display */
+        .dragon-evolution-area {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .ultimate-dragon {
+            font-size: 90px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.6));
+            animation: dragonFloat 4s infinite ease-in-out;
+        }
+
+        .ultimate-dragon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(255,215,0,0.9));
+        }
+
+        @keyframes dragonFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-12px) rotate(2deg); }
+            50% { transform: translateY(-6px) rotate(0deg); }
+            75% { transform: translateY(-18px) rotate(-2deg); }
+        }
+
+        .dragon-status {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #ffd700;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            border: 2px solid #ffd700;
+        }
+
+        .dragon-title {
+            font-size: 11px;
+            color: #ff6b9d;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .evolution-progress {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid #ff6b9d;
+        }
+
+        .evolution-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #ff8e8e);
+            transition: width 0.5s ease;
+        }
+
+        .evolution-text {
+            position: absolute;
+            bottom: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        /* Advanced Inventory System */
+        .inventory-panel {
+            position: absolute;
+            top: 18%;
+            left: 5px;
+            width: 65px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .inventory-title {
+            font-size: 7px;
+            color: #ffd700;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2px;
+        }
+
+        .inventory-slot {
+            width: 16px;
+            height: 16px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #666;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .inventory-slot:hover {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+        }
+
+        .inventory-slot.has-item {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            border-color: #ffd700;
+        }
+
+        .item-quantity {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            background: #ff6b9d;
+            color: white;
+            font-size: 5px;
+            padding: 1px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        /* Enhanced Abilities */
+        .abilities-panel {
+            position: absolute;
+            bottom: 120px;
+            left: 8px;
+            right: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .ability-button {
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ability-button:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.05);
+        }
+
+        .ability-button.ready {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            box-shadow: 0 0 10px rgba(76,175,80,0.6);
+            animation: abilityReady 2s infinite ease-in-out;
+        }
+
+        @keyframes abilityReady {
+            0%, 100% { box-shadow: 0 0 10px rgba(76,175,80,0.6); }
+            50% { box-shadow: 0 0 16px rgba(76,175,80,0.9); }
+        }
+
+        .ability-level {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ff6b9d;
+            color: white;
+            font-size: 6px;
+            padding: 1px 2px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .ability-cooldown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            border-radius: 4px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 7px;
+            font-weight: bold;
+        }
+
+        /* Adventure Areas */
+        .adventure-areas {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px;
+        }
+
+        .area-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid transparent;
+            min-width: 35px;
+            position: relative;
+        }
+
+        .area-button:hover {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .area-button.available {
+            border-color: #4caf50;
+            background: rgba(76,175,80,0.1);
+        }
+
+        .area-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .area-label {
+            font-size: 6px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .area-level {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ff6b9d;
+            color: white;
+            font-size: 5px;
+            padding: 1px 2px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Educational Challenge Overlay */
+        .challenge-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .challenge-panel {
+            background: linear-gradient(145deg, #2d1b69, #11998e);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            max-width: 300px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            animation: challengeSlideIn 0.5s ease-out;
+        }
+
+        @keyframes challengeSlideIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .challenge-title {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .challenge-content {
+            color: white;
+            font-size: 12px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .challenge-area {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .challenge-visual {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .challenge-question {
+            color: #ffd700;
+            font-size: 11px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .answer-button {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .answer-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .answer-button.correct {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+        }
+
+        .answer-button.incorrect {
+            background: linear-gradient(135deg, #ff4444, #ff6666);
+        }
+
+        /* Enhanced Effects */
+        .floating-effect {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatEffect 2s ease-out forwards;
+            z-index: 1500;
+        }
+
+        .xp-effect { color: #00ff88; }
+        .gold-effect { color: #ffd700; }
+        .evolution-effect { color: #ff6b9d; }
+        .achievement-effect { color: #fff; }
+
+        @keyframes floatEffect {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1.3);
+            }
+        }
+
+        .particle-system {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particleFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-15px) rotate(180deg); opacity: 1; }
+        }
+
+        /* Achievement System */
+        .achievement-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2000;
+            opacity: 0;
+            animation: achievementPop 4s ease-out;
+            border: 2px solid #fff;
+        }
+
+        @keyframes achievementPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+
+        /* Parent Dashboard Button */
+        .parent-dashboard-btn {
+            position: absolute;
+            top: 45px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #ffd700;
+        }
+
+        .parent-dashboard-btn:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-screen">
+            <!-- Game Mode Selector -->
+            <div class="mode-selector">
+                <div class="mode-tab active" onclick="switchMode('adventure')" id="adventureTab">🏰 Adventure</div>
+                <div class="mode-tab" onclick="switchMode('care')" id="careTab">🐾 Pet Care</div>
+                <div class="mode-tab" onclick="switchMode('social')" id="socialTab">👥 Social</div>
+            </div>
+
+            <!-- Particle System -->
+            <div class="particle-system" id="particleSystem"></div>
+
+            <!-- Ultimate HUD -->
+            <div class="ultimate-hud">
+                <div class="top-bar">
+                    <div class="player-info">
+                        <div class="player-avatar" id="playerAvatar" onclick="showEvolutionMenu()">🐉</div>
+                        <div class="level-section">
+                            <div class="level-badge" id="levelBadge">Lv. 15 • P1</div>
+                            <div class="xp-container">
+                                <div class="xp-bar">
+                                    <div class="xp-fill" id="xpFill" style="width: 67%"></div>
+                                </div>
+                                <div class="xp-text" id="xpText">13,400 / 20,000</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resources">
+                        <div class="resource-item" onclick="showResourceDetails('gold')">
+                            <span>💰</span>
+                            <span id="goldAmount">12,847</span>
+                        </div>
+                        <div class="resource-item" onclick="showResourceDetails('gems')">
+                            <span>💎</span>
+                            <span id="gemAmount">347</span>
+                        </div>
+                        <div class="resource-item" onclick="showResourceDetails('energy')">
+                            <span>⚡</span>
+                            <span id="energyAmount">156</span>
+                        </div>
+                        <div class="resource-item" onclick="showResourceDetails('materials')">
+                            <span>🔮</span>
+                            <span id="materialAmount">89</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="enhanced-stats">
+                    <div class="stat-mini" title="Health">
+                        <div class="stat-fill-mini health-fill" id="healthFill" style="width: 92%"></div>
+                    </div>
+                    <div class="stat-mini" title="Mana">
+                        <div class="stat-fill-mini mana-fill" id="manaFill" style="width: 78%"></div>
+                    </div>
+                    <div class="stat-mini" title="Stamina">
+                        <div class="stat-fill-mini stamina-fill" id="staminaFill" style="width: 85%"></div>
+                    </div>
+                    <div class="stat-mini" title="Happiness">
+                        <div class="stat-fill-mini happiness-fill" id="happinessFill" style="width: 96%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent Dashboard Button -->
+            <div class="parent-dashboard-btn" onclick="openParentDashboard()" title="Parent Dashboard">
+                📊
+            </div>
+
+            <!-- Advanced Inventory -->
+            <div class="inventory-panel">
+                <div class="inventory-title">🎒 Items</div>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <!-- Inventory slots will be generated here -->
+                </div>
+            </div>
+
+            <!-- Dragon Evolution Display -->
+            <div class="dragon-evolution-area">
+                <div class="dragon-container">
+                    <div class="dragon-status" id="dragonStatus">Sparkle the Transcendent</div>
+                    <div class="ultimate-dragon" id="ultimateDragon" onclick="interactWithUltimateDragon()">🐲</div>
+                    <div class="dragon-title" id="dragonTitle">Transcendent Dragon Lord • Lv. 15</div>
+                    <div class="evolution-progress">
+                        <div class="evolution-fill" id="evolutionFill" style="width: 67%"></div>
+                    </div>
+                    <div class="evolution-text" id="evolutionText">Evolution: 670 / 1000</div>
+                </div>
+            </div>
+
+            <!-- Enhanced Abilities -->
+            <div class="abilities-panel">
+                <div class="ability-button ready" onclick="useUltimateAbility('dragonfire')" title="Dragon Fire Storm">
+                    🔥
+                    <div class="ability-level">7</div>
+                    <div class="ability-cooldown" id="dragonfire-cooldown"></div>
+                </div>
+                <div class="ability-button ready" onclick="useUltimateAbility('healing')" title="Divine Healing">
+                    ✨
+                    <div class="ability-level">5</div>
+                    <div class="ability-cooldown" id="healing-cooldown"></div>
+                </div>
+                <div class="ability-button ready" onclick="useUltimateAbility('shield')" title="Cosmic Shield">
+                    🛡️
+                    <div class="ability-level">6</div>
+                    <div class="ability-cooldown" id="shield-cooldown"></div>
+                </div>
+                <div class="ability-button ready" onclick="useUltimateAbility('lightning')" title="Thunder Storm">
+                    ⚡
+                    <div class="ability-level">8</div>
+                    <div class="ability-cooldown" id="lightning-cooldown"></div>
+                </div>
+                <div class="ability-button ready" onclick="useUltimateAbility('ultimate')" title="Dragon's Apocalypse">
+                    💥
+                    <div class="ability-level">3</div>
+                    <div class="ability-cooldown" id="ultimate-cooldown"></div>
+                </div>
+                <div class="ability-button ready" onclick="useUltimateAbility('evolution')" title="Evolution Burst">
+                    🌟
+                    <div class="ability-level">2</div>
+                    <div class="ability-cooldown" id="evolution-cooldown"></div>
+                </div>
+            </div>
+
+            <!-- Adventure Areas -->
+            <div class="adventure-areas">
+                <div class="area-button available" onclick="enterUltimateArea('forest')" id="forestArea">
+                    <div class="area-icon">🌲</div>
+                    <div class="area-label">Forest</div>
+                    <div class="area-level">8-12</div>
+                </div>
+                <div class="area-button available" onclick="enterUltimateArea('volcano')" id="volcanoArea">
+                    <div class="area-icon">🌋</div>
+                    <div class="area-label">Volcano</div>
+                    <div class="area-level">12-18</div>
+                </div>
+                <div class="area-button available" onclick="enterUltimateArea('castle')" id="castleArea">
+                    <div class="area-icon">🏰</div>
+                    <div class="area-label">Castle</div>
+                    <div class="area-level">15-22</div>
+                </div>
+                <div class="area-button available" onclick="enterUltimateArea('abyss')" id="abyssArea">
+                    <div class="area-icon">🕳️</div>
+                    <div class="area-label">Abyss</div>
+                    <div class="area-level">20-30</div>
+                </div>
+                <div class="area-button available" onclick="enterUltimateArea('heaven')" id="heavenArea">
+                    <div class="area-icon">☁️</div>
+                    <div class="area-label">Heaven</div>
+                    <div class="area-level">25+</div>
+                </div>
+                <div class="area-button" onclick="enterUltimateArea('shop')" id="shopArea">
+                    <div class="area-icon">🏪</div>
+                    <div class="area-label">Shop</div>
+                </div>
+                <div class="area-button" onclick="enterUltimateArea('guild')" id="guildArea">
+                    <div class="area-icon">🏛️</div>
+                    <div class="area-label">Guild</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Challenge Overlay -->
+        <div class="challenge-overlay" id="challengeOverlay">
+            <div class="challenge-panel" id="challengePanel">
+                <!-- Challenge content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ultimate Game State
+        let ultimateGameState = {
+            player: {
+                name: "DragonMaster",
+                level: 15,
+                prestige: 1,
+                xp: 13400,
+                xpToNext: 20000,
+                class: "Transcendent Dragon Lord",
+                evolutionPoints: 670,
+                evolutionToNext: 1000
+            },
+            stats: {
+                health: 2847,
+                maxHealth: 3100,
+                mana: 1567,
+                maxMana: 2000,
+                stamina: 1245,
+                maxStamina: 1460,
+                happiness: 96,
+                maxHappiness: 100
+            },
+            resources: {
+                gold: 12847,
+                gems: 347,
+                energy: 156,
+                materials: 89
+            },
+            dragon: {
+                form: "transcendent",
+                emoji: "🐲",
+                title: "Transcendent Dragon Lord",
+                mood: "ecstatic"
+            },
+            abilities: {
+                dragonfire: { level: 7, cooldown: 0, manaCost: 45, damage: 850 },
+                healing: { level: 5, cooldown: 0, manaCost: 60, healing: 400 },
+                shield: { level: 6, cooldown: 0, manaCost: 35, defense: 300 },
+                lightning: { level: 8, cooldown: 0, manaCost: 70, damage: 1200 },
+                ultimate: { level: 3, cooldown: 0, manaCost: 150, damage: 2500 },
+                evolution: { level: 2, cooldown: 0, manaCost: 100, evolutionBoost: 50 }
+            },
+            inventory: [
+                { name: "Dragon Scale", quantity: 45, type: "material", emoji: "🔮" },
+                { name: "Magic Crystal", quantity: 23, type: "material", emoji: "💎" },
+                { name: "Ancient Rune", quantity: 12, type: "material", emoji: "📜" },
+                { name: "Star Dust", quantity: 8, type: "material", emoji: "✨" },
+                { name: "Health Potion", quantity: 25, type: "consumable", emoji: "🧪" },
+                { name: "Mana Elixir", quantity: 18, type: "consumable", emoji: "🍶" },
+                { name: "Evolution Catalyst", quantity: 3, type: "special", emoji: "🌟" },
+                { name: "Wisdom Scroll", quantity: 7, type: "educational", emoji: "📚" },
+                { name: "Power Crystal", quantity: 15, type: "enhancement", emoji: "💎" }
+            ],
+            currentMode: "adventure"
+        };
+
+        // Enhanced Educational Content Database
+        const ultimateEducationalContent = {
+            math: [
+                {
+                    title: "🔥 Dragon's Mathematical Fire",
+                    question: "Your dragon breathes fire in patterns. If each flame lasts 3 seconds and you breathe 7 flames, how long does the entire fire breath last?",
+                    visual: "🔥".repeat(7),
+                    answers: [21, 18, 24, 15],
+                    correct: 0,
+                    explanation: "7 flames × 3 seconds each = 21 seconds total",
+                    bonus: "Perfect calculation! Your fire burns twice as hot!"
+                },
+                {
+                    title: "💎 Treasure Division Quest",
+                    question: "You found 144 magical gems! You want to share them equally among 12 dragon friends. How many gems does each friend get?",
+                    visual: "💎".repeat(12),
+                    answers: [12, 10, 14, 16],
+                    correct: 0,
+                    explanation: "144 ÷ 12 = 12 gems per friend",
+                    bonus: "Generous sharing increases your wisdom!"
+                }
+            ],
+            science: [
+                {
+                    title: "⚡ Lightning Magic Science",
+                    question: "Lightning travels at incredible speed! If you see lightning and hear thunder 5 seconds later, how far away was the lightning? (Sound travels about 1 mile every 5 seconds)",
+                    visual: "⚡🌩️⚡",
+                    answers: ["1 mile", "5 miles", "10 miles", "25 miles"],
+                    correct: 0,
+                    explanation: "5 seconds ÷ 5 seconds per mile = 1 mile away",
+                    bonus: "Scientific knowledge amplifies your lightning power!"
+                }
+            ],
+            reading: [
+                {
+                    title: "📜 Ancient Dragon Prophecy",
+                    question: "Read this ancient text: 'The brave dragon who shows kindness to all creatures shall unlock the greatest power.' What is the main message?",
+                    visual: "📜✨📜",
+                    answers: ["Kindness leads to true power", "Only brave dragons matter", "Power comes from fighting", "Ancient texts are mysterious"],
+                    correct: 0,
+                    explanation: "The prophecy teaches that kindness and bravery together create the greatest strength",
+                    bonus: "Understanding ancient wisdom unlocks hidden abilities!"
+                }
+            ]
+        };
+
+        // Enhanced creature interaction
+        function interactWithUltimateDragon() {
+            const dragon = document.getElementById('ultimateDragon');
+            
+            // Enhanced animation
+            dragon.style.animation = 'none';
+            dragon.offsetHeight;
+            dragon.style.animation = 'dragonFloat 1s ease';
+            
+            // Calculate rewards based on prestige and level
+            const baseXP = 75;
+            const prestigeMultiplier = 1 + (ultimateGameState.player.prestige * 0.5);
+            const xpGain = Math.floor(baseXP * prestigeMultiplier + Math.random() * 50);
+            const goldGain = Math.floor(50 * prestigeMultiplier + Math.random() * 30);
+            const evolutionGain = Math.floor(5 + Math.random() * 10);
+            
+            // Update resources
+            ultimateGameState.player.xp += xpGain;
+            ultimateGameState.resources.gold += goldGain;
+            ultimateGameState.player.evolutionPoints += evolutionGain;
+            
+            // Show floating effects
+            showFloatingEffect(`+${xpGain} XP`, "xp-effect");
+            showFloatingEffect(`+${goldGain} Gold`, "gold-effect");
+            showFloatingEffect(`+${evolutionGain} Evolution`, "evolution-effect");
+            
+            // Random material drops
+            if (Math.random() < 0.3) {
+                const randomItem = ultimateGameState.inventory[Math.floor(Math.random() * ultimateGameState.inventory.length)];
+                randomItem.quantity += Math.floor(Math.random() * 3) + 1;
+                showFloatingEffect(`+${randomItem.name}`, "achievement-effect");
+            }
+            
+            // Check for level up
+            if (ultimateGameState.player.xp >= ultimateGameState.player.xpToNext) {
+                levelUpUltimate();
+            }
+            
+            // Check for evolution
+            if (ultimateGameState.player.evolutionPoints >= ultimateGameState.player.evolutionToNext) {
+                triggerEvolution();
+            }
+            
+            // Random educational challenge
+            if (Math.random() < 0.15) {
+                showUltimateChallenge();
+            }
+            
+            updateUltimateDisplay();
+            createParticleEffect();
+        }
+
+        // Level up system
+        function levelUpUltimate() {
+            ultimateGameState.player.level++;
+            ultimateGameState.player.xp -= ultimateGameState.player.xpToNext;
+            ultimateGameState.player.xpToNext = Math.floor(ultimateGameState.player.xpToNext * 1.3);
+            
+            // Massive stat increases
+            ultimateGameState.stats.maxHealth += 150;
+            ultimateGameState.stats.health = ultimateGameState.stats.maxHealth;
+            ultimateGameState.stats.maxMana += 100;
+            ultimateGameState.stats.mana = ultimateGameState.stats.maxMana;
+            ultimateGameState.stats.maxStamina += 80;
+            ultimateGameState.stats.stamina = ultimateGameState.stats.maxStamina;
+            
+            // Ability level ups
+            Object.keys(ultimateGameState.abilities).forEach(ability => {
+                if (Math.random() < 0.4) {
+                    ultimateGameState.abilities[ability].level++;
+                    ultimateGameState.abilities[ability].damage = Math.floor(ultimateGameState.abilities[ability].damage * 1.2);
+                }
+            });
+            
+            showFloatingEffect("LEVEL UP!", "achievement-effect");
+            showAchievementPopup("Level Master!", `Reached Level ${ultimateGameState.player.level}! 🎉`);
+            
+            // Screen shake effect
+            document.querySelector('.game-screen').style.animation = 'screenShake 0.5s ease-in-out';
+            setTimeout(() => {
+                document.querySelector('.game-screen').style.animation = '';
+            }, 500);
+        }
+
+        // Evolution system
+        function triggerEvolution() {
+            showFloatingEffect("EVOLUTION!", "evolution-effect");
+            showAchievementPopup("Evolution Complete!", "Your dragon has evolved! 🌟");
+            
+            ultimateGameState.player.evolutionPoints -= ultimateGameState.player.evolutionToNext;
+            ultimateGameState.player.evolutionToNext += 500;
+            
+            // Massive stat boost
+            ultimateGameState.stats.maxHealth += 300;
+            ultimateGameState.stats.maxMana += 200;
+            ultimateGameState.stats.maxStamina += 150;
+            ultimateGameState.stats.health = ultimateGameState.stats.maxHealth;
+            ultimateGameState.stats.mana = ultimateGameState.stats.maxMana;
+            ultimateGameState.stats.stamina = ultimateGameState.stats.maxStamina;
+        }
+
+        // Use ultimate abilities
+        function useUltimateAbility(abilityName) {
+            const ability = ultimateGameState.abilities[abilityName];
+            
+            if (ability.cooldown > 0 || ultimateGameState.stats.mana < ability.manaCost) {
+                showFloatingEffect("Not ready!", "achievement-effect");
+                return;
+            }
+            
+            // Use mana
+            ultimateGameState.stats.mana -= ability.manaCost;
+            
+            // Ability effects
+            switch(abilityName) {
+                case 'dragonfire':
+                    showFloatingEffect(`🔥 ${ability.damage} FIRE DMG`, "xp-effect");
+                    break;
+                case 'healing':
+                    ultimateGameState.stats.health = Math.min(
+                        ultimateGameState.stats.maxHealth,
+                        ultimateGameState.stats.health + ability.healing
+                    );
+                    showFloatingEffect(`✨ +${ability.healing} HP`, "gold-effect");
+                    break;
+                case 'shield':
+                    showFloatingEffect(`🛡️ +${ability.defense} SHIELD`, "achievement-effect");
+                    break;
+                case 'lightning':
+                    showFloatingEffect(`⚡ ${ability.damage} THUNDER`, "xp-effect");
+                    break;
+                case 'ultimate':
+                    showFloatingEffect(`💥 ${ability.damage} APOCALYPSE!`, "evolution-effect");
+                    break;
+                case 'evolution':
+                    ultimateGameState.player.evolutionPoints += ability.evolutionBoost;
+                    showFloatingEffect(`🌟 +${ability.evolutionBoost} EVOLUTION`, "evolution-effect");
+                    break;
+            }
+            
+            // Set cooldown
+            ability.cooldown = 8 + ability.level;
+            startUltimateCooldown(abilityName);
+            
+            // Random educational challenge for powerful abilities
+            if (['ultimate', 'evolution'].includes(abilityName) && Math.random() < 0.6) {
+                setTimeout(() => showUltimateChallenge(), 1000);
+            }
+            
+            updateUltimateDisplay();
+        }
+
+        // Start ability cooldown
+        function startUltimateCooldown(abilityName) {
+            const cooldownElement = document.getElementById(`${abilityName}-cooldown`);
+            const button = cooldownElement.parentElement;
+            
+            button.classList.remove('ready');
+            cooldownElement.style.display = 'flex';
+            cooldownElement.textContent = ultimateGameState.abilities[abilityName].cooldown;
+            
+            const interval = setInterval(() => {
+                ultimateGameState.abilities[abilityName].cooldown--;
+                cooldownElement.textContent = ultimateGameState.abilities[abilityName].cooldown;
+                
+                if (ultimateGameState.abilities[abilityName].cooldown <= 0) {
+                    cooldownElement.style.display = 'none';
+                    button.classList.add('ready');
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        // Show ultimate educational challenge
+        function showUltimateChallenge() {
+            const subjects = Object.keys(ultimateEducationalContent);
+            const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+            const challenges = ultimateEducationalContent[randomSubject];
+            const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+            
+            const overlay = document.getElementById('challengeOverlay');
+            const panel = document.getElementById('challengePanel');
+            
+            panel.innerHTML = `
+                <div class="challenge-title">${challenge.title}</div>
+                <div class="challenge-content">Master this challenge for ultimate power!</div>
+                <div class="challenge-area">
+                    <div class="challenge-visual">${challenge.visual}</div>
+                    <div class="challenge-question">${challenge.question}</div>
+                    <div class="answer-grid">
+                        ${challenge.answers.map((answer, index) => 
+                            `<button class="answer-button" onclick="answerUltimateChallenge(${index}, ${challenge.correct}, '${challenge.explanation}', '${challenge.bonus}')">${answer}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 10px; color: #ccc;">
+                    Correct answers provide massive bonuses!
+                </div>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        // Answer ultimate challenge
+        function answerUltimateChallenge(selected, correct, explanation, bonus) {
+            const isCorrect = selected === correct;
+            const buttons = document.querySelectorAll('.answer-button');
+            
+            buttons.forEach((button, index) => {
+                if (index === correct) {
+                    button.classList.add('correct');
+                } else if (index === selected && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+                button.disabled = true;
+            });
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    // Massive rewards for correct answers
+                    const xpBonus = 500 + (ultimateGameState.player.level * 50);
+                    const goldBonus = 300 + (ultimateGameState.player.level * 25);
+                    const evolutionBonus = 25 + (ultimateGameState.player.level * 2);
+                    
+                    ultimateGameState.player.xp += xpBonus;
+                    ultimateGameState.resources.gold += goldBonus;
+                    ultimateGameState.player.evolutionPoints += evolutionBonus;
+                    
+                    showAchievementPopup("PERFECT ANSWER!", `${bonus}\n+${xpBonus} XP, +${goldBonus} Gold, +${evolutionBonus} Evolution!`);
+                } else {
+                    // Consolation rewards
+                    const xpBonus = 100;
+                    const goldBonus = 50;
+                    
+                    ultimateGameState.player.xp += xpBonus;
+                    ultimateGameState.resources.gold += goldBonus;
+                    
+                    showAchievementPopup("Good Try!", `${explanation}\n+${xpBonus} XP, +${goldBonus} Gold for trying!`);
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('challengeOverlay').style.display = 'none';
+                    updateUltimateDisplay();
+                }, 3000);
+            }, 2000);
+        }
+
+        // Switch game modes
+        function switchMode(mode) {
+            ultimateGameState.currentMode = mode;
+            
+            // Update tab appearance
+            document.querySelectorAll('.mode-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(mode + 'Tab').classList.add('active');
+            
+            // Mode-specific changes
+            switch(mode) {
+                case 'adventure':
+                    showFloatingEffect("Adventure Mode!", "achievement-effect");
+                    break;
+                case 'care':
+                    showFloatingEffect("Pet Care Mode!", "gold-effect");
+                    break;
+                case 'social':
+                    showFloatingEffect("Social Mode!", "xp-effect");
+                    break;
+            }
+        }
+
+        // Enter ultimate areas
+        function enterUltimateArea(area) {
+            switch(area) {
+                case 'shop':
+                    showFloatingEffect("Magic Shop coming soon!", "achievement-effect");
+                    break;
+                case 'guild':
+                    showFloatingEffect("Guild Hall coming soon!", "achievement-effect");
+                    break;
+                default:
+                    showFloatingEffect(`Entering ${area}...`, "xp-effect");
+                    // Trigger educational challenge for area exploration
+                    setTimeout(() => showUltimateChallenge(), 1000);
+                    break;
+            }
+        }
+
+        // Show floating effects
+        function showFloatingEffect(text, className) {
+            const effect = document.createElement('div');
+            effect.className = `floating-effect ${className}`;
+            effect.textContent = text;
+            effect.style.left = (Math.random() * 200 + 100) + 'px';
+            effect.style.top = (Math.random() * 100 + 200) + 'px';
+            
+            document.querySelector('.game-screen').appendChild(effect);
+            
+            setTimeout(() => {
+                if (effect.parentNode) {
+                    effect.parentNode.removeChild(effect);
+                }
+            }, 2000);
+        }
+
+        // Show achievement popup
+        function showAchievementPopup(title, description) {
+            const achievement = document.createElement('div');
+            achievement.className = 'achievement-popup';
+            achievement.innerHTML = `🏆 ${title}<br><small>${description}</small>`;
+            
+            document.querySelector('.game-screen').appendChild(achievement);
+            
+            setTimeout(() => {
+                if (achievement.parentNode) {
+                    achievement.parentNode.removeChild(achievement);
+                }
+            }, 4000);
+        }
+
+        // Create particle effects
+        function createParticleEffect() {
+            const particleSystem = document.getElementById('particleSystem');
+            
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const particles = ['✨', '🌟', '💫', '⭐', '🔥', '💎'];
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                
+                particleSystem.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 5000);
+            }
+        }
+
+        // Initialize inventory
+        function initializeInventory() {
+            const inventoryGrid = document.getElementById('inventoryGrid');
+            inventoryGrid.innerHTML = '';
+            
+            for (let i = 0; i < 9; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'inventory-slot';
+                
+                if (i < ultimateGameState.inventory.length) {
+                    const item = ultimateGameState.inventory[i];
+                    slot.classList.add('has-item');
+                    slot.textContent = item.emoji;
+                    slot.title = `${item.name} (${item.quantity})`;
+                    
+                    if (item.quantity > 1) {
+                        const quantity = document.createElement('div');
+                        quantity.className = 'item-quantity';
+                        quantity.textContent = item.quantity > 99 ? '99+' : item.quantity;
+                        slot.appendChild(quantity);
+                    }
+                }
+                
+                inventoryGrid.appendChild(slot);
+            }
+        }
+
+        // Helper functions
+        function showEvolutionMenu() {
+            showFloatingEffect("Evolution menu coming soon!", "evolution-effect");
+        }
+
+        function showResourceDetails(resource) {
+            showFloatingEffect(`${resource} details coming soon!`, "gold-effect");
+        }
+
+        function openParentDashboard() {
+            showFloatingEffect("Parent Dashboard coming soon!", "achievement-effect");
+        }
+
+        // Update ultimate display
+        function updateUltimateDisplay() {
+            // Update level and XP
+            document.getElementById('levelBadge').textContent = `Lv. ${ultimateGameState.player.level} • P${ultimateGameState.player.prestige}`;
+            document.getElementById('xpFill').style.width = `${(ultimateGameState.player.xp / ultimateGameState.player.xpToNext) * 100}%`;
+            document.getElementById('xpText').textContent = `${ultimateGameState.player.xp.toLocaleString()} / ${ultimateGameState.player.xpToNext.toLocaleString()}`;
+            
+            // Update resources
+            document.getElementById('goldAmount').textContent = ultimateGameState.resources.gold.toLocaleString();
+            document.getElementById('gemAmount').textContent = ultimateGameState.resources.gems;
+            document.getElementById('energyAmount').textContent = ultimateGameState.resources.energy;
+            document.getElementById('materialAmount').textContent = ultimateGameState.resources.materials;
+            
+            // Update stats
+            document.getElementById('healthFill').style.width = `${(ultimateGameState.stats.health / ultimateGameState.stats.maxHealth) * 100}%`;
+            document.getElementById('manaFill').style.width = `${(ultimateGameState.stats.mana / ultimateGameState.stats.maxMana) * 100}%`;
+            document.getElementById('staminaFill').style.width = `${(ultimateGameState.stats.stamina / ultimateGameState.stats.maxStamina) * 100}%`;
+            document.getElementById('happinessFill').style.width = `${ultimateGameState.stats.happiness}%`;
+            
+            // Update evolution
+            document.getElementById('evolutionFill').style.width = `${(ultimateGameState.player.evolutionPoints / ultimateGameState.player.evolutionToNext) * 100}%`;
+            document.getElementById('evolutionText').textContent = `Evolution: ${ultimateGameState.player.evolutionPoints} / ${ultimateGameState.player.evolutionToNext}`;
+            
+            // Update dragon status
+            document.getElementById('dragonStatus').textContent = `${ultimateGameState.player.name}'s ${ultimateGameState.dragon.title}`;
+            document.getElementById('dragonTitle').textContent = `${ultimateGameState.dragon.title} • Lv. ${ultimateGameState.player.level}`;
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            
+            // Ability hotkeys
+            if (key >= '1' && key <= '6') {
+                const abilities = ['dragonfire', 'healing', 'shield', 'lightning', 'ultimate', 'evolution'];
+                const abilityIndex = parseInt(key) - 1;
+                if (abilities[abilityIndex]) {
+                    useUltimateAbility(abilities[abilityIndex]);
+                }
+            }
+            
+            // Mode switching
+            if (key.toLowerCase() === 'q') switchMode('adventure');
+            if (key.toLowerCase() === 'w') switchMode('care');
+            if (key.toLowerCase() === 'e') switchMode('social');
+        });
+
+        // Initialize ultimate game
+        function initializeUltimateGame() {
+            updateUltimateDisplay();
+            initializeInventory();
+            
+            // Auto-regeneration
+            setInterval(() => {
+                ultimateGameState.stats.mana = Math.min(
+                    ultimateGameState.stats.maxMana,
+                    ultimateGameState.stats.mana + 10
+                );
+                ultimateGameState.stats.stamina = Math.min(
+                    ultimateGameState.stats.maxStamina,
+                    ultimateGameState.stats.stamina + 8
+                );
+                updateUltimateDisplay();
+            }, 3000);
+            
+            // Random events
+            setInterval(() => {
+                if (Math.random() < 0.08) {
+                    const events = [
+                        { message: "Ancient treasure! +500 Gold", gold: 500 },
+                        { message: "Cosmic energy! +100 Mana", mana: 100 },
+                        { message: "Dragon blessing! +300 XP", xp: 300 },
+                        { message: "Evolution surge! +25 Evolution", evolution: 25 }
+                    ];
+                    
+                    const event = events[Math.floor(Math.random() * events.length)];
+                    
+                    Object.keys(event).forEach(key => {
+                        if (key !== 'message') {
+                            if (key === 'xp') ultimateGameState.player.xp += event[key];
+                            else if (key === 'evolution') ultimateGameState.player.evolutionPoints += event[key];
+                            else if (key === 'mana') {
+                                ultimateGameState.stats.mana = Math.min(
+                                    ultimateGameState.stats.maxMana,
+                                    ultimateGameState.stats.mana + event[key]
+                                );
+                            }
+                            else if (ultimateGameState.resources[key] !== undefined) {
+                                ultimateGameState.resources[key] += event[key];
+                            }
+                        }
+                    });
+                    
+                    showFloatingEffect(event.message, "achievement-effect");
+                    updateUltimateDisplay();
+                }
+            }, 20000);
+            
+            // Welcome message
+            setTimeout(() => {
+                showAchievementPopup("Welcome to Ultimate Edition!", "The most advanced educational RPG ever created! 🌟");
+            }, 1000);
+        }
+
+        // Start the ultimate game
+        initializeUltimateGame();
+    </script>
+</body>
+</html>

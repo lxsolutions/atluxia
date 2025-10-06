@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters - Pet Care Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #4a5568;
+        }
+
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.3"/><circle cx="80" cy="30" r="1.5" fill="white" opacity="0.4"/><circle cx="60" cy="70" r="1" fill="white" opacity="0.3"/><circle cx="30" cy="80" r="2.5" fill="white" opacity="0.2"/></svg>');
+        }
+
+        .creature-area {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .creature {
+            font-size: 120px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        .creature:hover {
+            transform: scale(1.1);
+        }
+
+        .creature:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        .creature-name {
+            font-size: 24px;
+            color: #2d3748;
+            font-weight: bold;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        }
+
+        .stats-bar {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 8px;
+        }
+
+        .stat-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .happiness-fill { background: linear-gradient(90deg, #ff6b9d, #ff8e8e); }
+        .energy-fill { background: linear-gradient(90deg, #4ecdc4, #44a08d); }
+        .magic-fill { background: linear-gradient(90deg, #a8edea, #fed6e3); }
+
+        .stat-value {
+            font-size: 12px;
+            font-weight: bold;
+            color: #2d3748;
+            min-width: 30px;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 3px solid #e2e8f0;
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            min-width: 60px;
+        }
+
+        .nav-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .need-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .speech-bubble {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            max-width: 250px;
+            text-align: center;
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeInOut 4s infinite;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            20%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b9d;
+            animation: floatUp 2s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        .mini-game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .mini-game {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 300px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .mini-game h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .berry-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .berry {
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 5px;
+        }
+
+        .berry:hover {
+            transform: scale(1.2);
+        }
+
+        .berry:active {
+            transform: scale(0.9);
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .game-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .game-button:active {
+            transform: translateY(0);
+        }
+
+        .notification {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+            z-index: 2000;
+            opacity: 0;
+            animation: notificationPop 3s ease-out;
+        }
+
+        @keyframes notificationPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        .room-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: all 0.5s ease;
+        }
+
+        .room-kitchen {
+            background: linear-gradient(180deg, #FFE5B4 0%, #FFCCCB 100%);
+        }
+
+        .room-bathroom {
+            background: linear-gradient(180deg, #E0F6FF 0%, #B0E0E6 100%);
+        }
+
+        .room-playroom {
+            background: linear-gradient(180deg, #FFB6C1 0%, #FFA07A 100%);
+        }
+
+        .room-bedroom {
+            background: linear-gradient(180deg, #E6E6FA 0%, #DDA0DD 100%);
+        }
+
+        .room-garden {
+            background: linear-gradient(180deg, #98FB98 0%, #90EE90 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-screen">
+            <div class="room-background room-garden" id="roomBackground"></div>
+            
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-icon">💖</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill happiness-fill" id="happinessFill" style="width: 85%"></div>
+                    </div>
+                    <span class="stat-value" id="happinessValue">85</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill energy-fill" id="energyFill" style="width: 92%"></div>
+                    </div>
+                    <span class="stat-value" id="energyValue">92</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">✨</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill magic-fill" id="magicFill" style="width: 78%"></div>
+                    </div>
+                    <span class="stat-value" id="magicValue">78</span>
+                </div>
+            </div>
+
+            <!-- Speech Bubble -->
+            <div class="speech-bubble" id="speechBubble">
+                Hi! I'm so happy to see you! 🐾
+            </div>
+
+            <!-- Creature Area -->
+            <div class="creature-area">
+                <div class="creature" id="creature" onclick="petCreature()">🐉</div>
+                <div class="creature-name">Sparkle</div>
+            </div>
+
+            <!-- Floating Hearts -->
+            <div class="floating-hearts" id="floatingHearts"></div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav">
+                <button class="nav-button" onclick="switchRoom('kitchen')" id="feedButton">
+                    <div class="nav-icon">🍎</div>
+                    <div class="nav-label">Feed</div>
+                    <div class="need-indicator" id="feedNeed">!</div>
+                </button>
+                <button class="nav-button" onclick="switchRoom('bathroom')">
+                    <div class="nav-icon">🛁</div>
+                    <div class="nav-label">Clean</div>
+                </button>
+                <button class="nav-button" onclick="switchRoom('playroom')">
+                    <div class="nav-icon">🎮</div>
+                    <div class="nav-label">Play</div>
+                </button>
+                <button class="nav-button" onclick="switchRoom('bedroom')">
+                    <div class="nav-icon">🛏️</div>
+                    <div class="nav-label">Sleep</div>
+                </button>
+                <button class="nav-button" onclick="switchRoom('garden')">
+                    <div class="nav-icon">🌳</div>
+                    <div class="nav-label">Explore</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mini Game Overlay -->
+        <div class="mini-game-overlay" id="miniGameOverlay">
+            <div class="mini-game" id="miniGameContent">
+                <!-- Mini game content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRoom = 'garden';
+        let creatureStats = {
+            happiness: 85,
+            energy: 92,
+            magic: 78
+        };
+
+        const speechMessages = [
+            "I love spending time with you! 💕",
+            "Want to play a game together? 🎮",
+            "I'm getting a little hungry... 🍎",
+            "You're the best friend ever! ✨",
+            "Let's explore somewhere new! 🗺️",
+            "I feel so happy when you're here! 😊"
+        ];
+
+        let messageIndex = 0;
+
+        function updateSpeechBubble() {
+            const bubble = document.getElementById('speechBubble');
+            bubble.textContent = speechMessages[messageIndex];
+            messageIndex = (messageIndex + 1) % speechMessages.length;
+        }
+
+        function petCreature() {
+            const creature = document.getElementById('creature');
+            creature.style.animation = 'none';
+            creature.offsetHeight; // Trigger reflow
+            creature.style.animation = 'bounce 0.5s ease';
+            
+            // Create floating hearts
+            createFloatingHearts();
+            
+            // Increase happiness
+            creatureStats.happiness = Math.min(100, creatureStats.happiness + 2);
+            updateStats();
+            
+            showNotification("Sparkle loves your pets! 💕");
+        }
+
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            for (let i = 0; i < 3; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💕';
+                heart.style.left = (Math.random() * 60 - 30) + 'px';
+                heart.style.animationDelay = (i * 0.2) + 's';
+                container.appendChild(heart);
+                
+                setTimeout(() => {
+                    container.removeChild(heart);
+                }, 2000);
+            }
+        }
+
+        function switchRoom(room) {
+            currentRoom = room;
+            const background = document.getElementById('roomBackground');
+            background.className = `room-background room-${room}`;
+            
+            // Update creature based on room
+            const creature = document.getElementById('creature');
+            const bubble = document.getElementById('speechBubble');
+            
+            switch(room) {
+                case 'kitchen':
+                    bubble.textContent = "I'm so hungry! Can you feed me? 🍎";
+                    setTimeout(() => startFeedingGame(), 1000);
+                    break;
+                case 'bathroom':
+                    bubble.textContent = "Bath time! Let's get clean! 🛁";
+                    setTimeout(() => startBathGame(), 1000);
+                    break;
+                case 'playroom':
+                    bubble.textContent = "Let's play games together! 🎮";
+                    setTimeout(() => startPlayGame(), 1000);
+                    break;
+                case 'bedroom':
+                    bubble.textContent = "This room is so cozy! 🛏️";
+                    setTimeout(() => startDecorateGame(), 1000);
+                    break;
+                case 'garden':
+                    bubble.textContent = "I love exploring the garden! 🌳";
+                    setTimeout(() => startExploreGame(), 1000);
+                    break;
+            }
+        }
+
+        function startFeedingGame() {
+            const overlay = document.getElementById('miniGameOverlay');
+            const content = document.getElementById('miniGameContent');
+            
+            content.innerHTML = `
+                <h3>🍎 Feeding Time!</h3>
+                <p>Sparkle found some berries! Help him count how many he has!</p>
+                <div class="berry-container" id="berryContainer">
+                    🫐🫐🫐🫐🫐🫐🫐🫐
+                </div>
+                <p>Sparkle ate 3 berries. How many are left?</p>
+                <div>
+                    <button class="game-button" onclick="selectAnswer(3)">3 berries</button>
+                    <button class="game-button" onclick="selectAnswer(5)">5 berries</button>
+                    <button class="game-button" onclick="selectAnswer(8)">8 berries</button>
+                </div>
+                <button class="game-button" onclick="closeMiniGame()" style="background: #ccc;">Skip</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function startBathGame() {
+            const overlay = document.getElementById('miniGameOverlay');
+            const content = document.getElementById('miniGameContent');
+            
+            content.innerHTML = `
+                <h3>🛁 Bubble Bath Fun!</h3>
+                <p>Mix colors to make Sparkle's favorite purple bubbles!</p>
+                <div style="margin: 20px 0;">
+                    <button class="game-button" onclick="mixColors('red', 'blue')" style="background: linear-gradient(45deg, red, blue);">Red + Blue</button>
+                    <button class="game-button" onclick="mixColors('yellow', 'blue')" style="background: linear-gradient(45deg, yellow, blue);">Yellow + Blue</button>
+                    <button class="game-button" onclick="mixColors('red', 'yellow')" style="background: linear-gradient(45deg, red, yellow);">Red + Yellow</button>
+                </div>
+                <button class="game-button" onclick="closeMiniGame()" style="background: #ccc;">Skip</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function startPlayGame() {
+            const overlay = document.getElementById('miniGameOverlay');
+            const content = document.getElementById('miniGameContent');
+            
+            content.innerHTML = `
+                <h3>🎮 Hide and Seek!</h3>
+                <p>Sparkle is hiding! Follow the clues to find him!</p>
+                <div style="margin: 20px 0;">
+                    <p style="font-size: 18px;">🗺️ "Look where the flowers grow tall and the sun shines bright!"</p>
+                </div>
+                <div>
+                    <button class="game-button" onclick="findSparkle('garden')">🌳 Garden</button>
+                    <button class="game-button" onclick="findSparkle('kitchen')">🍎 Kitchen</button>
+                    <button class="game-button" onclick="findSparkle('bedroom')">🛏️ Bedroom</button>
+                </div>
+                <button class="game-button" onclick="closeMiniGame()" style="background: #ccc;">Skip</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function startDecorateGame() {
+            const overlay = document.getElementById('miniGameOverlay');
+            const content = document.getElementById('miniGameContent');
+            
+            content.innerHTML = `
+                <h3>🛏️ Room Decorating!</h3>
+                <p>Help make Sparkle's room cozy! What should we add?</p>
+                <div style="margin: 20px 0;">
+                    <button class="game-button" onclick="addDecoration('pillow')">🛋️ Soft Pillows</button>
+                    <button class="game-button" onclick="addDecoration('stars')">⭐ Glow Stars</button>
+                    <button class="game-button" onclick="addDecoration('plants')">🪴 Pretty Plants</button>
+                </div>
+                <button class="game-button" onclick="closeMiniGame()" style="background: #ccc;">Skip</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function startExploreGame() {
+            const overlay = document.getElementById('miniGameOverlay');
+            const content = document.getElementById('miniGameContent');
+            
+            content.innerHTML = `
+                <h3>🌳 Garden Adventure!</h3>
+                <p>Sparkle found something interesting! What do you think it is?</p>
+                <div style="margin: 20px 0;">
+                    <button class="game-button" onclick="discover('butterfly')">🦋 Beautiful Butterfly</button>
+                    <button class="game-button" onclick="discover('flower')">🌸 Magic Flower</button>
+                    <button class="game-button" onclick="discover('treasure')">💎 Hidden Treasure</button>
+                </div>
+                <button class="game-button" onclick="closeMiniGame()" style="background: #ccc;">Skip</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function selectAnswer(answer) {
+            if (answer === 5) {
+                showNotification("Perfect! Sparkle is so happy! 🎉");
+                creatureStats.happiness += 10;
+                creatureStats.energy += 5;
+                document.getElementById('feedNeed').style.display = 'none';
+            } else {
+                showNotification("Good try! Let's count together next time! 😊");
+                creatureStats.happiness += 5;
+            }
+            updateStats();
+            closeMiniGame();
+        }
+
+        function mixColors(color1, color2) {
+            if ((color1 === 'red' && color2 === 'blue') || (color1 === 'blue' && color2 === 'red')) {
+                showNotification("Amazing! You made purple bubbles! 💜");
+                creatureStats.magic += 10;
+            } else {
+                showNotification("Pretty colors! Let's try mixing again! 🌈");
+                creatureStats.magic += 5;
+            }
+            updateStats();
+            closeMiniGame();
+        }
+
+        function findSparkle(location) {
+            if (location === 'garden') {
+                showNotification("You found me! Great reading! 📚✨");
+                creatureStats.happiness += 10;
+                creatureStats.magic += 5;
+            } else {
+                showNotification("Not here, but good guess! Try again! 🔍");
+                creatureStats.happiness += 3;
+            }
+            updateStats();
+            closeMiniGame();
+        }
+
+        function addDecoration(item) {
+            showNotification(`Sparkle loves the ${item}! So creative! 🎨`);
+            creatureStats.happiness += 8;
+            creatureStats.magic += 7;
+            updateStats();
+            closeMiniGame();
+        }
+
+        function discover(item) {
+            const messages = {
+                butterfly: "A magical butterfly! So beautiful! 🦋",
+                flower: "A singing flower! It loves music! 🌸🎵",
+                treasure: "Wow! Ancient dragon treasure! 💎✨"
+            };
+            showNotification(messages[item]);
+            creatureStats.happiness += 8;
+            creatureStats.magic += 8;
+            updateStats();
+            closeMiniGame();
+        }
+
+        function closeMiniGame() {
+            document.getElementById('miniGameOverlay').style.display = 'none';
+        }
+
+        function updateStats() {
+            // Ensure stats don't exceed 100
+            Object.keys(creatureStats).forEach(stat => {
+                creatureStats[stat] = Math.min(100, creatureStats[stat]);
+            });
+
+            document.getElementById('happinessFill').style.width = creatureStats.happiness + '%';
+            document.getElementById('happinessValue').textContent = creatureStats.happiness;
+            
+            document.getElementById('energyFill').style.width = creatureStats.energy + '%';
+            document.getElementById('energyValue').textContent = creatureStats.energy;
+            
+            document.getElementById('magicFill').style.width = creatureStats.magic + '%';
+            document.getElementById('magicValue').textContent = creatureStats.magic;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.querySelector('.game-screen').appendChild(notification);
+            
+            setTimeout(() => {
+                document.querySelector('.game-screen').removeChild(notification);
+            }, 3000);
+        }
+
+        // Auto-update speech bubble
+        setInterval(updateSpeechBubble, 5000);
+
+        // Simulate creature needs
+        setInterval(() => {
+            // Slowly decrease stats to create needs
+            if (Math.random() < 0.3) {
+                creatureStats.happiness = Math.max(0, creatureStats.happiness - 1);
+                creatureStats.energy = Math.max(0, creatureStats.energy - 1);
+            }
+            
+            // Show need indicators
+            if (creatureStats.happiness < 50) {
+                document.getElementById('feedNeed').style.display = 'block';
+            }
+            
+            updateStats();
+        }, 10000);
+
+        // Initialize
+        updateSpeechBubble();
+    </script>
+</body>
+</html>

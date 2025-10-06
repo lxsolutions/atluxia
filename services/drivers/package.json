@@ -1,5 +1,5 @@
 {
-  "name": "@nomad-life/api-drivers",
+  "name": "@atluxia/drivers",
   "version": "1.0.0",
   "description": "Drivers API service for Nomad Life platform",
   "private": true,
@@ -20,7 +20,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@trpc/server": "^10.0.0",
-    "@nomad-life/contracts": "workspace:*",
+    "@atluxia/contracts": "workspace:*",
     "zod": "^3.0.0"
   },
   "devDependencies": {

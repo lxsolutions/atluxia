@@ -1,5 +1,5 @@
 {
-  "extends": "@everpath/tsconfig/react-library.json",
+  "extends": "@atluxia/everpath-tsconfig/react-library.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "node_modules"]
 }

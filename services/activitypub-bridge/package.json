@@ -1,5 +1,5 @@
 {
-  "name": "@polyverse/bridge-apub",
+  "name": "@atluxia/activitypub-bridge",
   "version": "1.0.0",
   "description": "ActivityPub to PVP bridge service",
   "main": "dist/index.js",

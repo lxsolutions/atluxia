@@ -1,5 +1,5 @@
 {
-  "name": "@nomad-life/api-vehicles",
+  "name": "@atluxia/vehicles",
   "version": "0.1.0",
   "private": true,
   "packageManager": "npm@10.9.0",
@@ -42,7 +42,7 @@
     "js-yaml": "^4.1.0",
     "sharp": "^0.33.0",
     "stripe": "^14.0.0",
-    "@nomad-life/db": "workspace:*"
+    "@atluxia/db": "workspace:*"
   },
   "engines": {
     "node": ">=20",

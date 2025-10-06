@@ -16,7 +16,7 @@
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^10.0.0",
     "@fastify/sensible": "^5.0.0",
-    "@polyverse/pvp-sdk-js": "workspace:*",
+    "@atluxia/opengrid-client": "workspace:*",
     "zod": "^3.22.4",
     "nanoid": "^3.3.7",
     "nats": "^2.26.0",

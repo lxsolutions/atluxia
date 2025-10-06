@@ -1,0 +1,101 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "type": "claim",
+      "text": "The synodic lunar month has an average duration of approximately 29.53 days.",
+      "confidence": 0.8529313603914378,
+      "conditional_view": null,
+      "id": "C001"
+    },
+    {
+      "type": "claim",
+      "text": "The lunar month is the time between two consecutive new moons.",
+      "confidence": 0.7065921139768864,
+      "conditional_view": null,
+      "id": "C002"
+    },
+    {
+      "type": "claim",
+      "text": "The synodic month includes all lunar phases: new moon, first quarter, full moon, and last quarter.",
+      "confidence": 0.7065921139768864,
+      "conditional_view": null,
+      "id": "C003"
+    },
+    {
+      "type": "evidence",
+      "source_url": "https://solarsystem.nasa.gov/moons/earths-moon/in-depth/",
+      "stance": "supports",
+      "quality_score": 0.9,
+      "id": "E001"
+    },
+    {
+      "type": "evidence",
+      "source_url": "https://www.usno.navy.mil/USNO/astronomical-applications/astronomical-information-center/earth-moon",
+      "stance": "supports",
+      "quality_score": 0.9,
+      "id": "E002"
+    },
+    {
+      "type": "evidence",
+      "source_url": "https://www.timeanddate.com/astronomy/moon/synodic-month.html",
+      "stance": "mixed/unclear",
+      "quality_score": 0.5,
+      "id": "E003"
+    },
+    {
+      "type": "root",
+      "text": "Primary documents and audited datasets have higher evidentiary value than secondary commentary.",
+      "root_type": "structural",
+      "lock_state": "HELD",
+      "id": "R100"
+    },
+    {
+      "type": "root",
+      "text": "History is typically narrated by winners; suppressed primary sources can revise consensus views.",
+      "root_type": "structural",
+      "lock_state": "HELD",
+      "id": "R102"
+    }
+  ],
+  "links": [
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C001",
+      "target": "E001"
+    },
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C001",
+      "target": "E002"
+    },
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C001",
+      "target": "E003"
+    },
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C002",
+      "target": "E001"
+    },
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C002",
+      "target": "E003"
+    },
+    {
+      "type": "supports_evidence",
+      "weight": 1.0,
+      "source": "C003",
+      "target": "E001"
+    }
+  ]
+}

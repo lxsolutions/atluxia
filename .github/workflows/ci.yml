@@ -1,0 +1,213 @@
+
+
+name: CI
+
+on:
+  push:
+    branches: [ main, monorepo/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'pnpm'
+
+    - name: Install pnpm
+      run: npm install -g pnpm@9
+
+    - name: Install dependencies
+      run: pnpm install
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'pnpm'
+    - run: npm install -g pnpm@9
+    - run: pnpm install
+    - run: pnpm lint
+
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'pnpm'
+    - run: npm install -g pnpm@9
+    - run: pnpm install
+    - run: pnpm build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'pnpm'
+    - run: npm install -g pnpm@9
+    - run: pnpm install
+    - run: pnpm test
+
+  go-tests:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+    - name: Test Relay Service
+      run: |
+        cd services/relay
+        go mod tidy
+        go test -v ./...
+
+  python-tests:
+    runs-on: ubuntu-latest
+    needs: setup
+    strategy:
+      matrix:
+        package: [truth-archive, aegisgov, ai-router, games-api]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        if [ -d "packages/${{ matrix.package }}" ]; then
+          cd packages/${{ matrix.package }}
+        elif [ -d "services/${{ matrix.package }}" ]; then
+          cd services/${{ matrix.package }}
+        fi
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        fi
+    - name: Run integration tests
+      run: |
+        if [ -d "packages/${{ matrix.package }}" ]; then
+          cd packages/${{ matrix.package }}
+        elif [ -d "services/${{ matrix.package }}" ]; then
+          cd services/${{ matrix.package }}
+        fi
+        if [ -f "test_integration.py" ]; then
+          python test_integration.py
+        elif [ -f "test.py" ]; then
+          python test.py
+        else
+          echo "No test files found for ${{ matrix.package }}"
+        fi
+
+  contracts-tests:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    - name: Install Hardhat dependencies
+      run: |
+        cd contracts/escrow
+        npm install
+    - name: Run contract tests
+      run: |
+        cd contracts/escrow
+        npx hardhat test
+
+  playwright-tests:
+    runs-on: ubuntu-latest
+    needs: [build, test, go-tests, python-tests, contracts-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'pnpm'
+    - run: npm install -g pnpm@9
+    - run: pnpm install
+    - name: Install Playwright browsers
+      run: |
+        cd apps/polyverse
+        npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: |
+        cd apps/polyverse
+        npm run test:e2e:ci
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [build, test, go-tests, python-tests, contracts-tests, playwright-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Build Relay Docker image
+      run: |
+        cd services/relay
+        docker build -t polyverse-relay:test .
+    - name: Build Indexer Docker image
+      run: |
+        cd services/indexer
+        docker build -t polyverse-indexer:test .
+    - name: Build Web Docker image
+      run: |
+        cd apps/polyverse
+        docker build -t polyverse-web:test .
+    - name: Build AI Router Docker image
+      run: |
+        cd services/ai-router
+        docker build -t polyverse-ai-router:test .
+    - name: Build Games API Docker image
+      run: |
+        cd services/games-api
+        docker build -t polyverse-games-api:test .
+    - name: Build Truth Graph Docker image
+      run: |
+        cd services/truth-graph
+        docker build -t polyverse-truth-graph:test .
+    - name: Build Reputation Docker image
+      run: |
+        cd services/reputation
+        docker build -t polyverse-reputation:test .
+    - name: Build Consensus Docker image
+      run: |
+        cd services/consensus
+        docker build -t polyverse-consensus:test .
+    - name: Build Media Docker image
+      run: |
+        cd services/media
+        docker build -t polyverse-media:test .
+    - name: Build Media Worker Docker image
+      run: |
+        cd services/media-worker
+        docker build -t polyverse-media-worker:test .
+    - name: Build Payments Docker image
+      run: |
+        cd services/payments
+        docker build -t polyverse-payments:test .
+

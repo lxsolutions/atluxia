@@ -1,0 +1,27 @@
+PolyVerse MVP has been deployed!
+
+{{- if .Values.web.enabled }}
+Access the web interface at: http://localhost:3002
+{{- end }}
+
+{{- if .Values.relay.enabled }}
+Relay service available at: http://localhost:3000
+{{- end }}
+
+{{- if .Values.indexer.enabled }}
+Indexer service available at: http://localhost:3001
+{{- end }}
+
+{{- if .Values.aiRouter.enabled }}
+AI Router service available at: http://localhost:8000
+{{- end }}
+
+To access the services, use port-forwarding:
+{{- if .Values.web.enabled }}
+kubectl port-forward svc/{{ .Release.Name }}-web 3002:3002
+{{- end }}
+
+Database connection:
+PostgreSQL: {{ .Release.Name }}-postgresql:5432
+Redis: {{ .Release.Name }}-redis-master:6379
+OpenSearch: {{ .Release.Name }}-opensearch:9200

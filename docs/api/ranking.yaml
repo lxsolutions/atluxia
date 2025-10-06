@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse Ranking API
+  description: API for feed ranking algorithms with transparency records
+  version: 0.1.0
+  contact:
+    name: LX Solutions
+    url: https://polyverse.social
+    email: dev@polyverse.social
+
+servers:
+  - url: http://localhost:3002
+    description: Development server
+  - url: https://indexer.polyverse.social
+    description: Production server
+
+tags:
+  - name: Ranking
+    description: Feed ranking algorithms and transparency
+  - name: Feed
+    description: Content feed endpoints
+
+paths:
+  /feed:
+    get:
+      tags:
+        - Feed
+      summary: Get content feed
+      description: Returns a ranked feed of content using the specified algorithm
+      operationId: getFeed
+      parameters:
+        - name: bundle
+          in: query
+          description: Ranking algorithm to use
+          required: false
+          schema:
+            type: string
+            enum: [chronological, author_weighted, multipolar_diversity, locality_first, recency_follow, diversity_dissent]
+            default: chronological
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: cursor
+          in: query
+          description: Pagination cursor
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: userId
+          in: query
+          description: User ID for personalized ranking
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Feed content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+          headers:
+            X-Transparency-Records:
+              description: JSON-encoded transparency records for the ranking
+              schema:
+                type: string
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ranking/bundles:
+    get:
+      tags:
+        - Ranking
+      summary: Get available ranking bundles
+      description: Returns a list of available ranking algorithms with metadata
+      operationId: getRankingBundles
+      responses:
+        '200':
+          description: List of ranking bundles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingBundle'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique event identifier
+        kind:
+          type: string
+          description: Event type
+          enum: [post, repost, follow, like, profile, wiki_edit, moderation_decision, transparency_record, note, truth_claim, truth_evidence, truth_counterclaim, confidence_report, playful_signal]
+        author_did:
+          type: string
+          description: Author decentralized identifier
+        signature:
+          type: string
+          description: Cryptographic signature
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        content:
+          type: object
+          description: Event content
+        refs:
+          type: array
+          description: Event references
+          items:
+            type: object
+
+    RankingBundle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Bundle identifier
+        name:
+          type: string
+          description: Human-readable name
+        description:
+          type: string
+          description: Algorithm description
+
+    TransparencyRecord:
+      type: object
+      properties:
+        postId:
+          type: string
+          description: Post identifier
+        bundleId:
+          type: string
+          description: Ranking bundle identifier
+        features:
+          type: object
+          description: Feature scores used in ranking
+          additionalProperties:
+            type: number
+        score:
+          type: number
+          description: Final ranking score
+        explanation:
+          type: array
+          description: Human-readable explanations
+          items:
+            type: string
+        signed_at:
+          type: string
+          format: date-time
+          description: Signature timestamp
+        sig:
+          type: string
+          description: Cryptographic signature
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+          nullable: true
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

@@ -1,0 +1,53 @@
+
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Evidence",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { 
+      "type": "string", 
+      "enum": ["url", "pdf", "transcript", "dataset", "primary_source", "secondary_source", "tertiary_source"]
+    },
+    "source": { "type": "string" },
+    "quote": { "type": ["string", "null"] },
+    "hash": { "type": ["string", "null"] },
+    "authoredBy": { "type": ["string", "null"] },
+    "methodId": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "author_pubkey": { "type": "string" },
+    "sig": { "type": "string" },
+    "retrieved_at": { "type": "string", "format": "date-time" },
+    "published_at": { "type": ["string", "null"], "format": "date-time" },
+    "outlet": { "type": ["string", "null"] },
+    "author": { "type": ["string", "null"] },
+    "geography": { "type": ["string", "null"] },
+    "language": { "type": "string", "default": "en" },
+    "media_type": { "type": "string", "default": "text/html" },
+    "content_hash": { "type": ["string", "null"] },
+    "spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": { "type": "integer" },
+          "end": { "type": "integer" }
+        },
+        "required": ["start", "end"]
+      }
+    },
+    "stance": { 
+      "type": "string", 
+      "enum": ["supports", "contradicts", "mixed", "unclear", "neutral"] 
+    },
+    "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "independence_group_id": { "type": ["string", "null"] },
+    "method_notes": { "type": ["string", "null"] }
+  },
+  "required": [
+    "id", "kind", "source", "created_at", "author_pubkey", "sig", "stance", "quality_score"
+  ]
+}
+
+

@@ -1,0 +1,35 @@
+
+
+
+
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "opengrid-cli"
+version = "0.1.0"
+description = "Command line interface for OpenGrid decentralized compute mesh"
+authors = ["OpenHands <openhands@all-hands.dev>"]
+license = "MIT"
+readme = "../README.md"
+packages = [{include = "opengrid"}]
+
+[tool.poetry.scripts]
+og = "opengrid.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.1.7"
+requests = "^2.31.0"
+ethers = {git = "https://github.com/ethers-io/ethers.py.git", branch = "master"}
+web3 = "^6.9.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.0.0"
+black = "^24.1.0"
+isort = "^5.12.0"
+
+

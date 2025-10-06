@@ -1,0 +1,29 @@
+
+
+
+agents:
+  constitution: {permissions: validate_only, risk_tier: 1}
+  preference: {permissions: read_only, risk_tier: 1}
+  planner: {permissions: simulate_only, risk_tier: 2}
+  mechanism: {permissions: propose_only, risk_tier: 2}
+  assurance: {permissions: veto_pause, risk_tier: 1}
+  explainer: {permissions: read_only, risk_tier: 1}
+  appeals: {permissions: pause_exec_update_ledger, risk_tier: 3}
+  treasury: {permissions: budget_caps_only, risk_tier: 2}
+  energy: {permissions: domain_limited, risk_tier: 2}
+  housing: {permissions: domain_limited, risk_tier: 2}
+workflows:
+  planning_cycle:
+    steps: [preference, planner, constitution, assurance, explainer]
+    trigger: cron_daily
+  execute_low_risk:
+    steps: [constitution, assurance, treasury, energy, housing]
+    preconditions: ["assurance.pass","impact_budget_pct < 1","no_active_appeals"]
+  propose_high_risk:
+    steps: [planner, constitution, assurance, human_approval]
+    preconditions: ["impact_budget_pct >= 1 or population_impact_pct > 5"]
+  appeals_flow:
+    steps: [appeals, pause_all, panel_decision, apply_resolution, ledger_update]
+    slas: {pause_minutes: 5, panel_hours: 48}
+
+

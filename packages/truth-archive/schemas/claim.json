@@ -1,0 +1,79 @@
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Claim",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "statement": { "type": "string" },
+    "topicTags": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "author_pubkey": { "type": "string" },
+    "sig": { "type": "string" },
+    "prevId": { "type": ["string", "null"] },
+    "lineage": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "evidenceRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "counterclaimRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "methodRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "attributionRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "confidenceReports": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ConfidenceReport" },
+      "default": []
+    },
+    "version": { "type": "integer", "minimum": 1 }
+  },
+  "required": [
+    "id", "title", "statement", "created_at", "author_pubkey", "sig"
+  ],
+  "definitions": {
+    "ConfidenceReport": {
+      "type": "object",
+      "properties": {
+        "lensId": { "type": "string" },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "intervals": {
+          "type": "object",
+          "properties": {
+            "lower": { "type": "number", "minimum": 0, "maximum": 1 },
+            "upper": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "inputs": { "type": "object" },
+        "dissentingViews": { 
+          "type": "array", 
+          "items": { "type": "string" },
+          "default": []
+        },
+        "computed_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["lensId", "score", "computed_at"]
+    }
+  }
+}
+

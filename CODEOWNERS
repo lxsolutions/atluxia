@@ -1,0 +1,19 @@
+
+# Default owners for the entire repository
+* @lxsolutions
+
+# Package-specific owners (if needed)
+/apps/polyverse/ @lxsolutions
+/services/opengrid/ @lxsolutions
+/packages/truth-archive/ @lxsolutions
+/packages/aegisgov/ @lxsolutions
+/packages/opengrid-client/ @lxsolutions
+/packages/truth-archive-js/ @lxsolutions
+
+# Documentation
+README.md @lxsolutions
+CONTRIBUTING.md @lxsolutions
+CODEOWNERS @lxsolutions
+
+# CI/CD configurations
+.github/ @lxsolutions

@@ -1,0 +1,69 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_live_stream_abc123",
+    "type": "live_stream",
+    "timestamp": "2023-10-01T14:00:00Z",
+    "actor": {
+      "id": "user_123",
+      "type": "user"
+    },
+    "action": "live_stream_created",
+    "resource": {
+      "id": "live_abc123def456",
+      "type": "live_stream",
+      "provider": "cloudflare-stream"
+    },
+    "context": {
+      "title": "My Live Stream",
+      "description": "Join me for a live session!",
+      "provider": "cloudflare-stream",
+      "recordingMode": "automatic",
+      "timeoutSeconds": 60,
+      "rtmpUrl": "rtmps://live.cloudflare.com:443/live",
+      "streamKey": "abc123def456",
+      "playbackUrl": "https://cloudflare-stream.com/live/abc123def456/manifest.m3u8"
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": null
+  },
+  "liveInput": {
+    "uid": "live_abc123def456",
+    "meta": {
+      "title": "My Live Stream",
+      "description": "Join me for a live session!"
+    },
+    "recording": {
+      "mode": "automatic",
+      "timeoutSeconds": 60
+    },
+    "rtmps": {
+      "url": "rtmps://live.cloudflare.com:443/live",
+      "streamKey": "abc123def456"
+    },
+    "playback": {
+      "hls": "https://cloudflare-stream.com/live/abc123def456/manifest.m3u8"
+    }
+  },
+  "mediaAsset": {
+    "id": "live_abc123def456",
+    "originalName": "My Live Stream",
+    "mimeType": "video/live",
+    "fileSize": 0,
+    "bucket": "cloudflare-stream",
+    "s3Key": "live_abc123def456",
+    "status": "ready",
+    "metadata": {
+      "mediaId": "live_abc123def456",
+      "title": "My Live Stream",
+      "description": "Join me for a live session!",
+      "cloudflareUid": "live_abc123def456",
+      "provider": "cloudflare-stream",
+      "isLive": true,
+      "rtmpUrl": "rtmps://live.cloudflare.com:443/live",
+      "streamKey": "abc123def456",
+      "playbackUrl": "https://cloudflare-stream.com/live/abc123def456/manifest.m3u8"
+    },
+    "createdAt": "2023-10-01T14:00:00Z",
+    "updatedAt": "2023-10-01T14:00:00Z"
+  }
+}

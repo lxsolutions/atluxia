@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Attribution",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "actorId": { "type": "string" },
+    "role": { 
+      "type": "string", 
+      "enum": ["assertor", "reviewer", "juror", "validator", "methodologist"]
+    },
+    "proof": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "contribution": { "type": "string" },
+    "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+    "context": { "type": ["string", "null"] },
+    "revoked": { "type": "boolean", "default": false },
+    "revoked_at": { "type": ["string", "null"], "format": "date-time" },
+    "revocation_reason": { "type": ["string", "null"] }
+  },
+  "required": [
+    "id", "actorId", "role", "created_at", "contribution"
+  ]
+}

@@ -1,0 +1,25 @@
+
+
+apiVersion: v1
+kind: Job
+name: pytorch-mnist-sample
+resources:
+  gpu: 0  # CPU-only for this micro-example
+  vram_gb: 0
+  cpu_cores: 2
+  ram_gb: 8
+  disk_gb: 10
+privacy:
+  mode: "public"
+image: "ghcr.io/opengrid/examples/pytorch-train:latest"
+cmd: ["python", "train.py", "--epochs", "1"]
+inputs: {}
+outputs:
+  to: ipfs
+billing:
+  max_price_per_hour_usd: 0.75
+  payment: "milestone"
+  verifier: quorum
+  redundancy: 2
+  deadline_s: 900
+

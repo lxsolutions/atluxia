@@ -1,0 +1,52 @@
+{
+  "id": "trans_rec_arena_001",
+  "timestamp": "2025-09-16T12:45:33.789Z",
+  "actorId": "did:web:games-api.polyverse.example",
+  "context": {
+    "system": "arena",
+    "operation": "playful_signal_emission",
+    "targetId": "dispute_sc2_202"
+  },
+  "inputs": {
+    "disputeId": "dispute_sc2_202",
+    "claimId": "claim_xyz789",
+    "winnerSide": "for",
+    "verificationMethod": "sc2_replay_analysis",
+    "participantCount": 2,
+    "stakeAmount": 50.00
+  },
+  "computation": {
+    "method": "playful_signal_generation",
+    "parameters": {
+      "maxInfluence": 0.02,
+      "baseAdjustment": 0.015,
+      "verificationConfidence": 0.95,
+      "participantReputation": 0.82
+    },
+    "features": {
+      "rawSignalStrength": 0.015,
+      "verificationImpact": 0.01425,
+      "reputationImpact": 0.0123,
+      "finalAdjustment": 0.0123
+    }
+  },
+  "output": {
+    "playfulSignal": {
+      "disputeId": "dispute_sc2_202",
+      "claimId": "claim_xyz789",
+      "argumentId": "arg_for_456",
+      "winnerSide": "for",
+      "confidenceAdjustment": 0.0123,
+      "matchMeta": {
+        "game": "SC2",
+        "verificationMethod": "sc2_replay_analysis",
+        "participantCount": 2,
+        "map": "Lost Temple",
+        "durationMinutes": 28
+      }
+    },
+    "explanation": "Arena dispute resolution resulted in 1.23% confidence adjustment for the 'for' position, well below the 2% entertainment cap"
+  },
+  "signature": "ed25519:xyz123abc456...",
+  "previousRecordId": "trans_rec_dispute_resolution_001"
+}

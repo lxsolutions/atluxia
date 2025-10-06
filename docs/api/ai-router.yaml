@@ -1,0 +1,363 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse AI Router API
+  description: API for the Truth Agent microagents and question answering with citations
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.example
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+components:
+  schemas:
+    TruthAgentRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The question to answer
+        maxTokens:
+          type: integer
+          default: 500
+          description: Maximum tokens for the response
+        temperature:
+          type: number
+          format: float
+          default: 0.7
+          description: Temperature for response generation
+
+    Citation:
+      type: object
+      required:
+        - url
+        - title
+        - quote
+        - accessedAt
+        - relevance_score
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL of the citation source
+        title:
+          type: string
+          description: Title of the citation
+        quote:
+          type: string
+          description: Relevant quote or excerpt
+        accessedAt:
+          type: string
+          format: date-time
+          description: When the citation was accessed
+        relevance_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Relevance score of the citation
+
+    TruthAgentResponse:
+      type: object
+      required:
+        - answer
+        - citations
+        - confidence
+      properties:
+        answer:
+          type: string
+          description: The composed answer with citations
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Citation'
+          description: Citations supporting the answer
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Confidence score for the answer
+        dissentingLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Links to dissenting or contradictory evidence
+        query_suggestions:
+          type: array
+          items:
+            type: string
+          description: Suggested alternative queries
+
+    TruthAssistRequest:
+      type: object
+      properties:
+        claim_text:
+          type: string
+          description: Text of a new claim
+        claim_id:
+          type: string
+          format: uuid
+          description: ID of an existing claim
+        context:
+          type: string
+          description: Additional context
+        action_type:
+          type: string
+          enum: [analyze, merge, split, evidence, counterclaim]
+          default: analyze
+          description: Type of assistance requested
+
+    TruthAssistProposal:
+      type: object
+      required:
+        - action
+        - rationale
+        - confidence
+        - suggested_changes
+      properties:
+        action:
+          type: string
+          description: Proposed action
+        rationale:
+          type: string
+          description: Rationale for the proposal
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Confidence in the proposal
+        suggested_changes:
+          type: object
+          additionalProperties: true
+          description: Suggested changes
+        related_claims:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Related claim IDs
+        evidence_suggestions:
+          type: array
+          items:
+            type: object
+            properties:
+              kind:
+                type: string
+                enum: [web_search, url, database]
+              query:
+                type: string
+              source:
+                type: string
+          description: Evidence search suggestions
+
+    TruthAssistResponse:
+      type: object
+      required:
+        - proposals
+        - transparency_id
+      properties:
+        proposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/TruthAssistProposal'
+          description: List of assistance proposals
+        transparency_id:
+          type: string
+          description: Transparency record ID for this request
+
+paths:
+  /ask:
+    post:
+      summary: Ask a question to the Truth Agent
+      description: |
+        Truth Agent endpoint that follows the pipeline:
+        Retriever → ClaimCheck → CitationRank → AnswerCompose → GovernanceEnforce
+        
+        Returns answer with mandatory citations or "insufficient evidence" response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TruthAgentRequest'
+      responses:
+        '200':
+          description: Answer with citations and transparency record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TruthAgentResponse'
+        '400':
+          description: Invalid request format
+        '429':
+          description: Rate limit exceeded
+        '500':
+          description: Internal server error
+
+  /truth/assist:
+    post:
+      summary: Get assistance with truth claims
+      description: |
+        Truth Assist endpoint for claim management proposals:
+        - New claim creation suggestions
+        - Claim merging/splitting proposals
+        - Evidence attachment recommendations
+        - Counterargument identification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TruthAssistRequest'
+      responses:
+        '200':
+          description: Assistance proposals with transparency record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TruthAssistResponse'
+        '400':
+          description: Invalid request
+        '429':
+          description: Rate limit exceeded
+        '500':
+          description: Internal server error
+
+  /task:
+    post:
+      summary: Create a new AI task
+      description: Create and dispatch AI tasks to appropriate agent channels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_type:
+                  type: string
+                  enum: [summarization, moderation, onboarding]
+                data:
+                  type: object
+                  additionalProperties: true
+                model_policy:
+                  type: string
+                  default: balanced
+      responses:
+        '200':
+          description: Task dispatched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    example: dispatched
+                  result:
+                    type: object
+                    additionalProperties: true
+        '400':
+          description: Invalid task type
+
+  /task/{task_id}:
+    get:
+      summary: Get task result
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [processing, completed]
+                  result:
+                    type: object
+                    additionalProperties: true
+        '404':
+          description: Task not found
+
+  /transparency/logs:
+    get:
+      summary: Get transparency logs
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+          description: Number of logs to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: Offset for pagination
+      responses:
+        '200':
+          description: List of transparency logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                    query:
+                      type: string
+                    answer:
+                      type: string
+                    confidence:
+                      type: number
+                    citation_count:
+                      type: integer
+                    has_citations:
+                      type: boolean
+                    was_governance_blocked:
+                      type: boolean
+
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  service:
+                    type: string
+                    example: "ai-router"
+                  version:
+                    type: string
+                    example: "1.0.0"

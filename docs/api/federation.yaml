@@ -1,0 +1,379 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse Federation API
+  description: ActivityPub outbound federation with transparency records
+  version: 0.1.0
+  contact:
+    name: PolyVerse Team
+    url: https://polyverse.social
+
+servers:
+  - url: http://localhost:3008
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Check if the federation service is running
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: federation
+                  federation_enabled:
+                    type: boolean
+                    example: false
+                  database:
+                    type: string
+                    example: connected
+
+  /.well-known/webfinger:
+    get:
+      summary: WebFinger lookup
+      description: Discover actor information via WebFinger protocol
+      parameters:
+        - name: resource
+          in: query
+          required: true
+          schema:
+            type: string
+            example: acct:alice@localhost:3008
+      responses:
+        '200':
+          description: WebFinger response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject:
+                    type: string
+                    example: acct:alice@localhost:3008
+                  links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rel:
+                          type: string
+                          example: self
+                        type:
+                          type: string
+                          example: application/activity+json
+                        href:
+                          type: string
+                          example: https://localhost:3008/actors/alice
+        '404':
+          description: Resource not found
+
+  /actors/{username}:
+    get:
+      summary: Actor information
+      description: Get ActivityPub actor information
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+            example: alice
+      responses:
+        '200':
+          description: Actor information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '@context':
+                    type: array
+                    items:
+                      type: string
+                  id:
+                    type: string
+                    example: https://localhost:3008/actors/alice
+                  type:
+                    type: string
+                    example: Person
+                  preferredUsername:
+                    type: string
+                    example: alice
+                  inbox:
+                    type: string
+                    example: https://localhost:3008/actors/alice/inbox
+                  outbox:
+                    type: string
+                    example: https://localhost:3008/actors/alice/outbox
+                  publicKey:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: https://localhost:3008/actors/alice#main-key
+                      owner:
+                        type: string
+                        example: https://localhost:3008/actors/alice
+                      publicKeyPem:
+                        type: string
+                        example: mock-public-key
+
+  /federation/notes:
+    post:
+      summary: Create a federated note
+      description: Create a note for federation (ActivityPub Create activity)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+                - actor
+              properties:
+                content:
+                  type: string
+                  description: The content of the note
+                  example: Hello, federated world!
+                actor:
+                  type: string
+                  description: DID of the user creating the note
+                  example: did:example:alice
+                to:
+                  type: array
+                  items:
+                    type: string
+                  description: Recipients of the note
+                  default:
+                    - https://www.w3.org/ns/activitystreams#Public
+                cc:
+                  type: array
+                  items:
+                    type: string
+                  description: CC recipients
+                  default: []
+      responses:
+        '200':
+          description: Note created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  note_id:
+                    type: string
+                    example: https://localhost:3008/notes/abc123
+                  activity_id:
+                    type: string
+                    example: https://localhost:3008/activities/def456
+                  transparency_record:
+                    type: object
+                    properties:
+                      recordType:
+                        type: string
+                        example: note_created
+                      decision:
+                        type: string
+                        example: created
+                      bundleId:
+                        type: string
+                        example: federation
+                      features:
+                        type: object
+                      explanation:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: Invalid request
+        '403':
+          description: Federation is disabled
+
+  /federation/announce:
+    post:
+      summary: Announce (boost/repost)
+      description: Create an Announce activity for federation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - object
+                - actor
+              properties:
+                object:
+                  type: string
+                  description: URL of the object being announced
+                  example: https://example.com/notes/123
+                actor:
+                  type: string
+                  description: DID of the user creating the announce
+                  example: did:example:alice
+                to:
+                  type: array
+                  items:
+                    type: string
+                  description: Recipients
+                  default:
+                    - https://www.w3.org/ns/activitystreams#Public
+                cc:
+                  type: array
+                  items:
+                    type: string
+                  description: CC recipients
+                  default: []
+      responses:
+        '200':
+          description: Announce created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activity_id:
+                    type: string
+                    example: https://localhost:3008/activities/ghi789
+                  transparency_record:
+                    type: object
+        '400':
+          description: Invalid request
+        '403':
+          description: Federation is disabled
+
+  /federation/follow:
+    post:
+      summary: Follow another actor
+      description: Create a Follow activity for federation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - target
+                - actor
+              properties:
+                target:
+                  type: string
+                  description: Actor to follow
+                  example: https://mastodon.social/users/bob
+                actor:
+                  type: string
+                  description: DID of the user following
+                  example: did:example:alice
+      responses:
+        '200':
+          description: Follow request created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activity_id:
+                    type: string
+                    example: https://localhost:3008/activities/jkl012
+                  transparency_record:
+                    type: object
+        '400':
+          description: Invalid request
+        '403':
+          description: Federation is disabled
+
+  /federation/deliver:
+    post:
+      summary: Deliver activity to instance
+      description: Deliver an activity to a specific federated instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - activityId
+                - targetInstance
+              properties:
+                activityId:
+                  type: string
+                  description: ID of the activity to deliver
+                  example: abc123
+                targetInstance:
+                  type: string
+                  description: Target instance domain
+                  example: mastodon.social
+      responses:
+        '200':
+          description: Delivery status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  delivered:
+                    type: boolean
+                    example: true
+                  transparency_record:
+                    type: object
+        '400':
+          description: Invalid request
+        '403':
+          description: Federation is disabled
+        '404':
+          description: Activity not found
+
+  /federation/outbox:
+    get:
+      summary: Get outbox activities
+      description: Get recent activities from the outbox
+      responses:
+        '200':
+          description: List of outbox activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activities:
+                    type: array
+                    items:
+                      type: object
+
+  /federation/transparency:
+    get:
+      summary: Get transparency records
+      description: Get recent transparency records for federation activities
+      responses:
+        '200':
+          description: List of transparency records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    type: array
+                    items:
+                      type: object
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Federation is disabled

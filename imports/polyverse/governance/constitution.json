@@ -1,0 +1,200 @@
+{
+  "version": "0.4.0",
+  "principles": [
+    "Free expression with safety",
+    "Transparency by default",
+    "Viewpoint diversity as a core value",
+    "Community-led moderation with oversight",
+    "Proportional and appealable enforcement",
+    "Evidence-based truth seeking",
+    "Provenance and attribution integrity",
+    "Playful engagement with bounded influence",
+    "Fair monetization with creator empowerment",
+    "Anti-brigading and anti-Sybil protections"
+  ],
+  "prohibitions": [
+    "doxxing",
+    "incitement to violence",
+    "targeted harassment",
+    "coordinated inauthentic behavior",
+    "non-consensual intimate media",
+    "arena match fixing",
+    "boost fraud",
+    "subscription chargeback abuse",
+    "Sybil attacks on voting systems"
+  ],
+  "appeals": {
+    "enabled": true,
+    "slaHours": 72,
+    "process": "Users may appeal moderation decisions through a transparent review process involving community jurors"
+  },
+  "bundles": {
+    "rankingDefault": "recency_follow",
+    "moderationDefault": "baseline_rules",
+    "availableRankingBundles": [
+      "chronological",
+      "author_weighted", 
+      "multipolar_diversity",
+      "hashtag:*"
+    ],
+    "availableModerationBundles": [
+      "baseline_rules",
+      "family_friendly",
+      "developer_community"
+    ]
+  },
+  "transparency": {
+    "required": true,
+    "publicLogs": true,
+    "explanationStandards": {
+      "ranking": "Must include features, scores, and human-readable explanations",
+      "moderation": "Must include specific rule violations, evidence, and reviewer information"
+    }
+  },
+  "communityGovernance": {
+    "proposalSystem": true,
+    "votingThreshold": 0.6,
+    "quorumPercentage": 10,
+    "cooloffPeriodHours": 24
+  },
+  "sourceClusters": {
+    "recognized": ["ICC", "BRICS", "NATO", "NonAligned", "Academic", "CivilSociety"],
+    "autoDetection": true,
+    "userOverride": true
+  },
+  "truthAgent": {
+    "citationRequirements": true,
+    "fallbackToInsufficientEvidence": true,
+    "confidenceThresholds": {
+      "high": 0.8,
+      "medium": 0.6,
+      "low": 0.4
+    }
+  },
+  
+  "truthGovernance": {
+    "juryDiversity": {
+      "requiredClusters": ["ICC", "BRICS", "NATO", "NonAligned", "Academic", "CivilSociety"],
+      "minimumPerCluster": 1,
+      "maximumPerCluster": 3,
+      "quorumPercentage": 67
+    },
+    "jurorAntiCollusion": {
+      "panelOverlapLimit": 0.3,
+      "ipAsnHeuristics": true,
+      "coordinationDetection": true,
+      "cooloffPeriodDays": 7
+    },
+    "jurorCalibration": {
+      "displayEnabled": true,
+      "accuracyMetrics": true,
+      "biasDetection": true,
+      "performanceHistory": true
+    },
+    "evidenceStandards": {
+      "acceptableClasses": ["peer_reviewed", "primary_source", "official_record", "expert_testimony", "dataset", "reputable_media"],
+      "minimumQualityScore": 0.6,
+      "citationHygiene": {
+        "brokenLinkPenalty": -0.3,
+        "archiveRequirement": true
+      }
+    },
+    "conflictOfInterest": {
+      "disclosureRequired": true,
+      "recusalThreshold": 0.3,
+      "cooloffPeriodDays": 30
+    },
+    "appeals": {
+      "truthSLAHours": 96,
+      "evidenceReviewRequired": true,
+      "panelReselection": true
+    },
+    "transparencyRetention": {
+      "confidenceReports": "permanent",
+      "juryDeliberations": "30_days_anonymous",
+      "evidenceProvenance": "permanent",
+      "playfulSignals": "permanent"
+    }
+  },
+  
+  "arenaConduct": {
+    "playfulSignal": {
+      "maxWeight": 0.02,
+      "requiresVerification": true,
+      "entertainmentGrade": true,
+      "documentationInReceipts": true
+    },
+    "disputeResolution": {
+      "timeLimitHours": 72,
+      "minimumStake": 10.0,
+      "verificationMethods": ["automated", "manual_review", "community_vote"]
+    },
+    "antiFraud": {
+      "matchVerificationRequired": true,
+      "fraudPenalties": ["rating_reset", "suspension", "permanent_ban"],
+      "appealsProcess": "evidence_based_review"
+    }
+  },
+  
+  "monetization": {
+    "subscriptions": {
+      "revenueShare": {
+        "creator": 0.8,
+        "platform": 0.2
+      },
+      "payoutSchedule": "monthly",
+      "refundPolicy": {
+        "proRated": true,
+        "gracePeriodDays": 7
+      },
+      "creatorRequirements": {
+        "minimumContent": 5,
+        "verificationRequired": true,
+        "reputationThreshold": 0.6
+      }
+    },
+    "boosts": {
+      "transparency": {
+        "upliftCap": 0.15,
+        "labelRequired": "Promoted",
+        "receiptsRequired": true,
+        "budgetDisclosure": true
+      },
+      "targeting": {
+        "prohibitedCategories": ["adult", "gambling", "financial_advice"],
+        "geoRestrictions": "comply_with_local_laws",
+        "ageGating": true
+      },
+      "pacing": {
+        "dailyBudgetEnforcement": true,
+        "overspendProtection": true,
+        "refundOnRejection": true
+      }
+    },
+    "antiSybil": {
+      "identityVerification": {
+        "requiredForMonetization": true,
+        "methods": ["phone", "government_id", "social_verification"]
+      },
+      "rateLimits": {
+        "subscriptionsPerUser": 100,
+        "boostsPerContent": 5,
+        "votingPerClaim": 1
+      }
+    }
+  },
+  
+  "transparencyExpansion": {
+    "scope": ["truth", "moderation", "ranking", "boost", "arena"],
+    "retention": {
+      "boostRecords": "90_days",
+      "subscriptionTransactions": "permanent",
+      "arenaVerifications": "permanent"
+    },
+    "access": {
+      "public": ["boost_uplift", "subscription_counts", "arena_results"],
+      "authenticated": ["boost_targeting", "subscription_revenue", "arena_verification_details"],
+      "admin": ["boost_budgets", "subscription_payouts", "arena_fraud_detection"]
+    }
+  }
+}

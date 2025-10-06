@@ -1,0 +1,371 @@
+openapi: 3.0.3
+info:
+  title: PolyVerse Live Stream Service API
+  description: |
+    Live Stream Service with real-time chat, moderation, and DVR support.
+    Supports WebSocket connections for chat and emits transparency records for all actions.
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.social
+
+servers:
+  - url: http://localhost:3007
+    description: Development server
+  - url: https://live.polyverse.social
+    description: Production server
+
+paths:
+  /live/create:
+    post:
+      summary: Create a new live stream
+      description: Creates a new live stream with RTMP ingest and playback URLs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - userId
+              properties:
+                title:
+                  type: string
+                  example: "My Live Stream"
+                description:
+                  type: string
+                  example: "Join me for a live session!"
+                userId:
+                  type: string
+                  example: "user_123"
+      responses:
+        '200':
+          description: Live stream created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  streamId:
+                    type: string
+                    description: Unique stream identifier
+                    example: "abc123def456"
+                  streamKey:
+                    type: string
+                    description: Stream key for RTMP authentication
+                    example: "secret_stream_key_123"
+                  rtmpUrl:
+                    type: string
+                    description: RTMP ingest URL
+                    example: "rtmp://localhost:1935/live"
+                  playbackUrl:
+                    type: string
+                    description: HLS playback URL
+                    example: "http://localhost:3007/live/abc123def456/manifest.m3u8"
+                  metadata:
+                    type: object
+                    description: Stream metadata
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /live/{streamId}/start:
+    post:
+      summary: Start a live stream
+      description: Starts a live stream after verifying the stream key
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - streamKey
+              properties:
+                streamKey:
+                  type: string
+                  example: "secret_stream_key_123"
+      responses:
+        '200':
+          description: Stream started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "live"
+                  streamId:
+                    type: string
+                  startedAt:
+                    type: string
+                    format: date-time
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /live/{streamId}/end:
+    post:
+      summary: End a live stream
+      description: Ends a live stream and emits final metrics
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      responses:
+        '200':
+          description: Stream ended successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ended"
+                  streamId:
+                    type: string
+                  endedAt:
+                    type: string
+                    format: date-time
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /live/{streamId}/health:
+    get:
+      summary: Get stream health and metrics
+      description: Returns real-time health metrics for a live stream
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      responses:
+        '200':
+          description: Stream health information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  streamId:
+                    type: string
+                  status:
+                    type: string
+                    enum: ["created", "live", "ended", "failed"]
+                  viewerCount:
+                    type: integer
+                    description: Current number of viewers
+                  bitrate:
+                    type: integer
+                    description: Current bitrate in kbps
+                  latency:
+                    type: integer
+                    description: Current latency in milliseconds
+                  uptime:
+                    type: integer
+                    description: Stream uptime in seconds
+                  isHealthy:
+                    type: boolean
+                    description: Overall health status
+                  lastUpdated:
+                    type: string
+                    format: date-time
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /live/{streamId}/chat:
+    get:
+      summary: WebSocket endpoint for chat
+      description: Establishes a WebSocket connection for real-time chat
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      responses:
+        '101':
+          description: Switching to WebSocket protocol
+
+  /live/{streamId}/moderate:
+    post:
+      summary: Perform moderation actions
+      description: Applies moderation actions to chat users or messages
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - moderatorId
+                - action
+              properties:
+                moderatorId:
+                  type: string
+                  description: ID of the moderator
+                action:
+                  type: string
+                  enum: ["timeout", "ban", "delete_message"]
+                  description: Moderation action to perform
+                targetUserId:
+                  type: string
+                  description: User ID to moderate (for timeout/ban)
+                targetMessageId:
+                  type: string
+                  description: Message ID to delete (for delete_message)
+                duration:
+                  type: integer
+                  description: Duration in seconds (for timeout)
+                reason:
+                  type: string
+                  description: Reason for moderation action
+      responses:
+        '200':
+          description: Moderation action applied successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  moderationId:
+                    type: string
+                  status:
+                    type: string
+                    example: "applied"
+                  action:
+                    type: string
+                  targetUserId:
+                    type: string
+                  targetMessageId:
+                    type: string
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /live/{streamId}/manifest.m3u8:
+    get:
+      summary: Get HLS manifest with DVR support
+      description: Returns HLS manifest for live stream playback with DVR capabilities
+      parameters:
+        - name: streamId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Stream ID
+      responses:
+        '200':
+          description: HLS manifest
+          content:
+            application/vnd.apple.mpegurl:
+              schema:
+                type: string
+                example: |
+                  #EXTM3U
+                  #EXT-X-VERSION:3
+                  #EXT-X-TARGETDURATION:6
+                  #EXT-X-MEDIA-SEQUENCE:1
+                  #EXT-X-PLAYLIST-TYPE:EVENT
+                  #EXT-X-ALLOW-CACHE:NO
+                  #EXTINF:6.0,
+                  segment1.ts
+                  #EXT-X-ENDLIST
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns service health status and connection metrics
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  activeStreams:
+                    type: integer
+                    description: Number of active streams
+                  totalConnections:
+                    type: integer
+                    description: Total WebSocket connections
+
+components:
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  schemas:
+    ChatMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ["chat_message", "system", "moderation"]
+        messageId:
+          type: string
+        userId:
+          type: string
+        username:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    ModerationAction:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ["moderation", "message_deleted"]
+        action:
+          type: string
+        targetUserId:
+          type: string
+        targetMessageId:
+          type: string
+        duration:
+          type: integer
+        reason:
+          type: string
+        timestamp:
+          type: string
+          format: date-time

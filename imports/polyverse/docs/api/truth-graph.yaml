@@ -1,0 +1,338 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse Truth Graph API
+  description: API for managing truth claims, evidence, counterclaims, and confidence reports
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.example
+servers:
+  - url: http://localhost:3003
+    description: Development server
+
+components:
+  schemas:
+    Claim:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the claim
+        title:
+          type: string
+          description: Title of the claim
+        content:
+          type: string
+          description: Detailed content of the claim
+        initial_confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Initial confidence score (0-1)
+        topic:
+          type: string
+          description: Topic category
+        sources:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Source URLs
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - content
+        - initial_confidence
+        - topic
+
+    Evidence:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        evidence_type:
+          type: string
+          enum: [scientific_report, public_health_data, expert_testimony, dataset, transcript]
+        url:
+          type: string
+          format: uri
+        quality_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        author_affiliation:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ConfidenceReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+        lens_id:
+          type: string
+          enum: [bayesian_evidence_first, expert_jury, community_notes, market_signal]
+        confidence_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        calculation_inputs:
+          type: object
+          additionalProperties: true
+        transparency_record:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PlayfulSignal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+        dispute_id:
+          type: string
+          format: uuid
+        winner_side:
+          type: string
+          enum: [for, against]
+        match_meta:
+          type: object
+          properties:
+            game:
+              type: string
+            duration_minutes:
+              type: integer
+            participants:
+              type: integer
+            skill_level:
+              type: string
+            verification_status:
+              type: string
+        weight_applied:
+          type: number
+          format: float
+          maximum: 0.02
+          description: Maximum 2% influence cap
+        transparency_record:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+paths:
+  /claims:
+    post:
+      summary: Create a new truth claim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Claim'
+      responses:
+        '201':
+          description: Claim created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '400':
+          description: Invalid input
+
+  /claims/{claimId}:
+    get:
+      summary: Get a specific claim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Claim details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '404':
+          description: Claim not found
+
+  /claims/{claimId}/evidence:
+    post:
+      summary: Add evidence to a claim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Evidence'
+      responses:
+        '201':
+          description: Evidence added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Evidence'
+
+  /claims/{claimId}/counterclaims:
+    post:
+      summary: Add a counterclaim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                strength:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 1
+                sources:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+      responses:
+        '201':
+          description: Counterclaim added successfully
+
+  /truth/search:
+    get:
+      summary: Search truth claims
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: topic
+          in: query
+          schema:
+            type: string
+          description: Filter by topic
+        - name: min_confidence
+          in: query
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+          description: Minimum confidence score
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Claim'
+
+  /consensus/run:
+    post:
+      summary: Run consensus calculation for a claim
+      parameters:
+        - name: lensId
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [bayesian_evidence_first, expert_jury, community_notes, market_signal]
+          description: Which lens to use for calculation
+        - name: claimId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Claim to analyze
+      responses:
+        '200':
+          description: Confidence report generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfidenceReport'
+
+  /consensus/claim/{claimId}/reports:
+    get:
+      summary: Get confidence reports for a claim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of confidence reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfidenceReport'

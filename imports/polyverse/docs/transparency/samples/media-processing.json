@@ -1,0 +1,84 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_media_processing_abc123",
+    "type": "media_processing",
+    "timestamp": "2023-10-01T12:05:00Z",
+    "actor": {
+      "id": "cloudflare-stream",
+      "type": "service"
+    },
+    "action": "media_processing_completed",
+    "resource": {
+      "id": "media_abc123def456",
+      "type": "media_asset",
+      "provider": "cloudflare-stream"
+    },
+    "context": {
+      "processingTime": "00:05:00",
+      "status": "ready",
+      "duration": 120.5,
+      "thumbnailUrl": "https://cloudflare-stream.com/abc123def456/thumbnails/thumbnail.jpg",
+      "playbackUrls": {
+        "hls": "https://cloudflare-stream.com/abc123def456/manifest.m3u8",
+        "dash": "https://cloudflare-stream.com/abc123def456/manifest.mpd"
+      },
+      "webhookVerified": true,
+      "signature": "cf-webhook-signature-abc123"
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": "transparency_media_upload_abc123"
+  },
+  "webhookPayload": {
+    "uid": "abc123def456",
+    "status": "ready",
+    "meta": {
+      "name": "my-video.mp4"
+    },
+    "created": "2023-10-01T12:00:00Z",
+    "modified": "2023-10-01T12:05:00Z",
+    "duration": 120.5,
+    "thumbnail": "https://cloudflare-stream.com/abc123def456/thumbnails/thumbnail.jpg",
+    "playback": {
+      "hls": "https://cloudflare-stream.com/abc123def456/manifest.m3u8",
+      "dash": "https://cloudflare-stream.com/abc123def456/manifest.mpd"
+    }
+  },
+  "updatedMediaAsset": {
+    "id": "media_abc123def456",
+    "originalName": "my-video.mp4",
+    "mimeType": "video/mp4",
+    "fileSize": 52428800,
+    "bucket": "cloudflare-stream",
+    "s3Key": "abc123def456",
+    "status": "ready",
+    "metadata": {
+      "mediaId": "abc123def456",
+      "filename": "my-video.mp4",
+      "contentType": "video/mp4",
+      "fileSize": 52428800,
+      "cloudflareUid": "abc123def456",
+      "provider": "cloudflare-stream",
+      "duration": 120.5,
+      "thumbnailUrl": "https://cloudflare-stream.com/abc123def456/thumbnails/thumbnail.jpg",
+      "playbackUrls": {
+        "hls": "https://cloudflare-stream.com/abc123def456/manifest.m3u8",
+        "dash": "https://cloudflare-stream.com/abc123def456/manifest.mpd"
+      }
+    },
+    "createdAt": "2023-10-01T12:00:00Z",
+    "updatedAt": "2023-10-01T12:05:00Z"
+  },
+  "mediaRenditions": [
+    {
+      "id": "rendition_abc123",
+      "assetId": "media_abc123def456",
+      "renditionType": "hls",
+      "bucket": "cloudflare-stream",
+      "s3Key": "abc123def456",
+      "manifestKey": "https://cloudflare-stream.com/abc123def456/manifest.m3u8",
+      "isReady": true,
+      "createdAt": "2023-10-01T12:05:00Z",
+      "updatedAt": "2023-10-01T12:05:00Z"
+    }
+  ]
+}

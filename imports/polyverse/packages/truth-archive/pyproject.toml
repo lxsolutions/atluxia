@@ -1,0 +1,26 @@
+
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "truthfoundry"
+version = "0.1.0"
+description = "Evidence-weighted knowledge archiving system"
+authors = [
+    { name="TRUTHFOUNDRY Collective", email="info@truthfoundry.org" }
+]
+dependencies = [
+    "requests>=2.25",
+    "beautifulsoup4>=4.9",
+    "networkx>=2.5",
+    "python-dotenv>=0.17"
+]
+
+[tool.setuptools]
+packages = ["truthfoundry"]
+
+[project.scripts]
+tf = "truthfoundry.cli:main"
+

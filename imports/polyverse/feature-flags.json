@@ -1,0 +1,55 @@
+{
+  "flags": {
+    "MEDIA_STREAM": {
+      "description": "Enable Cloudflare Stream integration for media upload and playback",
+      "default": false,
+      "env": "ENABLE_MEDIA_STREAM"
+    },
+    "LENSE_L3": {
+      "description": "Enable Community Notes (pairwise voting + Elo) consensus lens",
+      "default": false,
+      "env": "ENABLE_LENSE_L3"
+    },
+    "LENSE_L4": {
+      "description": "Enable Market Signal (capped weight) consensus lens",
+      "default": false,
+      "env": "ENABLE_LENSE_L4"
+    },
+    "FED_APUB_WRITE": {
+      "description": "Enable ActivityPub outbound posting to federated platforms",
+      "default": false,
+      "env": "ENABLE_FED_APUB_WRITE"
+    },
+    "SEARCH_OPENSEARCH": {
+      "description": "Enable OpenSearch for advanced search capabilities",
+      "default": true,
+      "env": "ENABLE_SEARCH_OPENSEARCH"
+    }
+  },
+  "services": {
+    "web": {
+      "flags": ["MEDIA_STREAM", "FED_APUB_WRITE", "SEARCH_OPENSEARCH"],
+      "env_prefix": "NEXT_PUBLIC_"
+    },
+    "indexer": {
+      "flags": ["SEARCH_OPENSEARCH"],
+      "env_prefix": ""
+    },
+    "truth-graph": {
+      "flags": ["SEARCH_OPENSEARCH"],
+      "env_prefix": ""
+    },
+    "consensus": {
+      "flags": ["LENSE_L3", "LENSE_L4"],
+      "env_prefix": ""
+    },
+    "bridge-apub": {
+      "flags": ["FED_APUB_WRITE"],
+      "env_prefix": ""
+    },
+    "media": {
+      "flags": ["MEDIA_STREAM"],
+      "env_prefix": ""
+    }
+  }
+}

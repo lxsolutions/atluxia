@@ -1,0 +1,90 @@
+[
+  {
+    "id": "federation_note_1234567890",
+    "recordType": "note_created",
+    "decision": "created",
+    "bundleId": "federation",
+    "features": {
+      "actor": "did:example:alice",
+      "content_length": 25,
+      "audience": 1,
+      "to": ["https://www.w3.org/ns/activitystreams#Public"]
+    },
+    "explanation": [
+      "Note created by did:example:alice for federation",
+      "Content: 'Hello, federated world!'",
+      "Audience: Public"
+    ],
+    "created_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": "federation_announce_1234567891",
+    "recordType": "announce_created",
+    "decision": "created",
+    "bundleId": "federation",
+    "features": {
+      "actor": "did:example:bob",
+      "object": "https://example.com/notes/123",
+      "to": ["https://www.w3.org/ns/activitystreams#Public"]
+    },
+    "explanation": [
+      "Announce created by did:example:bob",
+      "Object: https://example.com/notes/123",
+      "Type: Boost/Repost"
+    ],
+    "created_at": "2024-01-15T10:35:00Z"
+  },
+  {
+    "id": "federation_follow_1234567892",
+    "recordType": "follow_created",
+    "decision": "created",
+    "bundleId": "federation",
+    "features": {
+      "actor": "did:example:alice",
+      "target": "https://mastodon.social/users/bob"
+    },
+    "explanation": [
+      "Follow request from did:example:alice to https://mastodon.social/users/bob",
+      "Status: Pending acceptance"
+    ],
+    "created_at": "2024-01-15T10:40:00Z"
+  },
+  {
+    "id": "federation_delivery_1234567893",
+    "recordType": "activity_delivered",
+    "decision": "delivered",
+    "bundleId": "federation",
+    "features": {
+      "activity_id": "abc123",
+      "target_instance": "mastodon.social",
+      "success": true,
+      "delivery_time_ms": 250
+    },
+    "explanation": [
+      "Activity abc123 delivered to mastodon.social",
+      "Delivery time: 250ms",
+      "HTTP Status: 202 Accepted"
+    ],
+    "created_at": "2024-01-15T10:45:00Z"
+  },
+  {
+    "id": "federation_delivery_1234567894",
+    "recordType": "activity_delivered",
+    "decision": "failed",
+    "bundleId": "federation",
+    "features": {
+      "activity_id": "def456",
+      "target_instance": "example.social",
+      "success": false,
+      "delivery_time_ms": 5000,
+      "error_code": 503
+    },
+    "explanation": [
+      "Activity def456 failed to deliver to example.social",
+      "Delivery time: 5000ms",
+      "HTTP Status: 503 Service Unavailable",
+      "Error: Target instance unreachable"
+    ],
+    "created_at": "2024-01-15T10:50:00Z"
+  }
+]

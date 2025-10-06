@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Counterclaim",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "claimId": { "type": "string" },
+    "statement": { "type": "string" },
+    "evidenceRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "author_pubkey": { "type": "string" },
+    "sig": { "type": "string" },
+    "strength": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status": { 
+      "type": "string", 
+      "enum": ["active", "resolved", "withdrawn", "superseded"],
+      "default": "active"
+    },
+    "resolution": { "type": ["string", "null"] },
+    "resolved_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": [
+    "id", "claimId", "statement", "created_at", "author_pubkey", "sig"
+  ]
+}

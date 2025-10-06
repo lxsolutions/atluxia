@@ -1,0 +1,54 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_moderation_action_abc123",
+    "type": "moderation_action",
+    "timestamp": "2023-10-01T14:10:00Z",
+    "actor": {
+      "id": "moderator_789",
+      "type": "moderator"
+    },
+    "action": "timeout",
+    "resource": {
+      "id": "moderation_abc123",
+      "type": "moderation_action"
+    },
+    "context": {
+      "streamId": "live_abc123def456",
+      "moderatorId": "moderator_789",
+      "targetUserId": "user_456",
+      "targetMessageId": "message_abc123",
+      "duration": 300,
+      "reason": "Inappropriate language",
+      "actionType": "timeout"
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": "transparency_chat_message_abc123"
+  },
+  "moderationAction": {
+    "id": "moderation_abc123",
+    "streamId": "live_abc123def456",
+    "moderatorId": "moderator_789",
+    "action": "timeout",
+    "targetUserId": "user_456",
+    "targetMessageId": "message_abc123",
+    "duration": 300,
+    "reason": "Inappropriate language",
+    "metadata": {
+      "moderationId": "moderation_abc123",
+      "streamId": "live_abc123def456",
+      "moderatorId": "moderator_789",
+      "action": "timeout",
+      "targetUserId": "user_456",
+      "targetMessageId": "message_abc123",
+      "duration": 300,
+      "reason": "Inappropriate language"
+    },
+    "createdAt": "2023-10-01T14:10:00Z"
+  },
+  "notificationInfo": {
+    "streamId": "live_abc123def456",
+    "recipientCount": 42,
+    "notificationType": "moderation",
+    "notificationTimestamp": "2023-10-01T14:10:00Z"
+  }
+}

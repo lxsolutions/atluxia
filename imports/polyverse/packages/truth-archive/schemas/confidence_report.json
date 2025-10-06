@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConfidenceReport",
+  "type": "object",
+  "properties": {
+    "claimId": { "type": "string" },
+    "lensId": { "type": "string" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "intervals": {
+      "type": "object",
+      "properties": {
+        "lower": { "type": "number", "minimum": 0, "maximum": 1 },
+        "upper": { "type": "number", "minimum": 0, "maximum": 1 },
+        "method": { "type": "string" }
+      }
+    },
+    "inputs": { "type": "object" },
+    "dissentingViews": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "computed_at": { "type": "string", "format": "date-time" },
+    "compute_duration_ms": { "type": "number" },
+    "version": { "type": "integer", "minimum": 1 },
+    "metadata": { "type": "object" }
+  },
+  "required": [
+    "claimId", "lensId", "score", "computed_at"
+  ]
+}

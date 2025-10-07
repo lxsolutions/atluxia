@@ -146,6 +146,35 @@ services:
       redis:
         condition: service_healthy
 
+  # Curio-Critters Services
+  critters-web:
+    build:
+      context: ../..
+      dockerfile: apps/critters-web/Dockerfile
+    ports:
+      - "3005:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:56456
+    volumes:
+      - ../../apps/critters-web:/app
+      - /app/node_modules
+    command: pnpm dev
+
+  critters-api:
+    build:
+      context: ../..
+      dockerfile: services/critters-api/Dockerfile
+    ports:
+      - "56456:56456"
+    environment:
+      - NODE_ENV=development
+      - PORT=56456
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   redis_data:

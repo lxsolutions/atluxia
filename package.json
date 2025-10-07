@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "dev:lite": "cross-env ATLUXIA_PROFILE=lite turbo run dev --parallel --filter=@atluxia/nomad-web --filter=@atluxia/polyverse-web --filter=@atluxia/immigration --filter=@atluxia/opengrid",
+    "dev:lite": "cross-env ATLUXIA_PROFILE=lite turbo run dev --parallel --filter=@atluxia/nomad-web --filter=@atluxia/polyverse-web --filter=@atluxia/immigration --filter=@atluxia/opengrid --filter=@atluxia/critters-web --filter=@atluxia/critters-api",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",

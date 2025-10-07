@@ -1,18 +1,18 @@
 # Atluxia - Manual Follow-ups
 
-This document lists items that require manual attention after the automated merge.
+This document lists items that require manual attention after the automated merge of nomad-life, polyverse, everpath, and curio-critters repositories.
 
 ## Immediate Actions
 
 ### 1. Database Schema Consolidation
-- **Task**: Merge Prisma schemas from nomad-life and polyverse
+- **Task**: Merge Prisma schemas from nomad-life, polyverse, everpath, and curio-critters
 - **Location**: `packages/db/prisma/schema.prisma`
-- **Notes**: Need to create unified user model that works for both platforms
+- **Notes**: Need to create unified user model that works for all platforms. Everpath and Curio-Critters models have been added.
 
 ### 2. Authentication Integration
-- **Task**: Configure NextAuth.js to work across both nomad-web and polyverse-web
-- **Location**: Both web apps' authentication configurations
-- **Notes**: Ensure shared session management and user profiles
+- **Task**: Configure NextAuth.js to work across nomad-web, polyverse-web, everpath-web, and critters-web
+- **Location**: All web apps' authentication configurations
+- **Notes**: Ensure shared session management and user profiles across all platforms
 
 ### 3. Service Communication
 - **Task**: Update service URLs in environment configurations

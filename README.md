@@ -1,8 +1,8 @@
 # Atluxia - Unified Super-App
 
-**Nomad platform + transparent social layer + career/education platform**
+**Nomad platform + transparent social layer + career/education platform + educational RPG**
 
-Atluxia is a unified super-app monorepo combining the digital nomad platform from `nomad-life`, the transparent social platform from `polyverse`, and the career/education platform from `everpath`. The repository preserves full git history from all three source repositories.
+Atluxia is a unified super-app monorepo combining the digital nomad platform from `nomad-life`, the transparent social platform from `polyverse`, the career/education platform from `everpath`, and the educational RPG from `curio-critters`. The repository preserves full git history from all four source repositories.
 
 ## 🚀 Features
 
@@ -29,6 +29,13 @@ Atluxia is a unified super-app monorepo combining the digital nomad platform fro
 - **Portfolio Builder**: Digital portfolio and artifact management
 - **XP System**: Experience points and achievement tracking
 
+### Curio-Critters Stack
+- **Educational RPG**: Gamified learning through interactive adventures
+- **Critter Companions**: Collect and evolve educational companions
+- **Quest System**: Educational quests across subjects
+- **Progress Tracking**: Monitor learning progress and achievements
+- **Multi-subject Support**: Math, science, language, history, and more
+
 ## 🏗️ Architecture
 
 Atluxia is built as a Turborepo monorepo with the following structure:
@@ -39,7 +46,8 @@ atluxia/
 │   ├── nomad-web/          # Nomad platform web app
 │   ├── polyverse-web/      # Social platform web app
 │   ├── everpath-web/       # Career/education platform web app
-│   └── everpath-admin/     # Everpath admin dashboard
+│   ├── everpath-admin/     # Everpath admin dashboard
+│   └── critters-web/       # Curio-Critters educational RPG
 ├── services/
 │   ├── booking/            # Booking service
 │   ├── drivers/            # Drivers service
@@ -52,7 +60,8 @@ atluxia/
 │   ├── truth-agent/        # Truth agent service
 │   ├── truth-graph/        # Truth graph service
 │   ├── everpath-api/       # Everpath FastAPI backend
-│   └── everpath-data/      # Everpath data processing service
+│   ├── everpath-data/      # Everpath data processing service
+│   └── critters-api/       # Curio-Critters API service
 ├── packages/
 │   ├── ui/                 # Shared UI components
 │   ├── db/                 # Database schema and client
@@ -107,6 +116,7 @@ atluxia/
    - Polyverse Web: http://localhost:3001
    - Everpath Web: http://localhost:3002
    - Everpath Admin: http://localhost:3003
+   - Curio-Critters: http://localhost:3005
 
 ### Development Commands
 
@@ -150,16 +160,18 @@ See [ENV_MATRIX.md](./ENV_MATRIX.md) for a complete list of environment variable
 - everpath-web: 3002
 - everpath-admin: 3003
 - opengrid: 3004
-- activitypub-bridge: 3005
-- truth-agent: 3006
-- truth-graph: 3007
-- booking: 3008
-- drivers: 3009
-- immigration: 3010
-- vehicles: 3011
+- critters-web: 3005
+- activitypub-bridge: 3006
+- truth-agent: 3007
+- truth-graph: 3008
+- booking: 3009
+- drivers: 3010
+- immigration: 3011
+- vehicles: 3012
 - everpath-api: 8001
 - ai-router: 8000
 - relay: 8080
+- critters-api: 56456
 
 ## 📚 Documentation
 
@@ -183,10 +195,10 @@ This project is licensed under the terms included in the LICENSE file.
 ## 📊 Current Status
 
 ### ✅ Completed
-- Repository unification with preserved git history from all three platforms
+- Repository unification with preserved git history from all four platforms
 - Package name normalization to `@atluxia` scope
 - TypeScript compilation working across all packages
-- Core services running (nomad-web, polyverse-web, immigration, everpath-web, everpath-api)
+- Core services running (nomad-web, polyverse-web, immigration, everpath-web, everpath-api, critters-web, critters-api)
 - Port configuration to avoid conflicts
 - Comprehensive documentation
 
@@ -208,4 +220,5 @@ This project is licensed under the terms included in the LICENSE file.
 - [Nomad-Life Original Repository](https://github.com/lxsolutions/nomad-life)
 - [Polyverse Original Repository](https://github.com/lxsolutions/polyverse)
 - [Everpath Original Repository](https://github.com/lxsolutions/everpath)
+- [Curio-Critters Original Repository](https://github.com/lxsolutions/curio-critters)
 - [Atluxia Repository](https://github.com/lxsolutions/atluxia)

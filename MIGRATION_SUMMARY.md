@@ -1,6 +1,6 @@
 # Atluxia Migration Summary
 
-This document maps the original file locations from both `nomad-life` and `polyverse` repositories to their new locations in the unified Atluxia monorepo.
+This document maps the original file locations from `nomad-life`, `polyverse`, `everpath`, and `curio-critters` repositories to their new locations in the unified Atluxia monorepo.
 
 ## Nomad-Life Repository Mapping
 
@@ -37,6 +37,24 @@ This document maps the original file locations from both `nomad-life` and `polyv
 | `infra` | `infra/polyverse` | Infrastructure files |
 | `Makefile` | `Makefile.polyverse` | Original Makefile preserved |
 
+## Everpath Repository Mapping
+
+| Original Path | New Atluxia Path | Notes |
+|---------------|------------------|-------|
+| `apps/web` | `apps/everpath-web` | Career/education platform web app |
+| `apps/admin` | `apps/everpath-admin` | Everpath admin dashboard |
+| `services/api` | `services/everpath-api` | Everpath FastAPI backend |
+| `services/data` | `services/everpath-data` | Everpath data processing service |
+| `packages/everpath-ui` | `packages/everpath-ui` | Everpath UI components |
+| `packages/everpath-tsconfig` | `packages/everpath-tsconfig` | Everpath TypeScript configs |
+
+## Curio-Critters Repository Mapping
+
+| Original Path | New Atluxia Path | Notes |
+|---------------|------------------|-------|
+| `src/frontend` | `apps/critters-web` | Educational RPG frontend |
+| `src/backend` | `services/critters-api` | Educational RPG API service |
+
 ## Key Changes
 
 ### Package Names
@@ -54,16 +72,21 @@ Environment variables have been unified and standardized. See `ENV_MATRIX.md` fo
 To avoid conflicts, services have been assigned specific ports:
 - nomad-web: 3000
 - polyverse-web: 3001
-- opengrid: 3002
-- activitypub-bridge: 3004
-- truth-agent: 3005
-- truth-graph: 3006
-- booking: 3007
-- drivers: 3008
-- immigration: 3009
-- vehicles: 3010
+- everpath-web: 3002
+- everpath-admin: 3003
+- opengrid: 3004
+- critters-web: 3005
+- activitypub-bridge: 3006
+- truth-agent: 3007
+- truth-graph: 3008
+- booking: 3009
+- drivers: 3010
+- immigration: 3011
+- vehicles: 3012
+- everpath-api: 8001
 - ai-router: 8000
 - relay: 8080
+- critters-api: 56456
 
 ### Tooling
 - Unified Turborepo configuration

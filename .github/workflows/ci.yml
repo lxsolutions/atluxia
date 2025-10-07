@@ -232,6 +232,8 @@ jobs:
           - activitypub-bridge
           - truth-agent
           - truth-graph
+          - critters-web
+          - critters-api
 
     steps:
     - name: Checkout code

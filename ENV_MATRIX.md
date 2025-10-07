@@ -38,6 +38,14 @@
 | `DRIVERS_API_URL` | nomad-web | No | `http://localhost:3008` | Drivers service URL |
 | `IMMIGRATION_API_URL` | nomad-web | No | `http://localhost:3009` | Immigration service URL |
 | `VEHICLES_API_URL` | nomad-web | No | `http://localhost:3010` | Vehicles service URL |
+| **EVERPATH SERVICES** | | | | |
+| `EVERPATH_API_URL` | everpath-web, everpath-admin | No | `http://localhost:8001` | Everpath API URL |
+| `EVERPATH_DATA_URL` | everpath-api | No | `http://localhost:8002` | Everpath data service URL |
+| `OPENAI_API_KEY` | everpath-api | No | - | OpenAI API key for AI features |
+| **CURIO-CRITTERS SERVICES** | | | | |
+| `VITE_API_URL` | critters-web | Yes | `http://localhost:56456` | Critters API URL (frontend) |
+| `PORT` | critters-api | No | `56456` | Critters API port |
+| `JWT_SECRET` | critters-api | Yes | - | JWT secret for authentication |
 | **FEATURE FLAGS** | | | | |
 | `FEATURE_ACTIVITYPUB_ENABLED` | polyverse-web | No | `false` | Enable ActivityPub federation |
 | `FEATURE_AI_ROUTER_ENABLED` | polyverse-web | No | `false` | Enable AI routing |
@@ -55,16 +63,21 @@
 |---------|------|-------|
 | nomad-web | 3000 | Main web application |
 | polyverse-web | 3001 | Social platform web app |
-| opengrid | 3002 | OpenGrid service |
-| activitypub-bridge | 3004 | ActivityPub bridge |
-| truth-agent | 3005 | Truth agent service |
-| truth-graph | 3006 | Truth graph service |
-| booking | 3007 | Booking service |
-| drivers | 3008 | Drivers service |
-| immigration | 3009 | Immigration service |
-| vehicles | 3010 | Vehicles service |
+| everpath-web | 3002 | Career/education platform web app |
+| everpath-admin | 3003 | Everpath admin dashboard |
+| opengrid | 3004 | OpenGrid service |
+| critters-web | 3005 | Educational RPG frontend |
+| activitypub-bridge | 3006 | ActivityPub bridge |
+| truth-agent | 3007 | Truth agent service |
+| truth-graph | 3008 | Truth graph service |
+| booking | 3009 | Booking service |
+| drivers | 3010 | Drivers service |
+| immigration | 3011 | Immigration service |
+| vehicles | 3012 | Vehicles service |
+| everpath-api | 8001 | Everpath FastAPI backend |
 | ai-router | 8000 | AI router service |
 | relay | 8080 | Relay service |
+| critters-api | 56456 | Curio-Critters API service |
 | postgres | 5432 | Database |
 | redis | 6379 | Cache |
 | minio | 9000 | S3-compatible storage |

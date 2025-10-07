@@ -1,8 +1,8 @@
 {
-  "name": "backend",
+  "name": "@atluxia/critters-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "db.js",
+  "description": "Curio Critters API service",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"

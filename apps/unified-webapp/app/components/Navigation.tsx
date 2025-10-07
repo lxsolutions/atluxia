@@ -11,6 +11,8 @@ import {
   User,
   Settings
 } from 'lucide-react';
+import SearchBar from './SearchBar';
+import NotificationBell from './NotificationBell';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
@@ -63,6 +65,14 @@ export function Navigation() {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
+            {/* Search Bar */}
+            <div className="hidden md:block w-64">
+              <SearchBar />
+            </div>
+            
+            {/* Notifications */}
+            <NotificationBell />
+            
             <Link
               href="/profile"
               className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200"
@@ -82,6 +92,11 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden pb-4">
+          {/* Mobile Search */}
+          <div className="mb-4">
+            <SearchBar />
+          </div>
+          
           <div className="flex space-x-1 overflow-x-auto">
             {navigation.map((item) => {
               const Icon = item.icon;

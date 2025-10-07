@@ -8,6 +8,7 @@ import {
   Calendar,
   MessageSquare
 } from 'lucide-react';
+import { getDashboardData } from './lib/api';
 
 const modules = [
   {
@@ -51,7 +52,9 @@ const recentActivity = [
   { type: 'critters', text: 'Earned badge: Math Explorer', time: '2 days ago' },
 ];
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const dashboardData = await getDashboardData();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Welcome Section */}

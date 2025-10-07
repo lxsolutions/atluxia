@@ -1,0 +1,239 @@
+
+
+
+
+import React, { useState, useEffect, useRef } from 'react';
+import learningEngine from '../utils/learningEngine';
+import soundEngine from '../utils/soundEngine';
+import animationEngine from '../utils/animationEngine';
+
+const PetCareGame = () => {
+  // Load from localStorage or use defaults
+  const loadPetData = () => {
+    const savedData = localStorage.getItem('petData');
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+    return {
+      currentRoom: 'garden',
+      creatureStats: {
+        happiness: 85,
+        energy: 92,
+        magic: 78
+      },
+      messageIndex: 0,
+      critterType: 'koala' // Default to Koko the koala
+    };
+  };
+
+  const [petData, setPetData] = useState(loadPetData());
+  const [messageIndex, setMessageIndex] = useState(petData.messageIndex);
+  const [currentMiniGame, setCurrentMiniGame] = useState(null);
+
+  // Save to localStorage whenever petData changes
+  useEffect(() => {
+    localStorage.setItem('petData', JSON.stringify(petData));
+  }, [petData]);
+
+  // Initialize sound and animation engines when component mounts
+  useEffect(() => {
+    soundEngine.init();
+    // Start background music
+    soundEngine.sounds.backgroundMusic.play().catch(e => console.log('Background music play error:', e));
+  }, []);
+
+  const answerButtonRefs = useRef([]);
+
+  // Update speech bubble every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(updateSpeechBubble, 5000);
+    return () => clearInterval(interval);
+  }, [messageIndex]);
+
+  // Initialize answer button refs when currentMiniGame changes
+  useEffect(() => {
+    if (currentMiniGame) {
+      answerButtonRefs.current = Array(currentMiniGame.answers.length).fill().map((_, i) => React.createRef());
+    }
+  }, [currentMiniGame]);
+
+  const updateSpeechBubble = () => {
+    setMessageIndex(prevIndex => (prevIndex + 1) % speechMessages.length);
+  };
+
+  const petCreature = () => {
+    // Increase happiness
+    setPetData(prevData => ({
+      ...prevData,
+      creatureStats: {
+        ...prevData.creatureStats,
+        happiness: Math.min(100, prevData.creatureStats.happiness + 5),
+        energy: Math.min(100, prevData.creatureStats.energy + 3)
+      }
+    }));
+
+    // Play pet sound and create heart animation
+    soundEngine.play('petSound');
+    animationEngine.createFloatingHearts('heartContainer', 2);
+
+    alert("Sparkle loves your pets! +25 XP"); // Temporary - will replace with proper UI
+  };
+
+  const getRoomName = (room) => {
+    switch(room) {
+      case 'garden': return "🌷 The Enchanted Garden";
+      case 'library': return "📚 The Magical Library";
+      case 'playground': return "🎠 The Fun Playground";
+      default: return room.charAt(0).toUpperCase() + room.slice(1);
+    }
+  };
+
+  const getStatIcon = (stat) => {
+    switch(stat) {
+      case 'happiness': return "✨";
+      case 'energy': return "⚡";
+      case 'magic': return "🌈";
+      default: return "❓";
+    }
+  };
+
+  const getMiniGameType = (type) => {
+    switch(type) {
+      case 'feeding': return "🍎 Feeding Time!";
+      case 'bath': return "🛁 Bath Time!";
+      case 'play': return "🎮 Play Time!";
+      case 'decorate': return "🖌️ Decorating Fun!";
+      case 'explore': return "🌳 Exploration Adventure!";
+      default: return "Mini Game";
+    }
+  };
+
+  const handleAnswerSelection = (selectedIndex, buttonRef) => {
+    if (!currentMiniGame) return;
+
+    const isCorrect = selectedIndex === currentMiniGame.correct;
+    let message = `You selected: ${currentMiniGame.answers[selectedIndex]}\n`;
+
+    if (isCorrect) {
+      message += "✅ Correct! ";
+      message += petData.critterType === 'koala' ? "Koko loves it!" : "Sparkle loves it!";
+      // Award rewards
+      if (currentMiniGame.onCorrect) {
+        currentMiniGame.onCorrect();
+      }
+
+      // Play correct sound and create sparkles animation
+      soundEngine.play('correctAnswer');
+      animationEngine.createSparkles('sparkleContainer');
+
+      // Add GSAP bounce animation for correct answer
+      if (buttonRef && buttonRef.current) {
+        const btn = buttonRef.current;
+        gsap.fromTo(btn, { scale: 1 }, { scale: 1.2, duration: 0.3, yoyo: true, repeat: 1 });
+      }
+    } else {
+      message += "❌ Incorrect. Try again!";
+      // Play wrong sound and shake the button
+      soundEngine.play('wrongAnswer');
+      if (buttonRef && buttonRef.current) {
+        animationEngine.shakeElement(buttonRef.current.id);
+      }
+    }
+
+    alert(message); // Temporary - will replace with proper UI
+
+    // Reset mini game after a short delay
+    setTimeout(() => {
+      setCurrentMiniGame(null);
+    }, 1000);
+  };
+
+  const critterType = petData.critterType;
+  const speechMessages = critterType === 'koala' ? [
+    "Hello! I'm Koko the koala. 🐨",
+    "I love eating eucalyptus leaves! 🍃",
+    "You're my favorite friend! ✨",
+    "Let's explore the forest together! 🌳",
+    "Being with you makes me so happy! 😊"
+  ] : [
+    "I love spending time with you! 💕",
+    "Want to play a game together? 🎮",
+    "I'm getting a little hungry... 🍎",
+    "You're the best friend ever! ✨",
+    "Let's explore somewhere new! 🗺️",
+    "I feel so happy when you're here! 😊"
+  ];
+
+  return (
+    <div className="game-container mx-auto my-8 p-4 bg-white rounded-lg shadow-xl max-w-md">
+      <h2 className="text-3xl font-bold text-center mb-6">Pet Care Game</h2>
+
+      {/* Stats Bar */}
+      <div className="stats-bar space-y-2 mb-4">
+        {['happiness', 'energy', 'magic'].map((stat) => (
+          <div key={stat} className="flex items-center bg-gray-100 p-2 rounded-lg shadow-sm">
+            <span className="text-xl mr-2">{getStatIcon(stat)}</span>
+            <div className="flex-1 h-4 bg-gray-300 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green-500 to-blue-500"
+                style={{ width: `${petData.creatureStats[stat]}%` }}
+              ></div>
+            </div>
+            <span className="ml-2">{petData.creatureStats[stat]}%</span>
+          </div>
+        ))}
+
+      </div>
+
+      {/* Creature Area */}
+      <div className="creature-area text-center mb-6 relative">
+        <div
+          className="creature text-8xl cursor-pointer mx-auto text-yellow-300"
+          onClick={petCreature}
+          onTouchStart={petCreature} // Add touch support for tablets
+        >
+          {critterType === 'koala' ? "🐨" : "✨"}
+        </div>
+
+        {/* Heart Container for pet animations */}
+        <div className="hearts-container absolute inset-0 pointer-events-none z-10" id="heartContainer"></div>
+      </div>
+
+      {/* Current Room */}
+      <div className="current-room bg-purple-900 p-4 rounded-lg mb-6 shadow-inner">
+        <h3 className="text-xl font-bold mb-2 text-yellow-300">Current Room</h3>
+        <p className="text-center">{getRoomName(petData.currentRoom)}</p>
+      </div>
+
+      {/* Mini Game Area */}
+      {currentMiniGame && (
+        <div className="mini-game bg-purple-900 p-4 rounded-lg shadow-inner">
+          <h3 className="text-xl font-bold mb-2 text-yellow-300">{getMiniGameType(currentMiniGame.type)}</h3>
+          <p className="mb-4">{currentMiniGame.question}</p>
+
+          <div className="grid grid-cols-2 gap-2">
+            {currentMiniGame.answers.map((answer, index) => (
+              <button
+                key={index}
+                ref={answerButtonRefs.current[index]}
+                className="answer-button bg-indigo-700 text-white px-3 py-2 rounded-lg hover:bg-indigo-600 transition-all"
+                onClick={() => handleAnswerSelection(index, answerButtonRefs.current[index])}
+                onTouchStart={() => handleAnswerSelection(index, answerButtonRefs.current[index])} // Add touch support for tablets
+              >
+                {answer}
+              </button>
+            ))}
+          </div>
+
+          {/* Sparkle Container for correct answers */}
+          <div className="sparkles-container absolute inset-0 pointer-events-none z-10" id="sparkleContainer"></div>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
+export default PetCareGame;
+
+

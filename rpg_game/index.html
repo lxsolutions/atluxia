@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters RPG - Adventure Awaits!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(180deg, #2d1b69 0%, #11998e 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ffd700;
+        }
+
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+
+        /* RPG HUD */
+        .rpg-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 10px;
+            z-index: 100;
+        }
+
+        .level-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .level-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .xp-bar-container {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .xp-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #ffd700;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4aa);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0,255,136,0.5);
+        }
+
+        .xp-text {
+            font-size: 10px;
+            color: #ffd700;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .power-level {
+            color: #ff6b9d;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Creature Display */
+        .creature-area {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .creature-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .creature {
+            font-size: 100px;
+            animation: heroIdle 3s infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+            position: relative;
+        }
+
+        .creature:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(255,215,0,0.8));
+        }
+
+        .creature:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes heroIdle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-5px) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(-2deg); }
+        }
+
+        .creature-name {
+            font-size: 20px;
+            color: #ffd700;
+            font-weight: bold;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .creature-title {
+            font-size: 12px;
+            color: #ff6b9d;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Equipment Slots */
+        .equipment-slots {
+            position: absolute;
+            top: 20%;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .equipment-slot {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .equipment-slot:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+        }
+
+        .equipment-slot.equipped {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            box-shadow: 0 0 15px rgba(255,215,0,0.6);
+        }
+
+        .equipment-rarity {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .rarity-common { background: #9e9e9e; }
+        .rarity-rare { background: #2196f3; }
+        .rarity-epic { background: #9c27b0; }
+        .rarity-legendary { background: #ff9800; }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: absolute;
+            top: 20%;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 80px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        .stat-value {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Abilities Bar */
+        .abilities-bar {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ability-slot {
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ability-slot:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+        }
+
+        .ability-slot.unlocked {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            box-shadow: 0 0 15px rgba(76,175,80,0.6);
+        }
+
+        .ability-slot.locked {
+            background: rgba(0,0,0,0.6);
+            border-color: #666;
+            opacity: 0.5;
+        }
+
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Adventure Buttons */
+        .adventure-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .adventure-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #ffd700;
+            min-width: 60px;
+            position: relative;
+        }
+
+        .adventure-button:hover {
+            background: rgba(255,215,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+        }
+
+        .adventure-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .adventure-label {
+            font-size: 9px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .new-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            background: #ff4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Loot Drop Animation */
+        .loot-drop {
+            position: absolute;
+            font-size: 30px;
+            pointer-events: none;
+            animation: lootDrop 2s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes lootDrop {
+            0% {
+                opacity: 1;
+                transform: translateY(-50px) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(0) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(50px) scale(1);
+            }
+        }
+
+        /* Level Up Effect */
+        .level-up-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: levelUpPulse 3s ease-out forwards;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        @keyframes levelUpPulse {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Quest Overlay */
+        .quest-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+        }
+
+        .quest-panel {
+            background: linear-gradient(145deg, #2d1b69, #11998e);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 300px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .quest-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quest-description {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .quest-rewards {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .reward-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .quest-button {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .quest-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .quest-button.secondary {
+            background: linear-gradient(135deg, #666, #888);
+        }
+
+        /* Floating Combat Text */
+        .combat-text {
+            position: absolute;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: combatText 2s ease-out forwards;
+            z-index: 1000;
+        }
+
+        .combat-text.xp-gain {
+            color: #00ff88;
+        }
+
+        .combat-text.damage {
+            color: #ff4444;
+        }
+
+        .combat-text.heal {
+            color: #44ff44;
+        }
+
+        @keyframes combatText {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-80px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-screen">
+            <!-- RPG HUD -->
+            <div class="rpg-hud">
+                <div class="level-display">
+                    <div class="level-info">
+                        <div class="level-badge" id="levelBadge">Lv. 5</div>
+                        <div class="xp-bar-container">
+                            <div class="xp-bar">
+                                <div class="xp-fill" id="xpFill" style="width: 65%"></div>
+                            </div>
+                            <div class="xp-text" id="xpText">1,300 / 2,000 XP</div>
+                        </div>
+                    </div>
+                    <div class="power-level" id="powerLevel">⚡ 1,247 Power</div>
+                </div>
+            </div>
+
+            <!-- Equipment Slots -->
+            <div class="equipment-slots">
+                <div class="equipment-slot equipped" title="Magic Crown">
+                    👑
+                    <div class="equipment-rarity rarity-epic"></div>
+                </div>
+                <div class="equipment-slot equipped" title="Dragon Scale Armor">
+                    🛡️
+                    <div class="equipment-rarity rarity-rare"></div>
+                </div>
+                <div class="equipment-slot equipped" title="Fire Sword">
+                    ⚔️
+                    <div class="equipment-rarity rarity-legendary"></div>
+                </div>
+                <div class="equipment-slot" title="Empty Ring Slot">
+                    💍
+                </div>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-value" id="healthStat">850</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-value" id="attackStat">234</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🛡️</span>
+                    <span class="stat-value" id="defenseStat">156</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-value" id="speedStat">89</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🧠</span>
+                    <span class="stat-value" id="intelligenceStat">312</span>
+                </div>
+            </div>
+
+            <!-- Creature Display -->
+            <div class="creature-area">
+                <div class="creature-container">
+                    <div class="creature" id="creature" onclick="petCreature()">🐉</div>
+                </div>
+                <div class="creature-name" id="creatureName">Sparkle the Mighty</div>
+                <div class="creature-title" id="creatureTitle">Dragon Warrior • Level 5</div>
+            </div>
+
+            <!-- Abilities Bar -->
+            <div class="abilities-bar">
+                <div class="ability-slot unlocked" onclick="useAbility('fireball')" title="Fireball">
+                    🔥
+                    <div class="cooldown-overlay" id="fireball-cooldown"></div>
+                </div>
+                <div class="ability-slot unlocked" onclick="useAbility('heal')" title="Healing Light">
+                    ✨
+                    <div class="cooldown-overlay" id="heal-cooldown"></div>
+                </div>
+                <div class="ability-slot unlocked" onclick="useAbility('shield')" title="Magic Shield">
+                    🛡️
+                    <div class="cooldown-overlay" id="shield-cooldown"></div>
+                </div>
+                <div class="ability-slot locked" title="Unlock at Level 8">
+                    ❄️
+                </div>
+                <div class="ability-slot locked" title="Unlock at Level 12">
+                    ⚡
+                </div>
+            </div>
+
+            <!-- Adventure Panel -->
+            <div class="adventure-panel">
+                <div class="adventure-button" onclick="startAdventure('dungeon')">
+                    <div class="adventure-icon">🏰</div>
+                    <div class="adventure-label">Dungeon</div>
+                    <div class="new-indicator">!</div>
+                </div>
+                <div class="adventure-button" onclick="startAdventure('forest')">
+                    <div class="adventure-icon">🌲</div>
+                    <div class="adventure-label">Forest</div>
+                </div>
+                <div class="adventure-button" onclick="startAdventure('volcano')">
+                    <div class="adventure-icon">🌋</div>
+                    <div class="adventure-label">Volcano</div>
+                </div>
+                <div class="adventure-button" onclick="startAdventure('shop')">
+                    <div class="adventure-icon">🏪</div>
+                    <div class="adventure-label">Shop</div>
+                </div>
+                <div class="adventure-button" onclick="startAdventure('guild')">
+                    <div class="adventure-icon">⚔️</div>
+                    <div class="adventure-label">Guild</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quest Overlay -->
+        <div class="quest-overlay" id="questOverlay">
+            <div class="quest-panel" id="questPanel">
+                <!-- Quest content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            level: 5,
+            xp: 1300,
+            xpToNext: 2000,
+            power: 1247,
+            stats: {
+                health: 850,
+                attack: 234,
+                defense: 156,
+                speed: 89,
+                intelligence: 312
+            },
+            equipment: {
+                crown: { name: "Magic Crown", rarity: "epic", stats: { intelligence: 50 } },
+                armor: { name: "Dragon Scale Armor", rarity: "rare", stats: { defense: 75 } },
+                weapon: { name: "Fire Sword", rarity: "legendary", stats: { attack: 120 } },
+                ring: null
+            },
+            abilities: {
+                fireball: { unlocked: true, cooldown: 0 },
+                heal: { unlocked: true, cooldown: 0 },
+                shield: { unlocked: true, cooldown: 0 },
+                freeze: { unlocked: false, unlockLevel: 8 },
+                lightning: { unlocked: false, unlockLevel: 12 }
+            }
+        };
+
+        // Educational content disguised as RPG quests
+        const questDatabase = {
+            dungeon: [
+                {
+                    title: "🏰 The Number Crystal Dungeon",
+                    description: "Ancient number crystals are hidden in the dungeon! Help Sparkle solve the crystal puzzle to unlock the treasure chamber.",
+                    content: "Sparkle found 12 magic crystals, but 5 were cursed and crumbled away. How many crystals remain for the treasure?",
+                    answers: [7, 17, 8, 5],
+                    correct: 0,
+                    rewards: ["250 XP", "Fire Crystal", "Gold Coins"],
+                    subject: "math"
+                },
+                {
+                    title: "🏰 The Riddle of the Ancient Door",
+                    description: "A mysterious door blocks the path! Sparkle must read the ancient riddle to find the magic word that opens it.",
+                    content: "The riddle says: 'I am tall when I'm young, short when I'm old. What am I?' Choose the magic word:",
+                    answers: ["Candle", "Tree", "Mountain", "River"],
+                    correct: 0,
+                    rewards: ["300 XP", "Wisdom Scroll", "Magic Key"],
+                    subject: "reading"
+                }
+            ],
+            forest: [
+                {
+                    title: "🌲 The Color-Mixing Potion Quest",
+                    description: "Forest sprites need a special purple potion! Help Sparkle mix the right colors to create the magical brew.",
+                    content: "The sprites need purple potion for their magic. What colors should Sparkle mix together?",
+                    answers: ["Red + Blue", "Yellow + Green", "Red + Yellow", "Blue + Green"],
+                    correct: 0,
+                    rewards: ["200 XP", "Nature Essence", "Sprite Blessing"],
+                    subject: "science"
+                }
+            ],
+            volcano: [
+                {
+                    title: "🌋 The Dragon's Fire Challenge",
+                    description: "The Fire Dragon challenges Sparkle to a test of courage! Solve the pattern to prove your worth.",
+                    content: "Complete the fire pattern: 🔥🔥🌟🔥🔥🌟🔥🔥___",
+                    answers: ["🌟", "🔥", "💎", "⚡"],
+                    correct: 0,
+                    rewards: ["400 XP", "Dragon Scale", "Fire Immunity"],
+                    subject: "math"
+                }
+            ]
+        };
+
+        function petCreature() {
+            const creature = document.getElementById('creature');
+            
+            // Animate creature
+            creature.style.animation = 'none';
+            creature.offsetHeight;
+            creature.style.animation = 'heroIdle 0.5s ease';
+            
+            // Gain XP and show floating text
+            gainXP(25);
+            showCombatText("+25 XP", "xp-gain");
+            
+            // Random loot drop chance
+            if (Math.random() < 0.3) {
+                dropLoot();
+            }
+        }
+
+        function gainXP(amount) {
+            gameState.xp += amount;
+            
+            // Check for level up
+            if (gameState.xp >= gameState.xpToNext) {
+                levelUp();
+            }
+            
+            updateHUD();
+        }
+
+        function levelUp() {
+            gameState.level++;
+            gameState.xp = gameState.xp - gameState.xpToNext;
+            gameState.xpToNext = Math.floor(gameState.xpToNext * 1.5);
+            
+            // Increase stats
+            gameState.stats.health += 50;
+            gameState.stats.attack += 15;
+            gameState.stats.defense += 10;
+            gameState.stats.speed += 5;
+            gameState.stats.intelligence += 20;
+            gameState.power += 100;
+            
+            // Show level up effect
+            showLevelUpEffect();
+            
+            // Unlock new abilities
+            checkAbilityUnlocks();
+            
+            updateHUD();
+            updateStats();
+        }
+
+        function showLevelUpEffect() {
+            const effect = document.createElement('div');
+            effect.className = 'level-up-effect';
+            effect.textContent = `LEVEL UP! ${gameState.level}`;
+            document.querySelector('.game-screen').appendChild(effect);
+            
+            setTimeout(() => {
+                document.querySelector('.game-screen').removeChild(effect);
+            }, 3000);
+        }
+
+        function checkAbilityUnlocks() {
+            Object.keys(gameState.abilities).forEach(ability => {
+                const abilityData = gameState.abilities[ability];
+                if (!abilityData.unlocked && gameState.level >= abilityData.unlockLevel) {
+                    abilityData.unlocked = true;
+                    showCombatText(`${ability.toUpperCase()} UNLOCKED!`, "heal");
+                }
+            });
+            updateAbilities();
+        }
+
+        function dropLoot() {
+            const lootItems = ['💎', '🏆', '⭐', '🎁', '💰', '🔮'];
+            const randomLoot = lootItems[Math.floor(Math.random() * lootItems.length)];
+            
+            const loot = document.createElement('div');
+            loot.className = 'loot-drop';
+            loot.textContent = randomLoot;
+            loot.style.left = (Math.random() * 200 + 100) + 'px';
+            loot.style.top = '40%';
+            
+            document.querySelector('.game-screen').appendChild(loot);
+            
+            setTimeout(() => {
+                document.querySelector('.game-screen').removeChild(loot);
+            }, 2000);
+            
+            // Gain random reward
+            const rewards = ['Gold', 'Gem', 'Equipment', 'Potion'];
+            const reward = rewards[Math.floor(Math.random() * rewards.length)];
+            showCombatText(`+${reward}!`, "heal");
+        }
+
+        function showCombatText(text, type) {
+            const combatText = document.createElement('div');
+            combatText.className = `combat-text ${type}`;
+            combatText.textContent = text;
+            combatText.style.left = (Math.random() * 200 + 100) + 'px';
+            combatText.style.top = '30%';
+            
+            document.querySelector('.game-screen').appendChild(combatText);
+            
+            setTimeout(() => {
+                document.querySelector('.game-screen').removeChild(combatText);
+            }, 2000);
+        }
+
+        function useAbility(abilityName) {
+            const ability = gameState.abilities[abilityName];
+            
+            if (!ability.unlocked || ability.cooldown > 0) return;
+            
+            // Use ability
+            switch(abilityName) {
+                case 'fireball':
+                    showCombatText("🔥 FIREBALL!", "damage");
+                    gainXP(50);
+                    break;
+                case 'heal':
+                    showCombatText("✨ HEALED!", "heal");
+                    gainXP(30);
+                    break;
+                case 'shield':
+                    showCombatText("🛡️ PROTECTED!", "heal");
+                    gainXP(40);
+                    break;
+            }
+            
+            // Set cooldown
+            ability.cooldown = 5;
+            startCooldown(abilityName);
+        }
+
+        function startCooldown(abilityName) {
+            const cooldownElement = document.getElementById(`${abilityName}-cooldown`);
+            cooldownElement.style.display = 'flex';
+            cooldownElement.textContent = gameState.abilities[abilityName].cooldown;
+            
+            const interval = setInterval(() => {
+                gameState.abilities[abilityName].cooldown--;
+                cooldownElement.textContent = gameState.abilities[abilityName].cooldown;
+                
+                if (gameState.abilities[abilityName].cooldown <= 0) {
+                    cooldownElement.style.display = 'none';
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        function startAdventure(location) {
+            const quests = questDatabase[location];
+            if (!quests || quests.length === 0) {
+                showCombatText("Coming Soon!", "heal");
+                return;
+            }
+            
+            const randomQuest = quests[Math.floor(Math.random() * quests.length)];
+            showQuest(randomQuest);
+        }
+
+        function showQuest(quest) {
+            const overlay = document.getElementById('questOverlay');
+            const panel = document.getElementById('questPanel');
+            
+            panel.innerHTML = `
+                <div class="quest-title">${quest.title}</div>
+                <div class="quest-description">${quest.description}</div>
+                <div style="margin: 20px 0; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                    <p style="color: white; font-size: 16px; margin-bottom: 15px;">${quest.content}</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        ${quest.answers.map((answer, index) => 
+                            `<button class="quest-button" onclick="selectAnswer(${index}, ${quest.correct})">${answer}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                <div class="quest-rewards">
+                    <div style="color: #ffd700; font-weight: bold; margin-bottom: 5px;">Rewards:</div>
+                    ${quest.rewards.map(reward => `<div class="reward-item">${reward}</div>`).join('')}
+                </div>
+                <button class="quest-button secondary" onclick="closeQuest()">Skip Quest</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        function selectAnswer(selected, correct) {
+            if (selected === correct) {
+                showCombatText("CORRECT! +500 XP", "xp-gain");
+                gainXP(500);
+                dropLoot();
+            } else {
+                showCombatText("Good try! +100 XP", "heal");
+                gainXP(100);
+            }
+            closeQuest();
+        }
+
+        function closeQuest() {
+            document.getElementById('questOverlay').style.display = 'none';
+        }
+
+        function updateHUD() {
+            document.getElementById('levelBadge').textContent = `Lv. ${gameState.level}`;
+            document.getElementById('xpFill').style.width = `${(gameState.xp / gameState.xpToNext) * 100}%`;
+            document.getElementById('xpText').textContent = `${gameState.xp.toLocaleString()} / ${gameState.xpToNext.toLocaleString()} XP`;
+            document.getElementById('powerLevel').textContent = `⚡ ${gameState.power.toLocaleString()} Power`;
+            
+            // Update creature title
+            const titles = [
+                "Newborn Dragon", "Young Dragon", "Dragon Apprentice", "Dragon Warrior", 
+                "Dragon Knight", "Dragon Master", "Elder Dragon", "Ancient Dragon", 
+                "Legendary Dragon", "Mythical Dragon"
+            ];
+            const titleIndex = Math.min(gameState.level - 1, titles.length - 1);
+            document.getElementById('creatureTitle').textContent = `${titles[titleIndex]} • Level ${gameState.level}`;
+        }
+
+        function updateStats() {
+            document.getElementById('healthStat').textContent = gameState.stats.health;
+            document.getElementById('attackStat').textContent = gameState.stats.attack;
+            document.getElementById('defenseStat').textContent = gameState.stats.defense;
+            document.getElementById('speedStat').textContent = gameState.stats.speed;
+            document.getElementById('intelligenceStat').textContent = gameState.stats.intelligence;
+        }
+
+        function updateAbilities() {
+            const abilitySlots = document.querySelectorAll('.ability-slot');
+            const abilities = ['fireball', 'heal', 'shield', 'freeze', 'lightning'];
+            
+            abilities.forEach((ability, index) => {
+                const slot = abilitySlots[index];
+                const abilityData = gameState.abilities[ability];
+                
+                if (abilityData.unlocked) {
+                    slot.classList.remove('locked');
+                    slot.classList.add('unlocked');
+                } else {
+                    slot.classList.remove('unlocked');
+                    slot.classList.add('locked');
+                    slot.title = `Unlock at Level ${abilityData.unlockLevel}`;
+                }
+            });
+        }
+
+        // Initialize game
+        updateHUD();
+        updateStats();
+        updateAbilities();
+
+        // Auto-save and periodic events
+        setInterval(() => {
+            // Random events
+            if (Math.random() < 0.1) {
+                const events = [
+                    "Sparkle found a shiny coin! +50 XP",
+                    "A friendly fairy blessed Sparkle! +30 XP",
+                    "Sparkle discovered a hidden gem! +75 XP"
+                ];
+                const event = events[Math.floor(Math.random() * events.length)];
+                const xpGain = parseInt(event.match(/\+(\d+)/)[1]);
+                showCombatText(event, "xp-gain");
+                gainXP(xpGain);
+            }
+        }, 15000);
+
+        // Welcome message
+        setTimeout(() => {
+            showCombatText("Welcome back, Hero!", "heal");
+        }, 1000);
+    </script>
+</body>
+</html>

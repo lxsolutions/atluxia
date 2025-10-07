@@ -1,0 +1,77 @@
+name: curio_critters
+description: An educational Android game for kids aged 4-9 where they adopt cute creatures and complete personalized learning mini-games.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  
+  # HTTP & API
+  http: ^1.1.0
+  dio: ^5.4.0
+  
+  # UI & Animations
+  lottie: ^2.7.0
+  flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.0
+  flutter_staggered_animations: ^1.1.1
+  
+  # Audio
+  audioplayers: ^5.2.1
+  
+  # Storage & Preferences
+  shared_preferences: ^2.2.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  
+  # Utils
+  uuid: ^4.2.1
+  intl: ^0.19.0
+  flutter_dotenv: ^5.1.0
+  
+  # Icons & Fonts
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.7
+  mockito: ^5.4.4
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/images/creatures/
+    - assets/images/backgrounds/
+    - assets/images/ui/
+    - assets/sounds/
+    - assets/animations/
+    - .env
+  
+  fonts:
+    - family: ComicNeue
+      fonts:
+        - asset: assets/fonts/ComicNeue-Regular.ttf
+        - asset: assets/fonts/ComicNeue-Bold.ttf
+          weight: 700

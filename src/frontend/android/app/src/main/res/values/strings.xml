@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">cd /workspace/curio-critters/src/frontend &amp;&amp; echo \"y\" | npx cap init</string>
+    <string name="title_activity_main">cd /workspace/curio-critters/src/frontend &amp;&amp; echo \"y\" | npx cap init</string>
+    <string name="package_name">com.lxsolutions.curiocritters</string>
+    <string name="custom_url_scheme">com.lxsolutions.curiocritters</string>
+</resources>

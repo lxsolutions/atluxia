@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters - Educational Game for Kids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8eaff 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #6b73ff 0%, #9b59b6 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(107, 115, 255, 0.3);
+        }
+
+        .logo::before {
+            content: "🐾";
+            font-size: 50px;
+        }
+
+        h1 {
+            color: #6b73ff;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 40px;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+        }
+
+        .feature-card:nth-child(5) .feature-icon {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .feature-card:nth-child(6) .feature-icon {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .architecture {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
+        }
+
+        .architecture h2 {
+            color: #6b73ff;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .module {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #6b73ff;
+        }
+
+        .module h3 {
+            color: #6b73ff;
+            margin-bottom: 10px;
+        }
+
+        .module p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tech-stack {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .tech-stack h2 {
+            color: #6b73ff;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .tech-item {
+            background: #6b73ff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #6b73ff 0%, #9b59b6 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(107, 115, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .modules {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo"></div>
+            <h1>Curio Critters</h1>
+            <p class="subtitle">A comprehensive homeschool education system for children ages 4-9 that completely replaces traditional schooling through engaging, creature-driven learning adventures.</p>
+        </header>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3 class="feature-title">Complete K-4 Curriculum</h3>
+                <p class="feature-description">Full coverage of Math, Reading, Writing, Science, and Arts aligned to Common Core and NGSS standards.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">AI-Powered Personalization</h3>
+                <p class="feature-description">Dynamic lesson generation, adaptive assessments, and personalized learning paths for each child.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Daily Quest System</h3>
+                <p class="feature-description">Structured daily learning goals with review, new material, and assessments tailored to each child.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3 class="feature-title">Mastery-Based Progression</h3>
+                <p class="feature-description">Standards-based assessments unlock creature evolution and ensure educational mastery.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3 class="feature-title">Homeschool Compliance</h3>
+                <p class="feature-description">Legal documentation, exportable reports, and comprehensive record-keeping for state requirements.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Offline-First Design</h3>
+                <p class="feature-description">Full functionality without internet, with cloud sync when available for flexible learning.</p>
+            </div>
+        </section>
+
+        <section class="architecture">
+            <h2>App Architecture</h2>
+            <div class="modules">
+                <div class="module">
+                    <h3>Curriculum Engine</h3>
+                    <p>Standards-based learning progression with Common Core/NGSS alignment and adaptive pathways.</p>
+                </div>
+                <div class="module">
+                    <h3>AI Content Generator</h3>
+                    <p>Dynamic lesson creation, assessment generation, and personalized learning content for each child.</p>
+                </div>
+                <div class="module">
+                    <h3>Assessment System</h3>
+                    <p>Comprehensive testing with mastery tracking, detailed analytics, and standards alignment.</p>
+                </div>
+                <div class="module">
+                    <h3>Daily Quest Manager</h3>
+                    <p>Structured learning goals with adaptive difficulty and progress tracking across all subjects.</p>
+                </div>
+                <div class="module">
+                    <h3>Homeschool Compliance</h3>
+                    <p>Legal documentation, exportable reports, and comprehensive record-keeping for state requirements.</p>
+                </div>
+                <div class="module">
+                    <h3>Offline Learning System</h3>
+                    <p>Full curriculum access without internet, with cloud sync for seamless learning anywhere.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-stack">
+            <h2>Technology Stack</h2>
+            <div class="tech-items">
+                <span class="tech-item">Flutter 3.x</span>
+                <span class="tech-item">Dart</span>
+                <span class="tech-item">Firebase</span>
+                <span class="tech-item">OpenAI API</span>
+                <span class="tech-item">Common Core Standards</span>
+                <span class="tech-item">NGSS Standards</span>
+                <span class="tech-item">Offline-First Architecture</span>
+                <span class="tech-item">Provider State Management</span>
+                <span class="tech-item">Firestore</span>
+                <span class="tech-item">Cloud Storage</span>
+                <span class="tech-item">Material Design</span>
+                <span class="tech-item">Homeschool Compliance</span>
+            </div>
+        </section>
+
+        <div class="cta">
+            <a href="#" class="cta-button">Transform Education Today 🚀</a>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Animate logo
+            const logo = document.querySelector('.logo');
+            setInterval(() => {
+                logo.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    logo.style.transform = 'scale(1)';
+                }, 200);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+
+/* Floating hearts animation for Koko */
+.floating-hearts {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.heart {
+  position: absolute;
+  font-size: 24px;
+  color: #ff69b4;
+  animation: floatUp 2s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  50% { transform: translateY(-30px) scale(1.2); }
+  100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+}

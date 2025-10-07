@@ -1,0 +1,85 @@
+
+
+
+import React, { useEffect, useRef } from 'react';
+import soundEngine from '../utils/soundEngine';
+import animationEngine from '../utils/animationEngine';
+
+const PetCareGame = () => {
+  // Sample data for testing
+  const creature = {
+    happiness: 85,
+    energy: 70,
+    magic: 90,
+    emoji: '🐨'
+  };
+
+  const currentCreature = creature;
+  const currentSpeechBubble = "Hello!";
+  const answers = [
+    { text: "Feed", isCorrect: true },
+    { text: "Ignore", isCorrect: false }
+  ];
+
+  // Initialize sound and animation engines when component mounts
+  useEffect(() => {
+    soundEngine.init();
+    // Start background music using the sound engine
+    if (process.env.NODE_ENV !== 'test') {
+      soundEngine.play("backgroundMusic");
+    }
+  }, []);
+
+  const answerButtonRefs = useRef([]);
+
+  // Update speech bubble every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(updateSpeechBubble, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const updateSpeechBubble = () => {
+    // Logic to update speech bubble text
+  };
+
+  const handleAnswerSelection = (isCorrect) => {
+    if (isCorrect) {
+      soundEngine.play('correct');
+      animationEngine.createSparkles();
+    } else {
+      soundEngine.play('wrong');
+      animationEngine.shakeElement(answerButtonRefs.current[0]);
+    }
+  };
+
+  return (
+    <div className="pet-care-game">
+      <h1>Pet Care Game</h1>
+      <div className="creature-stats">
+        <p>Happiness: {creature.happiness}</p>
+        <p>Energy: {creature.energy}</p>
+        <p>Magic: {creature.magic}</p>
+      </div>
+      <div className="creature-area">
+        <div className="creature">{currentCreature.emoji}</div>
+        <div className="speech-bubble">{currentSpeechBubble}</div>
+        <div className="sparkles-container" id="sparkleContainer"></div>
+      </div>
+      <div className="answer-buttons">
+        {answers.map((answer, index) => (
+          <button
+            key={index}
+            ref={(el) => (answerButtonRefs.current[index] = el)}
+            onClick={() => handleAnswerSelection(answer.isCorrect)}
+          >
+            {answer.text}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PetCareGame;
+
+

@@ -1,0 +1,100 @@
+
+
+[
+  {
+    "id": "fluffy_cat",
+    "name": "Fluffy Cat",
+    "description": "A cute and playful cat with soft, fluffy fur.",
+    "emoji": "🐱✨",
+    "base_happiness": 60,
+    "base_energy": 75,
+    "base_magic": 80,
+    "rarity": "common",
+    "type": "cat",
+    "abilities": ["purr", "jump"],
+    "evolution_requirements": {
+      "xp": 1000,
+      "duplicates_needed": 2
+    },
+    "mini_games": [
+      { "id": "trampoline_jump", "type": "math_patterns" }
+    ]
+  },
+  {
+    "id": "unicorn_panda",
+    "name": "Unicorn Panda",
+    "description": "A magical panda with a sparkling unicorn horn.",
+    "emoji": "🦄🐼",
+    "base_happiness": 70,
+    "base_energy": 85,
+    "base_magic": 95,
+    "rarity": "rare",
+    "type": "panda",
+    "abilities": ["sparkle", "dance"],
+    "evolution_requirements": {
+      "xp": 2000,
+      "duplicates_needed": 3
+    },
+    "mini_games": [
+      { "id": "color_match", "type": "pattern_recognition" }
+    ]
+  },
+  {
+    "id": "dragon_bunny",
+    "name": "Dragon Bunny",
+    "description": "A tiny bunny with dragon wings and fire breath.",
+    "emoji": "🐇🔥",
+    "base_happiness": 50,
+    "base_energy": 60,
+    "base_magic": 70,
+    "rarity": "epic",
+    "type": "bunny",
+    "abilities": ["fly", "fire_breath"],
+    "evolution_requirements": {
+      "xp": 3000,
+      "duplicates_needed": 4
+    },
+    "mini_games": [
+      { "id": "math_quiz", "type": "arithmetic" }
+    ]
+  },
+  {
+    "id": "rainbow_squirrel",
+    "name": "Rainbow Squirrel",
+    "description": "A squirrel with a rainbow tail that loves to collect shiny objects.",
+    "emoji": "🐿️🌈",
+    "base_happiness": 65,
+    "base_energy": 70,
+    "base_magic": 85,
+    "rarity": "legendary",
+    "type": "squirrel",
+    "abilities": ["collect", "hide"],
+    "evolution_requirements": {
+      "xp": 4000,
+      "duplicates_needed": 5
+    },
+    "mini_games": [
+      { "id": "memory_game", "type": "memory" }
+    ]
+  },
+  {
+    "id": "mermaid_fox",
+    "name": "Mermaid Fox",
+    "description": "A fox with a mermaid tail that loves water and music.",
+    "emoji": "🦊🧜‍♀️",
+    "base_happiness": 75,
+    "base_energy": 80,
+    "base_magic": 90,
+    "rarity": "mythic",
+    "type": "fox",
+    "abilities": ["sing", "swim"],
+    "evolution_requirements": {
+      "xp": 5000,
+      "duplicates_needed": 6
+    },
+    "mini_games": [
+      { "id": "rhythm_game", "type": "music_patterns" }
+    ]
+  }
+]
+

@@ -1,0 +1,59 @@
+
+# Node modules
+node_modules/
+
+# Log files
+*.log
+
+# Build directories
+dist/
+build/
+
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+jspm_packages/
+
+# Mobile build directories
+.android/
+.ios/
+capacitor.config.ts  # If sensitive; otherwise keep for version control
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Misc
+Thumbs.db
+ehthumbs.db
+.Apple*
+Icon?
+._*
+*~
+*.bak
+*.swp
+*.tmp
+*.orig
+*.rej
+*.patch
+*.diff
+

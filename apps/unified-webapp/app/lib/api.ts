@@ -51,6 +51,22 @@ class ApiClient {
       return { success: true, data };
     } catch (error) {
       console.error(`API GET error for ${endpoint}:`, error);
+      
+      // Fallback to mock data for development
+      if (process.env.NODE_ENV === 'development') {
+        try {
+          const mockResponse = await fetch(`/api/mock/${this.baseUrl.includes('nomad') ? 'nomad' : 
+            this.baseUrl.includes('polyverse') ? 'polyverse' :
+            this.baseUrl.includes('everpath') ? 'everpath' : 'critters'}`);
+          if (mockResponse.ok) {
+            const mockData = await mockResponse.json();
+            return { success: true, data: mockData as T };
+          }
+        } catch (mockError) {
+          console.error('Mock data fallback failed:', mockError);
+        }
+      }
+      
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error' 
@@ -160,3 +176,51 @@ export async function getDashboardData() {
     };
   }
 }
+
+// Mock data for development
+export const mockDashboardData = {
+  nomad: {
+    success: true,
+    data: {
+      userStats: {
+        countriesVisited: 12,
+        activeBookings: 3,
+        visaApplications: 5,
+        totalTrips: 24
+      }
+    }
+  },
+  polyverse: {
+    success: true,
+    data: {
+      userStats: {
+        connections: 256,
+        posts: 42,
+        groups: 8,
+        reputation: 1250
+      }
+    }
+  },
+  everpath: {
+    success: true,
+    data: {
+      userStats: {
+        coursesInProgress: 3,
+        coursesCompleted: 8,
+        skillsLearned: 15,
+        learningHours: 120
+      }
+    }
+  },
+  critters: {
+    success: true,
+    data: {
+      userStats: {
+        playerLevel: 15,
+        crittersCollected: 42,
+        questsCompleted: 28,
+        badgesEarned: 8
+      }
+    }
+  }
+};

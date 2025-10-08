@@ -197,7 +197,7 @@ export default function AdminDashboard() {
                     <div className="mt-2">
                       {Object.entries(metric.tags).map(([key, value]) => (
                         <span key={key} className="inline-block text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded mr-1">
-                          {key}: {value}
+                          {key}: {String(value)}
                         </span>
                       ))}
                     </div>

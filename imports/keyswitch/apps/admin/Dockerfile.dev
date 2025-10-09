@@ -1,0 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Development Dockerfile for Admin App
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY apps/admin/package.json .
+COPY apps/admin/package-lock.json .
+
+RUN npm install --production=false
+
+COPY apps/admin/ ./
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+

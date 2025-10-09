@@ -1,0 +1,34 @@
+
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/core/package.json ./packages/core/
+COPY packages/db/package.json ./packages/db/
+COPY packages/ui/package.json ./packages/ui/
+COPY apps/web/package.json ./apps/web/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY packages/core ./packages/core
+COPY packages/db ./packages/db
+COPY packages/ui ./packages/ui
+COPY apps/web ./apps/web
+
+# Build packages
+RUN pnpm run -w build
+
+WORKDIR /app/apps/web
+
+EXPOSE 3000
+
+CMD ["pnpm", "run", "dev"]
+

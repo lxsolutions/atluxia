@@ -1,0 +1,92 @@
+
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Minimal schema to test
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String?
+  createdAt DateTime @default(now())
+
+  hostProfile    HostProfile?
+}
+
+model HostProfile {
+  id      String   @id @default(cuid())
+  userId  String   @unique
+  user    User     @relation(fields: [userId], references: [id])
+}
+
+model AirportRulePack {
+  id           String   @id @default(cuid())
+  airport_code String
+  version      String   // rulepack_version from the YAML
+  json_blob    Json     // The full rule pack as JSON
+  checksum     String   @unique // SHA256 checksum of the JSON blob
+  active       Boolean  @default(false)
+  created_by   String?  // User ID who created this rule pack
+  created_at   DateTime @default(now())
+  activated_at DateTime?
+
+  @@unique([airport_code, version])
+  @@index([airport_code])
+  @@index([active])
+}
+
+model Trip {
+  id            String   @id @default(cuid())
+  host_id       String
+  vehicle_id    String
+  airport_code  String
+  start_ts      DateTime
+  end_ts        DateTime
+  marketplace   String
+  ics_uid       String?  @unique
+  meta          Json?
+  path_geojson  Json?    // GeoJSON LineString of breadcrumbs
+  created_at    DateTime @default(now())
+  compliance    ComplianceResult?
+
+  @@index([host_id])
+  @@index([airport_code])
+  @@index([start_ts, end_ts])
+}
+
+model ComplianceResult {
+  id                String   @id @default(cuid())
+  trip_id           String   @unique
+  pass              Boolean
+  reasons           Json     // Array of strings
+  fees_breakdown    Json     // Array of {code: string, amount: number}
+  rulepack_version  String
+  assessed_at       DateTime @default(now())
+
+  trip Trip @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+}
+
+model Payout {
+  id          String   @id @default(cuid())
+  host_id     String
+  trip_id     String   @unique
+  amount_usd  Float
+  status      String   // pending, processing, completed, failed
+  transfer_id String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([host_id])
+  @@index([status])
+}
+
+
+

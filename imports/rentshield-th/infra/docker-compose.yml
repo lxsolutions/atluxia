@@ -1,0 +1,52 @@
+
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rentshield-postgres
+    environment:
+      POSTGRES_USER: rentshield
+      POSTGRES_PASSWORD: rentshield123
+      POSTGRES_DB: rentshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rentshield -d rentshield"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: rentshield-mailhog
+    ports:
+      - "8025:8025" # Web UI
+      - "1025:1025" # SMTP server
+
+  minio:
+    image: minio/minio
+    container_name: rentshield-minio
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: rentshield
+      MINIO_ROOT_PASSWORD: rentshield123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  postgres_data:
+  minio_data:
+

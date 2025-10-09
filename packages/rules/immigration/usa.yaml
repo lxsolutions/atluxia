@@ -1,0 +1,21 @@
+---
+country: USA
+version: 0.1
+paths:
+  - id: us_th_tourist_60
+    origin: USA
+    destination: TH
+    purpose: tourism
+    length_days: 60
+    entry_types: [visa_exempt, e-visa]
+    requirements:
+      - passport_validity_months: 6
+      - onward_ticket: true
+      - proof_of_funds_usd: 600
+    tasks:
+      - id: tm30
+        title: TM30 address reporting
+        due: "arrival+24h"
+      - id: day90
+        title: 90-day reporting (if still in TH)
+        due: "arrival+90d"

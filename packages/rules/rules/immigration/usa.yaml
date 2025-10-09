@@ -1,0 +1,103 @@
+
+version: "1.0.0"
+effectiveDate: "2025-01-01"
+countries:
+  TH:
+    - destination: "US"
+      purpose: "tourism"
+      stayLength:
+        min: 1
+        max: 90
+        unit: "days"
+      visaPaths:
+        - id: "us-visa-exempt-esta"
+          name: "ESTA Visa Waiver"
+          type: "visa_exempt"
+          stayLimit:
+            value: 90
+            unit: "days"
+          requirements:
+            - "Passport from ESTA-eligible country"
+            - "Valid ESTA authorization"
+            - "Proof of onward travel"
+          documents:
+            - type: "passport"
+              description: "Valid passport from ESTA-eligible country"
+            - type: "esta"
+              description: "Valid ESTA authorization"
+            - type: "flight_ticket"
+              description: "Onward flight ticket"
+          processingTime:
+            min: 0
+            max: 0
+            unit: "days"
+          fees:
+            government: 21
+            currency: "USD"
+          confidence: "high"
+          onlineApplication: true
+          notes:
+            - "ESTA valid for 2 years or until passport expires"
+            - "Maximum 90 days per visit"
+            - "Cannot be extended"
+
+        - id: "us-b1b2-visa"
+          name: "B1/B2 Tourist/Business Visa"
+          type: "consular_visa"
+          stayLimit:
+            value: 180
+            unit: "days"
+          requirements:
+            - "Passport valid for at least 6 months"
+            - "DS-160 application form"
+            - "Visa interview appointment"
+            - "Proof of strong ties to home country"
+          documents:
+            - type: "passport"
+              description: "Valid passport"
+            - type: "ds160"
+              description: "Completed DS-160 form"
+            - type: "photo"
+              description: "Passport-style photo"
+            - type: "financial_docs"
+              description: "Proof of financial support"
+          processingTime:
+            min: 14
+            max: 60
+            unit: "days"
+          fees:
+            government: 185
+            currency: "USD"
+          confidence: "medium"
+          appointmentRequired: true
+          notes:
+            - "10-year validity for many nationalities"
+            - "Interview required at US embassy/consulate"
+
+usSpecific:
+  esta:
+    eligibleCountries: ["TH", "GB", "FR", "DE", "JP", "KR", "AU", "NZ", "SG"]
+    validity: 24 # months
+    fee: 21
+    processingTime:
+      min: 1 # hours
+      max: 72 # hours
+  visaCategories:
+    - type: "B1/B2"
+      validity:
+        value: 10
+        unit: "years"
+      entryType: "multiple"
+      requirements:
+        - "DS-160 form"
+        - "Visa interview"
+        - "Proof of ties to home country"
+    - type: "F1"
+      validity:
+        value: 5
+        unit: "years"
+      entryType: "multiple"
+      requirements:
+        - "I-20 form from school"
+        - "Proof of financial support"
+        - "SEVIS fee payment"

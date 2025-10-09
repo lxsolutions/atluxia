@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+
+
+
+
+# Verifier Development Container
+
+FROM golang:1.20-alpine AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download && \
+    go build -o bin/verifier
+
+CMD ["./bin/verifier"]
+
+
+
+
+
+
+
+

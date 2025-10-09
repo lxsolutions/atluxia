@@ -1,0 +1,21 @@
+apiVersion: v2
+name: polyverse
+version: 0.1.0
+description: A Helm chart for PolyVerse MVP deployment
+
+type: application
+
+# Dependencies for the chart
+dependencies:
+  - name: postgresql
+    version: "12.1.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "17.3.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+  - name: opensearch
+    version: "2.10.0"
+    repository: "https://opensearch-project.github.io/helm-charts/"
+    condition: opensearch.enabled

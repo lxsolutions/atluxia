@@ -1,0 +1,284 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse Media Service API
+  description: API for uploading, transcoding, and serving media content
+  version: 0.1.0
+  contact:
+    name: LX Solutions
+    url: https://polyverse.social
+    email: dev@polyverse.social
+
+servers:
+  - url: http://localhost:3006
+    description: Development server
+  - url: https://media.polyverse.social
+    description: Production server
+
+tags:
+  - name: Media
+    description: Media upload and management operations
+  - name: Playback
+    description: Media playback and streaming endpoints
+
+paths:
+  /media/upload:
+    post:
+      tags:
+        - Media
+      summary: Initiate media upload
+      description: Creates a presigned URL for direct upload to storage and returns metadata
+      operationId: initiateMediaUpload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Media file to upload
+      responses:
+        '200':
+          description: Upload initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Invalid upload request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /media/ingest/callback:
+    post:
+      tags:
+        - Media
+      summary: Media processing callback
+      description: Callback endpoint for media worker to notify when processing is complete
+      operationId: mediaProcessingCallback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessingCallback'
+      responses:
+        '200':
+          description: Callback processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+        '400':
+          description: Invalid callback data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /media/{id}/manifest.m3u8:
+    get:
+      tags:
+        - Playback
+      summary: Get HLS manifest
+      description: Returns the HLS manifest for a media item
+      operationId: getHlsManifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Media ID
+      responses:
+        '200':
+          description: HLS manifest
+          content:
+            application/vnd.apple.mpegurl:
+              schema:
+                type: string
+        '404':
+          description: Media not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /media/{id}/meta:
+    get:
+      tags:
+        - Media
+      summary: Get media metadata
+      description: Returns metadata for a media item
+      operationId: getMediaMetadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Media ID
+      responses:
+        '200':
+          description: Media metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaMetadata'
+        '404':
+          description: Media not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      tags:
+        - System
+      summary: Health check
+      description: Returns service health status
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+components:
+  schemas:
+    UploadResponse:
+      type: object
+      properties:
+        mediaId:
+          type: string
+          description: Unique media identifier
+          example: abc123def456
+        uploadUrl:
+          type: string
+          format: uri
+          description: Presigned URL for direct upload
+          example: https://minio:9000/media/uploads/abc123def456/video.mp4
+        fields:
+          type: object
+          description: Additional fields required for upload
+          additionalProperties:
+            type: string
+        metadata:
+          $ref: '#/components/schemas/MediaMetadata'
+
+    MediaMetadata:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique media identifier
+        filename:
+          type: string
+          description: Original filename
+        contentType:
+          type: string
+          description: Media content type
+        fileSize:
+          type: integer
+          description: File size in bytes
+        status:
+          type: string
+          enum: [uploading, processing, ready, failed]
+          description: Current processing status
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        renditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rendition'
+          description: Available video renditions
+
+    Rendition:
+      type: object
+      properties:
+        quality:
+          type: string
+          description: Rendition quality label
+          example: 720p
+        width:
+          type: integer
+          description: Video width in pixels
+        height:
+          type: integer
+          description: Video height in pixels
+        bitrate:
+          type: integer
+          description: Video bitrate in bits per second
+        manifestUrl:
+          type: string
+          format: uri
+          description: HLS manifest URL
+
+    ProcessingCallback:
+      type: object
+      properties:
+        mediaId:
+          type: string
+          description: Media identifier
+        status:
+          type: string
+          enum: [success, failed]
+          description: Processing status
+        renditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rendition'
+          description: Generated renditions (if successful)
+        error:
+          type: string
+          description: Error message (if failed)
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+          nullable: true
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

@@ -1,0 +1,41 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+weight_profiles:
+  baseline: [0.2, 0.2, 0.2, 0.15, 0.15, 0.1]
+  climate_prior: [0.1, 0.15, 0.1, 0.15, 0.4, 0.1]
+  equity_prior: [0.15, 0.2, 0.3, 0.15, 0.1, 0.1]
+
+thresholds:
+  min_hourly_target: 0.8
+  max_risk: 3.0
+  fairness_regression_pct: 2.0
+  reserve_margin_slack_pct: 3.0
+
+rate_limits:
+  auto_exec_per_day: 50
+  max_budget_delta_pct: 1.0
+
+
+
+
+
+
+
+
+
+
+
+

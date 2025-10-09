@@ -1,0 +1,44 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+region: "Denver-Boulder"
+population: 1200000
+domain_toggles:
+  energy: true
+  housing: true
+  logistics: false
+  manufacturing: false
+
+seed_kpis:
+  real_wage: 35.0
+  unemployment: 4.8
+  atkinson_index: 0.25
+  carbon_intensity: 350
+  reserve_margin: 18
+  rent_burden: 28
+
+
+
+
+
+
+
+
+
+
+
+
+

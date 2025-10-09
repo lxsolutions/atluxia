@@ -1,0 +1,133 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "PolyVerse Overview",
+    "tags": ["polyverse", "monitoring"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Service Health",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"polyverse-services\"}",
+            "legendFormat": "{{instance}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "API Response Times",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])",
+            "legendFormat": "{{instance}} - {{method}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "Queue Lag",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "polyverse_queue_lag_seconds",
+            "legendFormat": "{{queue}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "Transcode Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "polyverse_media_transcode_duration_seconds",
+            "legendFormat": "{{resolution}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "Consensus Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "polyverse_consensus_duration_seconds",
+            "legendFormat": "{{lens}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "id": 6,
+        "title": "Webhook Success Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(polyverse_webhook_success_total[5m]) / rate(polyverse_webhook_total[5m])",
+            "legendFormat": "{{webhook_type}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        }
+      },
+      {
+        "id": 7,
+        "title": "Verification Errors",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(polyverse_verification_errors_total[5m])",
+            "legendFormat": "{{game}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        }
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"$schema": "http://json-schema.org/draft-07/schema#", "title": "PolyVerse Payment Schema", "type": "object", "required": ["to", "amount", "chain"], "properties": {"to": {"type": "string"}, "amount": {"type": "number"}, "chain": {"enum": ["lightning"]}, "memo": {"type": "string"}}}

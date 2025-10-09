@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d10" for="edge" attr.name="weight" attr.type="double"/>
+<key id="d9" for="edge" attr.name="type" attr.type="string"/>
+<key id="d8" for="node" attr.name="lock_state" attr.type="string"/>
+<key id="d7" for="node" attr.name="root_type" attr.type="string"/>
+<key id="d6" for="node" attr.name="quality_score" attr.type="double"/>
+<key id="d5" for="node" attr.name="stance" attr.type="string"/>
+<key id="d4" for="node" attr.name="source_url" attr.type="string"/>
+<key id="d3" for="node" attr.name="conditional_view" attr.type="string"/>
+<key id="d2" for="node" attr.name="confidence" attr.type="double"/>
+<key id="d1" for="node" attr.name="text" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="C001">
+  <data key="d0">claim</data>
+  <data key="d1">The synodic lunar month has an average duration of approximately 29.53 days.</data>
+  <data key="d2">0.8529313603914378</data>
+  <data key="d3"></data>
+</node>
+<node id="C002">
+  <data key="d0">claim</data>
+  <data key="d1">The lunar month is the time between two consecutive new moons.</data>
+  <data key="d2">0.7065921139768864</data>
+  <data key="d3"></data>
+</node>
+<node id="C003">
+  <data key="d0">claim</data>
+  <data key="d1">The synodic month includes all lunar phases: new moon, first quarter, full moon, and last quarter.</data>
+  <data key="d2">0.7065921139768864</data>
+  <data key="d3"></data>
+</node>
+<node id="E001">
+  <data key="d0">evidence</data>
+  <data key="d4">https://solarsystem.nasa.gov/moons/earths-moon/in-depth/</data>
+  <data key="d5">supports</data>
+  <data key="d6">0.9</data>
+</node>
+<node id="E002">
+  <data key="d0">evidence</data>
+  <data key="d4">https://www.usno.navy.mil/USNO/astronomical-applications/astronomical-information-center/earth-moon</data>
+  <data key="d5">supports</data>
+  <data key="d6">0.9</data>
+</node>
+<node id="E003">
+  <data key="d0">evidence</data>
+  <data key="d4">https://www.timeanddate.com/astronomy/moon/synodic-month.html</data>
+  <data key="d5">mixed/unclear</data>
+  <data key="d6">0.5</data>
+</node>
+<node id="R100">
+  <data key="d0">root</data>
+  <data key="d1">Primary documents and audited datasets have higher evidentiary value than secondary commentary.</data>
+  <data key="d7">structural</data>
+  <data key="d8">HELD</data>
+</node>
+<node id="R102">
+  <data key="d0">root</data>
+  <data key="d1">History is typically narrated by winners; suppressed primary sources can revise consensus views.</data>
+  <data key="d7">structural</data>
+  <data key="d8">HELD</data>
+</node>
+<edge source="C001" target="E001">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+<edge source="C001" target="E002">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+<edge source="C001" target="E003">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+<edge source="C002" target="E001">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+<edge source="C002" target="E003">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+<edge source="C003" target="E001">
+  <data key="d9">supports_evidence</data>
+  <data key="d10">1.0</data>
+</edge>
+</graph></graphml>

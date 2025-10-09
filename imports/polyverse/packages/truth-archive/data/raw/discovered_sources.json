@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://www.usno.navy.mil/USNO/astronomical-applications/astronomical-information-center/earth-moon",
+    "title": "Earth-Moon System - US Naval Observatory",
+    "description": "Official information about lunar cycles",
+    "source_type": "primary"
+  },
+  {
+    "url": "https://solarsystem.nasa.gov/moons/earths-moon/in-depth/",
+    "title": "Earth's Moon In-Depth - NASA",
+    "description": "Comprehensive data on lunar characteristics",
+    "source_type": "primary"
+  },
+  {
+    "url": "https://www.timeanddate.com/astronomy/moon/synodic-month.html",
+    "title": "Synodic Month Length - Time and Date",
+    "description": "Explanation of synodic month duration",
+    "source_type": "secondary"
+  }
+]

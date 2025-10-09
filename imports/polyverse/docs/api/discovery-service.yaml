@@ -1,0 +1,350 @@
+openapi: 3.0.3
+info:
+  title: PolyVerse Discovery Service API
+  description: |
+    Discovery Service providing recommendation bundles with transparency receipts.
+    Supports "Why this?" explanations and exposure analytics.
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.social
+
+servers:
+  - url: http://localhost:3008
+    description: Development server
+  - url: https://discovery.polyverse.social
+    description: Production server
+
+paths:
+  /discovery/bundles:
+    get:
+      summary: Get recommendation bundles
+      description: Returns multiple recommendation bundles with different algorithms and transparency receipts
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+          description: User ID for personalization
+        - name: context
+          in: query
+          schema:
+            type: string
+          description: Context for recommendations (home, search, topic)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+          description: Number of bundles to return
+      responses:
+        '200':
+          description: Recommendation bundles returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bundles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RecommendationBundle'
+                  metadata:
+                    type: object
+                    properties:
+                      totalBundles:
+                        type: integer
+                      userId:
+                        type: string
+                      context:
+                        type: string
+                      generatedAt:
+                        type: string
+                        format: date-time
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /discovery/explain/{bundleId}/{itemId}:
+    get:
+      summary: Get "Why this?" explanation
+      description: Returns detailed explanation for why a specific item was recommended
+      parameters:
+        - name: bundleId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Bundle ID
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Item ID
+        - name: userId
+          in: query
+          schema:
+            type: string
+          description: User ID for personalized explanation
+      responses:
+        '200':
+          description: Explanation returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  explanation:
+                    $ref: '#/components/schemas/RecommendationExplanation'
+                  rawFeatures:
+                    type: object
+                    properties:
+                      features:
+                        type: array
+                        items:
+                          type: string
+                      weights:
+                        type: object
+                      constraints:
+                        type: object
+                      itemMetadata:
+                        type: object
+                  metadata:
+                    type: object
+                    properties:
+                      bundleId:
+                        type: string
+                      itemId:
+                        type: string
+                      userId:
+                        type: string
+                      generatedAt:
+                        type: string
+                        format: date-time
+        '404':
+          description: Item not found
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /discovery/engagement:
+    post:
+      summary: Track user engagement
+      description: Records user engagement with recommendations for analytics and improvement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - bundleId
+                - itemId
+                - action
+              properties:
+                userId:
+                  type: string
+                  description: User ID
+                bundleId:
+                  type: string
+                  description: Bundle ID
+                itemId:
+                  type: string
+                  description: Item ID
+                action:
+                  type: string
+                  enum: ["view", "click", "like", "share", "save"]
+                  description: Engagement action
+                context:
+                  type: object
+                  description: Additional context for the engagement
+      responses:
+        '200':
+          description: Engagement recorded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  engagementId:
+                    type: string
+                  status:
+                    type: string
+                    example: "recorded"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          description: Missing required fields
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /discovery/analytics/exposure:
+    get:
+      summary: Get exposure analytics
+      description: Returns analytics about recommendation exposure and diversity
+      parameters:
+        - name: timeframe
+          in: query
+          schema:
+            type: string
+            enum: ["1d", "7d", "30d", "90d"]
+          description: Timeframe for analytics
+        - name: granularity
+          in: query
+          schema:
+            type: string
+            enum: ["hourly", "daily", "weekly"]
+          description: Granularity of data
+      responses:
+        '200':
+          description: Analytics returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timeframe:
+                    type: string
+                  granularity:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      totalImpressions:
+                        type: integer
+                      totalEngagements:
+                        type: integer
+                      engagementRate:
+                        type: number
+                      exposureByCluster:
+                        type: object
+                      exposureByTopic:
+                        type: object
+                      diversityMetrics:
+                        type: object
+                  metadata:
+                    type: object
+                    properties:
+                      generatedAt:
+                        type: string
+                        format: date-time
+                      dataSource:
+                        type: string
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns service health status
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  service:
+                    type: string
+
+components:
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  schemas:
+    RecommendationBundle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Bundle ID
+        name:
+          type: string
+          description: Bundle name
+        description:
+          type: string
+          description: Bundle description
+        type:
+          type: string
+          enum: ["trending", "personalized", "topic", "voice_balance"]
+          description: Bundle type
+        algorithm:
+          type: string
+          description: Algorithm used for recommendations
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentItem'
+        metadata:
+          type: object
+          description: Bundle metadata
+
+    ContentItem:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: ["video", "article", "audio", "image"]
+        title:
+          type: string
+        description:
+          type: string
+        creator:
+          type: string
+        views:
+          type: integer
+        likes:
+          type: integer
+        duration:
+          type: integer
+          nullable: true
+        thumbnail:
+          type: string
+          format: uri
+        url:
+          type: string
+          format: uri
+        topics:
+          type: array
+          items:
+            type: string
+
+    RecommendationExplanation:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Explanation title
+        description:
+          type: string
+          description: Detailed explanation
+        factors:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+              weight:
+                type: number

@@ -1,0 +1,395 @@
+openapi: 3.0.0
+info:
+  title: PolyVerse Games API
+  description: API for managing arena disputes, payments, verification, and leaderboards
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.example
+servers:
+  - url: http://localhost:8001
+    description: Development server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Dispute:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+          description: Linked truth claim ID
+        title:
+          type: string
+        description:
+          type: string
+        game_type:
+          type: string
+          enum: [sc2, aoe2, faf, other]
+        stake_amount:
+          type: number
+          format: float
+          minimum: 0
+        currency:
+          type: string
+          enum: [USD, USDC]
+        status:
+          type: string
+          enum: [draft, funding, active, verification, resolved, cancelled]
+        created_by:
+          type: string
+          format: uuid
+          description: User DID who created the dispute
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Argument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dispute_id:
+          type: string
+          format: uuid
+        side:
+          type: string
+          enum: [for, against]
+        title:
+          type: string
+        content:
+          type: string
+        evidence_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+        created_by:
+          type: string
+          format: uuid
+          description: User DID who created the argument
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PaymentIntent:
+      type: object
+      properties:
+        id:
+          type: string
+        client_secret:
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [requires_payment_method, requires_confirmation, requires_action, processing, requires_capture, canceled, succeeded]
+
+    VerificationResult:
+      type: object
+      properties:
+        dispute_id:
+          type: string
+          format: uuid
+        method:
+          type: string
+          enum: [sc2_replay, aoe2_replay, faf_replay, manual_review]
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        winner_side:
+          type: string
+          enum: [for, against, draw]
+        details:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        elo_rating:
+          type: integer
+        games_played:
+          type: integer
+        win_rate:
+          type: number
+          format: float
+        total_winnings:
+          type: number
+          format: float
+        last_activity:
+          type: string
+          format: date-time
+
+paths:
+  /api/disputes:
+    post:
+      summary: Create a new dispute
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                claim_id:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                description:
+                  type: string
+                game_type:
+                  type: string
+                  enum: [sc2, aoe2, faf, other]
+                stake_amount:
+                  type: number
+                  format: float
+                currency:
+                  type: string
+                  enum: [USD, USDC]
+      responses:
+        '201':
+          description: Dispute created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dispute'
+        '400':
+          description: Invalid input
+
+    get:
+      summary: List disputes
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, funding, active, verification, resolved, cancelled]
+        - name: game_type
+          in: query
+          schema:
+            type: string
+            enum: [sc2, aoe2, faf, other]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of disputes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dispute'
+
+  /api/disputes/{disputeId}:
+    get:
+      summary: Get dispute details
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dispute details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dispute'
+        '404':
+          description: Dispute not found
+
+  /api/disputes/{disputeId}/arguments:
+    post:
+      summary: Add argument to dispute
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                side:
+                  type: string
+                  enum: [for, against]
+                title:
+                  type: string
+                content:
+                  type: string
+                evidence_urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+      responses:
+        '201':
+          description: Argument added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Argument'
+
+    get:
+      summary: Get arguments for dispute
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of arguments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Argument'
+
+  /api/payments/intent:
+    post:
+      summary: Create payment intent
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dispute_id:
+                  type: string
+                  format: uuid
+                amount:
+                  type: integer
+                currency:
+                  type: string
+                  enum: [USD, USDC]
+      responses:
+        '200':
+          description: Payment intent created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntent'
+
+  /api/verify/{disputeId}:
+    post:
+      summary: Initiate verification for dispute
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Verification started
+        '400':
+          description: Dispute not ready for verification
+
+  /api/verify/status/{disputeId}:
+    get:
+      summary: Get verification status
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Verification status and result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResult'
+        '404':
+          description: No verification data found
+
+  /api/leaderboards:
+    get:
+      summary: Get leaderboards
+      parameters:
+        - name: game_type
+          in: query
+          schema:
+            type: string
+            enum: [sc2, aoe2, faf, overall]
+        - name: time_period
+          in: query
+          schema:
+            type: string
+            enum: [all_time, monthly, weekly]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Leaderboard data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaderboardEntry'

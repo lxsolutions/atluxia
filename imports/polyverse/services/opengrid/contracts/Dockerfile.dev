@@ -1,0 +1,35 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Contracts Development Container
+
+FROM foundry-rs/foundry:v0.2.1 AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN forge install && \
+    forge build
+
+CMD ["forge", "test"]
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Method",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "description": { "type": "string" },
+    "protocolRefs": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "author_pubkey": { "type": "string" },
+    "sig": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "validationStatus": { 
+      "type": "string", 
+      "enum": ["draft", "peer_reviewed", "community_validated", "deprecated"],
+      "default": "draft"
+    },
+    "limitations": { "type": ["string", "null"] },
+    "applicability": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "default": []
+    }
+  },
+  "required": [
+    "id", "description", "created_at", "author_pubkey", "sig"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_live_stream_created_abc123",
+    "type": "live_stream_created",
+    "timestamp": "2023-10-01T14:00:00Z",
+    "actor": {
+      "id": "user_123",
+      "type": "user"
+    },
+    "action": "live_stream_created",
+    "resource": {
+      "id": "live_abc123def456",
+      "type": "live_stream"
+    },
+    "context": {
+      "title": "My Live Stream",
+      "description": "Join me for a live session!",
+      "userId": "user_123",
+      "streamKey": "secret_stream_key_123",
+      "rtmpUrl": "rtmp://localhost:1935/live",
+      "playbackUrl": "http://localhost:3007/live/abc123def456/manifest.m3u8"
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": null
+  },
+  "streamMetadata": {
+    "streamId": "live_abc123def456",
+    "title": "My Live Stream",
+    "description": "Join me for a live session!",
+    "userId": "user_123",
+    "streamKey": "secret_stream_key_123",
+    "status": "created",
+    "viewerCount": 0,
+    "maxViewers": 0,
+    "createdAt": "2023-10-01T14:00:00Z",
+    "updatedAt": "2023-10-01T14:00:00Z"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PolyVerse Event Schema",
+  "type": "object",
+  "required": ["id", "kind", "created_at", "author_did", "sig"],
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { 
+      "enum": [
+        "post", "repost", "follow", "like", "profile", 
+        "wiki_edit", "moderation_decision", "transparency_record", "note"
+      ]
+    },
+    "created_at": { "type": "integer" },
+    "author_did": { "type": "string" },
+    "body": { 
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "media": { 
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cid": { "type": "string" },
+              "mime": { "type": "string" }
+            },
+            "required": ["cid", "mime"]
+          }
+        }
+      }
+    },
+    "refs": {
+      "type": "object",
+      "properties": {
+        "parent": { "type": "string" },
+        "quote": { "type": "string" },
+        "mentions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "topics": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "source": { "type": "string" },
+    "bundle_id": { "type": "string" },
+    "sig": { "type": "string" }
+  },
+  "definitions": {
+    "ModerationDecision": {
+      "type": "object",
+      "required": ["subject_event_id", "subject_user_id", "rules_triggered", "decision", "rationale", "reviewer"],
+      "properties": {
+        "subject_event_id": { "type": "string" },
+        "subject_user_id": { "type": "string" },
+        "rules_triggered": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "decision": { "enum": ["approve", "reject", "escalate", "no_action"] },
+        "rationale": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "signed_at": { "type": "integer" }
+      }
+    },
+    "TransparencyRecord": {
+      "type": "object",
+      "required": ["subject_event_id", "bundle_id", "inputs", "outputs", "explanation"],
+      "properties": {
+        "subject_event_id": { "type": "string" },
+        "bundle_id": { "type": "string" },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "score": { "type": "number" },
+            "rank": { "type": "integer" },
+            "decision": { "type": "string" }
+          }
+        },
+        "explanation": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "signed_at": { "type": "integer" }
+      }
+    }
+  }
+}

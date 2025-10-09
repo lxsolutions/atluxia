@@ -1,0 +1,86 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_recommendation_explanation_requested_abc123",
+    "type": "recommendation_explanation_requested",
+    "timestamp": "2023-10-01T15:05:00Z",
+    "actor": {
+      "id": "user_123",
+      "type": "user"
+    },
+    "action": "recommendation_explanation_requested",
+    "resource": {
+      "id": "content_1",
+      "type": "content_item"
+    },
+    "context": {
+      "userId": "user_123",
+      "bundleId": "bundle_trending",
+      "itemId": "content_1",
+      "explanationType": "Why this is trending",
+      "features": ["views", "likes", "freshness"],
+      "weights": {
+        "views": 0.4,
+        "likes": 0.3,
+        "freshness": 0.3
+      },
+      "constraints": {
+        "minViews": 500,
+        "minLikeRatio": 0.05
+      }
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": "transparency_recommendation_bundle_generated_abc123"
+  },
+  "explanation": {
+    "title": "Why this is trending",
+    "description": "This content is popular across the platform based on engagement metrics.",
+    "factors": [
+      {
+        "name": "View Count",
+        "value": 1500,
+        "weight": 0.4,
+        "description": "High view count indicates broad interest"
+      },
+      {
+        "name": "Like Ratio",
+        "value": 0.08,
+        "weight": 0.3,
+        "description": "Good engagement ratio relative to views"
+      },
+      {
+        "name": "Freshness",
+        "value": "High",
+        "weight": 0.3,
+        "description": "Recently published content"
+      }
+    ],
+    "algorithm": "popularity_weighted",
+    "bundleType": "trending"
+  },
+  "rawFeatures": {
+    "features": ["views", "likes", "freshness"],
+    "weights": {
+      "views": 0.4,
+      "likes": 0.3,
+      "freshness": 0.3
+    },
+    "constraints": {
+      "minViews": 500,
+      "minLikeRatio": 0.05
+    },
+    "itemMetadata": {
+      "id": "content_1",
+      "type": "video",
+      "title": "Introduction to PolyVerse",
+      "views": 1500,
+      "likes": 120,
+      "publishedAt": "2023-09-28T10:00:00Z"
+    }
+  },
+  "userContext": {
+    "userId": "user_123",
+    "bundleId": "bundle_trending",
+    "itemId": "content_1",
+    "requestTimestamp": "2023-10-01T15:05:00Z"
+  }
+}

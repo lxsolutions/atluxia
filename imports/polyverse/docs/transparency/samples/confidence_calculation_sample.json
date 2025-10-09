@@ -1,0 +1,49 @@
+{
+  "id": "trans_rec_truth_001",
+  "timestamp": "2025-09-16T11:15:22.456Z",
+  "actorId": "did:web:consensus.polyverse.example",
+  "context": {
+    "system": "truth",
+    "operation": "confidence_calculation",
+    "targetId": "claim_xyz789"
+  },
+  "inputs": {
+    "claimId": "claim_xyz789",
+    "lensId": "L2_expert_jury",
+    "evidenceCount": 3,
+    "counterclaimCount": 1,
+    "sourceReliability": 0.88
+  },
+  "computation": {
+    "method": "expert_jury_weighted",
+    "parameters": {
+      "jurySize": 7,
+      "diversityConstraints": ["icc", "un", "brics", "non_aligned"],
+      "calibrationWeight": 0.7,
+      "minExpertise": 0.8
+    },
+    "features": {
+      "juryDiversityScore": 0.92,
+      "averageCalibration": 0.85,
+      "evidenceQualityMean": 0.78,
+      "methodologyScore": 0.82,
+      "consensusStrength": 0.88,
+      "baseConfidence": 0.76
+    }
+  },
+  "output": {
+    "confidenceScore": 0.76,
+    "confidenceInterval": [0.68, 0.83],
+    "dissentingViews": [
+      {
+        "jurorId": "juror_005",
+        "score": 0.62,
+        "rationale": "Methodology concerns with evidence collection"
+      }
+    ],
+    "lensUsed": "L2_expert_jury",
+    "transparencyRecordId": "trans_rec_truth_001"
+  },
+  "signature": "ed25519:def789abc123...",
+  "previousRecordId": "trans_rec_evidence_review_001"
+}

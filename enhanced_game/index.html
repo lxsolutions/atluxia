@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curio Critters Enhanced - Ultimate Pet Care RPG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #4a5568;
+        }
+
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        /* Enhanced HUD */
+        .enhanced-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 10px;
+            z-index: 100;
+        }
+
+        .creature-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .creature-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .creature-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .creature-name-level {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .mood-indicator {
+            font-size: 12px;
+            color: #ff6b9d;
+            font-style: italic;
+        }
+
+        .currency-display {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Enhanced Stats */
+        .enhanced-stats {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-mini {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-fill-mini {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .hunger-fill { background: linear-gradient(90deg, #ff6b9d, #ff8e8e); }
+        .energy-fill { background: linear-gradient(90deg, #4ecdc4, #44a08d); }
+        .happiness-fill { background: linear-gradient(90deg, #ffd700, #ffed4e); }
+        .cleanliness-fill { background: linear-gradient(90deg, #87ceeb, #98fb98); }
+
+        /* Enhanced Creature Area */
+        .enhanced-creature-area {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .creature-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .enhanced-creature {
+            font-size: 120px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            position: relative;
+            animation: creatureIdle 4s infinite ease-in-out;
+        }
+
+        .enhanced-creature:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
+        }
+
+        .enhanced-creature:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes creatureIdle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(3deg); }
+            50% { transform: translateY(-8px) rotate(0deg); }
+            75% { transform: translateY(-20px) rotate(-3deg); }
+        }
+
+        .creature-mood-bubble {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            animation: moodBubble 6s infinite;
+        }
+
+        @keyframes moodBubble {
+            0%, 80%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            10%, 70% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Enhanced Environment */
+        .environment-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particleFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        /* Enhanced Room System */
+        .room-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: all 0.8s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .room-kitchen {
+            background: linear-gradient(180deg, #FFE5B4 0%, #FFCCCB 100%);
+        }
+
+        .room-bathroom {
+            background: linear-gradient(180deg, #E0F6FF 0%, #B0E0E6 100%);
+        }
+
+        .room-playroom {
+            background: linear-gradient(180deg, #FFB6C1 0%, #FFA07A 100%);
+        }
+
+        .room-bedroom {
+            background: linear-gradient(180deg, #E6E6FA 0%, #DDA0DD 100%);
+        }
+
+        .room-garden {
+            background: linear-gradient(180deg, #98FB98 0%, #90EE90 100%);
+        }
+
+        /* Interactive Objects */
+        .interactive-objects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 60;
+        }
+
+        .interactive-object {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: objectPulse 2s infinite ease-in-out;
+        }
+
+        .interactive-object:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+        }
+
+        @keyframes objectPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Enhanced Navigation */
+        .enhanced-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .nav-room {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid transparent;
+            min-width: 60px;
+            position: relative;
+        }
+
+        .nav-room:hover {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(255,215,0,0.3);
+        }
+
+        .nav-room.active {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .nav-room.active .nav-icon {
+            color: #1a1a2e;
+        }
+
+        .nav-room.active .nav-label {
+            color: #1a1a2e;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .need-alert {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: #ff4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            animation: alertPulse 1s infinite;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Enhanced Mini-Game Overlay */
+        .enhanced-minigame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .minigame-panel {
+            background: linear-gradient(145deg, #2d1b69, #11998e);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: panelSlideIn 0.5s ease-out;
+        }
+
+        @keyframes panelSlideIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(50px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .minigame-title {
+            color: #ffd700;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .minigame-content {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .game-area {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .interactive-element {
+            font-size: 40px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .interactive-element:hover {
+            transform: scale(1.2);
+            background: rgba(255,215,0,0.2);
+        }
+
+        .interactive-element:active {
+            transform: scale(0.9);
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .answer-button {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .answer-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .answer-button:active {
+            transform: translateY(0);
+        }
+
+        .close-button {
+            background: linear-gradient(135deg, #666, #888);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* Achievement System */
+        .achievement-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 2000;
+            opacity: 0;
+            animation: achievementPop 4s ease-out;
+        }
+
+        @keyframes achievementPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+
+        /* Enhanced Effects */
+        .floating-number {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatNumber 2s ease-out forwards;
+            z-index: 1500;
+        }
+
+        .xp-number { color: #00ff88; }
+        .coin-number { color: #ffd700; }
+        .heart-number { color: #ff6b9d; }
+
+        @keyframes floatNumber {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-80px) scale(1.5);
+            }
+        }
+
+        .sparkle-effect {
+            position: absolute;
+            font-size: 16px;
+            color: #ffd700;
+            pointer-events: none;
+            animation: sparkle 1.5s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-screen">
+            <!-- Room Background -->
+            <div class="room-background room-garden" id="roomBackground"></div>
+            
+            <!-- Environment Effects -->
+            <div class="environment-effects" id="environmentEffects"></div>
+            
+            <!-- Interactive Objects -->
+            <div class="interactive-objects" id="interactiveObjects"></div>
+            
+            <!-- Enhanced HUD -->
+            <div class="enhanced-hud">
+                <div class="creature-info">
+                    <div class="creature-avatar" id="creatureAvatar">🐉</div>
+                    <div class="creature-details">
+                        <div class="creature-name-level" id="creatureNameLevel">Sparkle • Level 5</div>
+                        <div class="mood-indicator" id="moodIndicator">Feeling Happy! 😊</div>
+                    </div>
+                    <div class="currency-display">
+                        <div class="currency-item">
+                            <span>💰</span>
+                            <span id="goldAmount">1,247</span>
+                        </div>
+                        <div class="currency-item">
+                            <span>💎</span>
+                            <span id="gemAmount">23</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="enhanced-stats">
+                    <div class="stat-mini" title="Hunger">
+                        <div class="stat-fill-mini hunger-fill" id="hungerFill" style="width: 75%"></div>
+                    </div>
+                    <div class="stat-mini" title="Energy">
+                        <div class="stat-fill-mini energy-fill" id="energyFill" style="width: 85%"></div>
+                    </div>
+                    <div class="stat-mini" title="Happiness">
+                        <div class="stat-fill-mini happiness-fill" id="happinessFill" style="width: 92%"></div>
+                    </div>
+                    <div class="stat-mini" title="Cleanliness">
+                        <div class="stat-fill-mini cleanliness-fill" id="cleanlinessFill" style="width: 68%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Creature Area -->
+            <div class="enhanced-creature-area">
+                <div class="creature-container">
+                    <div class="enhanced-creature" id="enhancedCreature" onclick="interactWithCreature()">🐉</div>
+                    <div class="creature-mood-bubble" id="moodBubble">I love you! 💕</div>
+                </div>
+            </div>
+
+            <!-- Enhanced Navigation -->
+            <div class="enhanced-nav">
+                <div class="nav-room active" onclick="switchRoom('garden')" id="gardenNav">
+                    <div class="nav-icon">🌳</div>
+                    <div class="nav-label">Garden</div>
+                </div>
+                <div class="nav-room" onclick="switchRoom('kitchen')" id="kitchenNav">
+                    <div class="nav-icon">🍎</div>
+                    <div class="nav-label">Kitchen</div>
+                    <div class="need-alert" id="hungerAlert">!</div>
+                </div>
+                <div class="nav-room" onclick="switchRoom('bathroom')" id="bathroomNav">
+                    <div class="nav-icon">🛁</div>
+                    <div class="nav-label">Bathroom</div>
+                    <div class="need-alert" id="cleanAlert" style="display: none;">!</div>
+                </div>
+                <div class="nav-room" onclick="switchRoom('playroom')" id="playroomNav">
+                    <div class="nav-icon">🎮</div>
+                    <div class="nav-label">Playroom</div>
+                </div>
+                <div class="nav-room" onclick="switchRoom('bedroom')" id="bedroomNav">
+                    <div class="nav-icon">🛏️</div>
+                    <div class="nav-label">Bedroom</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Mini-Game Overlay -->
+        <div class="enhanced-minigame" id="enhancedMinigame">
+            <div class="minigame-panel" id="minigamePanel">
+                <!-- Mini-game content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Game State
+        let enhancedGameState = {
+            creature: {
+                name: "Sparkle",
+                level: 5,
+                xp: 1300,
+                xpToNext: 2000,
+                mood: "happy",
+                personality: "playful"
+            },
+            stats: {
+                hunger: 75,
+                energy: 85,
+                happiness: 92,
+                cleanliness: 68
+            },
+            currency: {
+                gold: 1247,
+                gems: 23
+            },
+            currentRoom: "garden",
+            achievements: [],
+            inventory: [],
+            lastInteraction: Date.now()
+        };
+
+        // Mood messages based on stats and personality
+        const moodMessages = {
+            happy: [
+                "I love spending time with you! 💕",
+                "This is the best day ever! ✨",
+                "You make me so happy! 😊",
+                "Let's play together! 🎮",
+                "I feel amazing! 🌟"
+            ],
+            hungry: [
+                "My tummy is rumbling... 🍎",
+                "Could we get some food? 😋",
+                "I'm getting pretty hungry! 🥺",
+                "Food would be nice right now! 🍇"
+            ],
+            tired: [
+                "I'm feeling sleepy... 😴",
+                "Maybe we could rest a bit? 💤",
+                "I need some energy! ⚡",
+                "A nap sounds good! 🛏️"
+            ],
+            dirty: [
+                "I could use a bath! 🛁",
+                "I'm feeling a bit messy... 🧼",
+                "Bubble bath time? 🫧",
+                "Let's get clean! ✨"
+            ],
+            playful: [
+                "Want to play a game? 🎯",
+                "I'm ready for adventure! ⚔️",
+                "Let's explore together! 🗺️",
+                "Games are so fun! 🎲"
+            ]
+        };
+
+        // Room-specific interactive objects
+        const roomObjects = {
+            garden: [
+                { emoji: "🌸", x: "20%", y: "60%", action: "flower" },
+                { emoji: "🦋", x: "70%", y: "40%", action: "butterfly" },
+                { emoji: "🌰", x: "50%", y: "70%", action: "acorn" },
+                { emoji: "🐛", x: "30%", y: "80%", action: "bug" }
+            ],
+            kitchen: [
+                { emoji: "🍎", x: "25%", y: "50%", action: "apple" },
+                { emoji: "🥕", x: "60%", y: "45%", action: "carrot" },
+                { emoji: "🍇", x: "40%", y: "65%", action: "grapes" },
+                { emoji: "🥛", x: "75%", y: "55%", action: "milk" }
+            ],
+            bathroom: [
+                { emoji: "🧼", x: "30%", y: "50%", action: "soap" },
+                { emoji: "🚿", x: "60%", y: "40%", action: "shower" },
+                { emoji: "🧽", x: "45%", y: "70%", action: "sponge" },
+                { emoji: "🛁", x: "70%", y: "60%", action: "bathtub" }
+            ],
+            playroom: [
+                { emoji: "🎲", x: "25%", y: "55%", action: "dice" },
+                { emoji: "🧸", x: "65%", y: "45%", action: "teddy" },
+                { emoji: "🎨", x: "40%", y: "70%", action: "paint" },
+                { emoji: "📚", x: "75%", y: "50%", action: "book" }
+            ],
+            bedroom: [
+                { emoji: "🛏️", x: "50%", y: "60%", action: "bed" },
+                { emoji: "🕯️", x: "25%", y: "45%", action: "candle" },
+                { emoji: "🧸", x: "70%", y: "50%", action: "pillow" },
+                { emoji: "⭐", x: "60%", y: "30%", action: "star" }
+            ]
+        };
+
+        // Enhanced mini-games with better mechanics
+        const enhancedMiniGames = {
+            feeding: {
+                title: "🍎 Magical Fruit Counting",
+                description: "Help Sparkle count the magical fruits for a healthy snack!",
+                generateContent: () => {
+                    const fruits = ["🍎", "🍊", "🍌", "🍇", "🥝"];
+                    const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
+                    const count = Math.floor(Math.random() * 8) + 3;
+                    const eaten = Math.floor(Math.random() * (count - 1)) + 1;
+                    const remaining = count - eaten;
+                    
+                    return {
+                        content: `Sparkle found ${count} delicious ${selectedFruit} fruits! He ate ${eaten} of them. How many are left for later?`,
+                        visual: selectedFruit.repeat(count),
+                        answers: [remaining, remaining + 1, remaining - 1, count],
+                        correct: 0,
+                        subject: "math"
+                    };
+                }
+            },
+            bathing: {
+                title: "🛁 Rainbow Bubble Science",
+                description: "Mix magical colors to create the perfect bubble bath!",
+                generateContent: () => {
+                    const colorCombos = [
+                        { colors: ["Red", "Blue"], result: "Purple", correct: 0 },
+                        { colors: ["Yellow", "Blue"], result: "Green", correct: 1 },
+                        { colors: ["Red", "Yellow"], result: "Orange", correct: 2 }
+                    ];
+                    const combo = colorCombos[Math.floor(Math.random() * colorCombos.length)];
+                    
+                    return {
+                        content: `Sparkle wants ${combo.result.toLowerCase()} bubbles! What colors should we mix?`,
+                        visual: "🫧".repeat(8),
+                        answers: [`${combo.colors[0]} + ${combo.colors[1]}`, "Yellow + Green", "Blue + Orange", "Red + Green"],
+                        correct: combo.correct,
+                        subject: "science"
+                    };
+                }
+            },
+            playing: {
+                title: "🎮 Treasure Hunt Adventure",
+                description: "Follow the clues to find Sparkle's hidden treasure!",
+                generateContent: () => {
+                    const clues = [
+                        { clue: "Where flowers bloom and butterflies dance", answer: "Garden", locations: ["Garden", "Kitchen", "Bedroom", "Bathroom"] },
+                        { clue: "Where bubbles pop and water flows", answer: "Bathroom", locations: ["Garden", "Kitchen", "Bedroom", "Bathroom"] },
+                        { clue: "Where dreams are made and rest is found", answer: "Bedroom", locations: ["Garden", "Kitchen", "Bedroom", "Bathroom"] },
+                        { clue: "Where yummy treats and snacks are kept", answer: "Kitchen", locations: ["Garden", "Kitchen", "Bedroom", "Bathroom"] }
+                    ];
+                    const selectedClue = clues[Math.floor(Math.random() * clues.length)];
+                    
+                    return {
+                        content: `🗺️ The treasure map says: "${selectedClue.clue}" Where should Sparkle look?`,
+                        visual: "🗺️✨🏆",
+                        answers: selectedClue.locations,
+                        correct: selectedClue.locations.indexOf(selectedClue.answer),
+                        subject: "reading"
+                    };
+                }
+            }
+        };
+
+        // Enhanced creature interaction
+        function interactWithCreature() {
+            const creature = document.getElementById('enhancedCreature');
+            
+            // Enhanced animation
+            creature.style.animation = 'none';
+            creature.offsetHeight;
+            creature.style.animation = 'creatureIdle 1s ease';
+            
+            // Gain rewards based on current stats
+            let xpGain = 25;
+            let goldGain = Math.floor(Math.random() * 10) + 5;
+            
+            // Bonus for good care
+            if (enhancedGameState.stats.happiness > 80) {
+                xpGain += 15;
+                goldGain += 5;
+            }
+            
+            // Update currency
+            enhancedGameState.currency.gold += goldGain;
+            enhancedGameState.currency.gems += Math.random() < 0.1 ? 1 : 0;
+            
+            // Show floating numbers
+            showFloatingNumber(`+${xpGain} XP`, "xp-number");
+            showFloatingNumber(`+${goldGain} Gold`, "coin-number");
+            
+            // Create sparkle effects
+            createSparkleEffect();
+            
+            // Increase happiness
+            enhancedGameState.stats.happiness = Math.min(100, enhancedGameState.stats.happiness + 3);
+            
+            // Random achievement chance
+            if (Math.random() < 0.05) {
+                showAchievement("Pet Lover!", "Sparkle feels so loved! 💕");
+            }
+            
+            updateDisplay();
+            updateMood();
+        }
+
+        // Enhanced room switching with better transitions
+        function switchRoom(room) {
+            if (enhancedGameState.currentRoom === room) return;
+            
+            enhancedGameState.currentRoom = room;
+            
+            // Update navigation
+            document.querySelectorAll('.nav-room').forEach(nav => nav.classList.remove('active'));
+            document.getElementById(room + 'Nav').classList.add('active');
+            
+            // Update background
+            const background = document.getElementById('roomBackground');
+            background.className = `room-background room-${room}`;
+            
+            // Update interactive objects
+            updateInteractiveObjects(room);
+            
+            // Update environment effects
+            updateEnvironmentEffects(room);
+            
+            // Room-specific creature mood
+            setTimeout(() => {
+                updateCreatureMoodForRoom(room);
+            }, 500);
+            
+            // Auto-trigger room activities after a delay
+            setTimeout(() => {
+                if (room === 'kitchen' && enhancedGameState.stats.hunger < 50) {
+                    showMiniGame('feeding');
+                } else if (room === 'bathroom' && enhancedGameState.stats.cleanliness < 50) {
+                    showMiniGame('bathing');
+                } else if (room === 'playroom' && enhancedGameState.stats.happiness < 70) {
+                    showMiniGame('playing');
+                }
+            }, 2000);
+        }
+
+        // Update interactive objects for current room
+        function updateInteractiveObjects(room) {
+            const container = document.getElementById('interactiveObjects');
+            container.innerHTML = '';
+            
+            const objects = roomObjects[room] || [];
+            objects.forEach(obj => {
+                const element = document.createElement('div');
+                element.className = 'interactive-object';
+                element.textContent = obj.emoji;
+                element.style.left = obj.x;
+                element.style.top = obj.y;
+                element.onclick = () => interactWithObject(obj.action);
+                container.appendChild(element);
+            });
+        }
+
+        // Interact with room objects
+        function interactWithObject(action) {
+            const rewards = {
+                flower: { happiness: 5, gold: 3, message: "Beautiful flower! 🌸" },
+                butterfly: { happiness: 8, gold: 5, message: "Magical butterfly! 🦋" },
+                apple: { hunger: 15, gold: 2, message: "Yummy apple! 🍎" },
+                soap: { cleanliness: 20, gold: 3, message: "So clean! 🧼" },
+                teddy: { happiness: 12, gold: 4, message: "Cuddly teddy! 🧸" },
+                book: { happiness: 10, gold: 6, message: "Great story! 📚" }
+            };
+            
+            const reward = rewards[action];
+            if (reward) {
+                // Apply stat changes
+                Object.keys(reward).forEach(stat => {
+                    if (stat !== 'message' && enhancedGameState.stats[stat] !== undefined) {
+                        enhancedGameState.stats[stat] = Math.min(100, enhancedGameState.stats[stat] + reward[stat]);
+                    } else if (stat === 'gold') {
+                        enhancedGameState.currency.gold += reward[stat];
+                    }
+                });
+                
+                // Show feedback
+                showFloatingNumber(reward.message, "heart-number");
+                createSparkleEffect();
+                
+                updateDisplay();
+                updateMood();
+            }
+        }
+
+        // Enhanced mini-game system
+        function showMiniGame(type) {
+            const game = enhancedMiniGames[type];
+            if (!game) return;
+            
+            const content = game.generateContent();
+            const overlay = document.getElementById('enhancedMinigame');
+            const panel = document.getElementById('minigamePanel');
+            
+            panel.innerHTML = `
+                <div class="minigame-title">${game.title}</div>
+                <div class="minigame-content">${game.description}</div>
+                <div class="game-area">
+                    <div style="font-size: 24px; margin-bottom: 15px;">${content.visual}</div>
+                    <div style="color: #ffd700; font-size: 16px; margin-bottom: 15px;">${content.content}</div>
+                    <div class="answer-grid">
+                        ${content.answers.map((answer, index) => 
+                            `<button class="answer-button" onclick="selectGameAnswer(${index}, ${content.correct}, '${type}')">${answer}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                <button class="close-button" onclick="closeMiniGame()">Skip for now</button>
+            `;
+            
+            overlay.style.display = 'flex';
+        }
+
+        // Handle mini-game answers
+        function selectGameAnswer(selected, correct, gameType) {
+            const isCorrect = selected === correct;
+            
+            if (isCorrect) {
+                // Correct answer rewards
+                const rewards = {
+                    feeding: { hunger: 25, happiness: 15, gold: 50, xp: 100 },
+                    bathing: { cleanliness: 30, happiness: 10, gold: 40, xp: 80 },
+                    playing: { happiness: 20, energy: 10, gold: 60, xp: 120 }
+                };
+                
+                const reward = rewards[gameType];
+                Object.keys(reward).forEach(stat => {
+                    if (enhancedGameState.stats[stat] !== undefined) {
+                        enhancedGameState.stats[stat] = Math.min(100, enhancedGameState.stats[stat] + reward[stat]);
+                    } else if (stat === 'gold') {
+                        enhancedGameState.currency.gold += reward[stat];
+                    }
+                });
+                
+                showFloatingNumber("Perfect! ⭐", "xp-number");
+                showAchievement("Smart Cookie!", `+${reward.xp} XP earned! 🎓`);
+                
+                // Remove need alerts
+                if (gameType === 'feeding') document.getElementById('hungerAlert').style.display = 'none';
+                if (gameType === 'bathing') document.getElementById('cleanAlert').style.display = 'none';
+                
+            } else {
+                // Consolation rewards
+                enhancedGameState.stats.happiness += 5;
+                enhancedGameState.currency.gold += 10;
+                showFloatingNumber("Good try! 😊", "heart-number");
+            }
+            
+            updateDisplay();
+            updateMood();
+            closeMiniGame();
+        }
+
+        // Close mini-game
+        function closeMiniGame() {
+            document.getElementById('enhancedMinigame').style.display = 'none';
+        }
+
+        // Show floating numbers
+        function showFloatingNumber(text, className) {
+            const number = document.createElement('div');
+            number.className = `floating-number ${className}`;
+            number.textContent = text;
+            number.style.left = (Math.random() * 200 + 100) + 'px';
+            number.style.top = '40%';
+            
+            document.querySelector('.game-screen').appendChild(number);
+            
+            setTimeout(() => {
+                if (number.parentNode) {
+                    number.parentNode.removeChild(number);
+                }
+            }, 2000);
+        }
+
+        // Create sparkle effects
+        function createSparkleEffect() {
+            for (let i = 0; i < 5; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle-effect';
+                sparkle.textContent = '✨';
+                sparkle.style.left = (Math.random() * 100 + 150) + 'px';
+                sparkle.style.top = (Math.random() * 100 + 200) + 'px';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                
+                document.querySelector('.game-screen').appendChild(sparkle);
+                
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 1500);
+            }
+        }
+
+        // Show achievements
+        function showAchievement(title, description) {
+            const achievement = document.createElement('div');
+            achievement.className = 'achievement-popup';
+            achievement.innerHTML = `🏆 ${title}<br><small>${description}</small>`;
+            
+            document.querySelector('.game-screen').appendChild(achievement);
+            
+            setTimeout(() => {
+                if (achievement.parentNode) {
+                    achievement.parentNode.removeChild(achievement);
+                }
+            }, 4000);
+        }
+
+        // Update creature mood based on stats
+        function updateMood() {
+            const stats = enhancedGameState.stats;
+            let mood = "happy";
+            let messages = moodMessages.happy;
+            
+            if (stats.hunger < 30) {
+                mood = "hungry";
+                messages = moodMessages.hungry;
+            } else if (stats.energy < 30) {
+                mood = "tired";
+                messages = moodMessages.tired;
+            } else if (stats.cleanliness < 30) {
+                mood = "dirty";
+                messages = moodMessages.dirty;
+            } else if (stats.happiness > 80) {
+                mood = "playful";
+                messages = moodMessages.playful;
+            }
+            
+            enhancedGameState.creature.mood = mood;
+            
+            // Update mood display
+            const moodIndicator = document.getElementById('moodIndicator');
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            moodIndicator.textContent = randomMessage;
+            
+            // Update mood bubble
+            const moodBubble = document.getElementById('moodBubble');
+            moodBubble.textContent = randomMessage;
+            
+            // Update need alerts
+            document.getElementById('hungerAlert').style.display = stats.hunger < 50 ? 'block' : 'none';
+            document.getElementById('cleanAlert').style.display = stats.cleanliness < 50 ? 'block' : 'none';
+        }
+
+        // Update creature mood for specific room
+        function updateCreatureMoodForRoom(room) {
+            const roomMoods = {
+                garden: "I love the fresh air! 🌿",
+                kitchen: "Something smells delicious! 😋",
+                bathroom: "Time to get squeaky clean! 🛁",
+                playroom: "Let's have some fun! 🎮",
+                bedroom: "This is so cozy! 🛏️"
+            };
+            
+            const moodBubble = document.getElementById('moodBubble');
+            moodBubble.textContent = roomMoods[room] || "This place is nice! ✨";
+        }
+
+        // Update environment effects
+        function updateEnvironmentEffects(room) {
+            const container = document.getElementById('environmentEffects');
+            container.innerHTML = '';
+            
+            // Add room-specific particles
+            const particleCount = 8;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                switch (room) {
+                    case 'garden':
+                        particle.textContent = Math.random() > 0.5 ? '🌸' : '🍃';
+                        break;
+                    case 'kitchen':
+                        particle.textContent = Math.random() > 0.5 ? '✨' : '🍎';
+                        break;
+                    case 'bathroom':
+                        particle.textContent = Math.random() > 0.5 ? '🫧' : '💧';
+                        break;
+                    case 'playroom':
+                        particle.textContent = Math.random() > 0.5 ? '⭐' : '🎈';
+                        break;
+                    case 'bedroom':
+                        particle.textContent = Math.random() > 0.5 ? '✨' : '💤';
+                        break;
+                }
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Update all displays
+        function updateDisplay() {
+            // Update stats
+            document.getElementById('hungerFill').style.width = enhancedGameState.stats.hunger + '%';
+            document.getElementById('energyFill').style.width = enhancedGameState.stats.energy + '%';
+            document.getElementById('happinessFill').style.width = enhancedGameState.stats.happiness + '%';
+            document.getElementById('cleanlinessFill').style.width = enhancedGameState.stats.cleanliness + '%';
+            
+            // Update currency
+            document.getElementById('goldAmount').textContent = enhancedGameState.currency.gold.toLocaleString();
+            document.getElementById('gemAmount').textContent = enhancedGameState.currency.gems;
+            
+            // Update creature info
+            document.getElementById('creatureNameLevel').textContent = 
+                `${enhancedGameState.creature.name} • Level ${enhancedGameState.creature.level}`;
+        }
+
+        // Simulate time passage and stat decay
+        function simulateTimePassage() {
+            const now = Date.now();
+            const timeSinceLastInteraction = now - enhancedGameState.lastInteraction;
+            
+            // Gradual stat decay (every 30 seconds)
+            if (timeSinceLastInteraction > 30000) {
+                enhancedGameState.stats.hunger = Math.max(0, enhancedGameState.stats.hunger - 1);
+                enhancedGameState.stats.energy = Math.max(0, enhancedGameState.stats.energy - 1);
+                enhancedGameState.stats.cleanliness = Math.max(0, enhancedGameState.stats.cleanliness - 1);
+                
+                if (enhancedGameState.stats.hunger < 20 || enhancedGameState.stats.cleanliness < 20) {
+                    enhancedGameState.stats.happiness = Math.max(0, enhancedGameState.stats.happiness - 2);
+                }
+                
+                enhancedGameState.lastInteraction = now;
+                updateDisplay();
+                updateMood();
+            }
+        }
+
+        // Initialize enhanced game
+        function initializeEnhancedGame() {
+            updateDisplay();
+            updateMood();
+            updateInteractiveObjects('garden');
+            updateEnvironmentEffects('garden');
+            
+            // Start time simulation
+            setInterval(simulateTimePassage, 5000);
+            
+            // Random positive events
+            setInterval(() => {
+                if (Math.random() < 0.1) {
+                    const events = [
+                        { message: "Found a shiny coin! 💰", gold: 25 },
+                        { message: "A fairy blessed Sparkle! ✨", happiness: 10 },
+                        { message: "Discovered a magic gem! 💎", gems: 1 },
+                        { message: "Sparkle feels energized! ⚡", energy: 15 }
+                    ];
+                    
+                    const event = events[Math.floor(Math.random() * events.length)];
+                    
+                    Object.keys(event).forEach(key => {
+                        if (key !== 'message') {
+                            if (enhancedGameState.stats[key] !== undefined) {
+                                enhancedGameState.stats[key] = Math.min(100, enhancedGameState.stats[key] + event[key]);
+                            } else if (enhancedGameState.currency[key] !== undefined) {
+                                enhancedGameState.currency[key] += event[key];
+                            }
+                        }
+                    });
+                    
+                    showFloatingNumber(event.message, "xp-number");
+                    updateDisplay();
+                }
+            }, 20000);
+            
+            // Welcome message
+            setTimeout(() => {
+                showFloatingNumber("Welcome back! Sparkle missed you! 💕", "heart-number");
+            }, 1000);
+        }
+
+        // Start the enhanced game
+        initializeEnhancedGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,706 @@
+
+
+
+[
+  {
+    "id": "math-001",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["K", "1"],
+    "question": "What is 2 + 3?",
+    "answers": [
+      { "text": "5", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "6", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition", "basic_math"]
+  },
+  {
+    "id": "math-002",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 7 - 4?",
+    "answers": [
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-003",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 3 × 4?",
+    "answers": [
+      { "text": "12", "correct": true },
+      { "text": "9", "correct": false },
+      { "text": "16", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-004",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 20 ÷ 5?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "6", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-005",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 1/2 + 1/4?",
+    "answers": [
+      { "text": "3/4", "correct": true },
+      { "text": "1/4", "correct": false },
+      { "text": "2/4", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-006",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 8 + 5?",
+    "answers": [
+      { "text": "13", "correct": true },
+      { "text": "10", "correct": false },
+      { "text": "9", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-007",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 15 - 6?",
+    "answers": [
+      { "text": "9", "correct": true },
+      { "text": "8", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-008",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 7 × 6?",
+    "answers": [
+      { "text": "42", "correct": true },
+      { "text": "35", "correct": false },
+      { "text": "49", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-009",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 36 ÷ 4?",
+    "answers": [
+      { "text": "9", "correct": true },
+      { "text": "8", "correct": false },
+      { "text": "10", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-010",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["3", "4"],
+    "question": "How many sides does a triangle have?",
+    "answers": [
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-011",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["K", "1"],
+    "question": "What is 4 + 2?",
+    "answers": [
+      { "text": "6", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-012",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 9 - 3?",
+    "answers": [
+      { "text": "6", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-013",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 5 × 8?",
+    "answers": [
+      { "text": "40", "correct": true },
+      { "text": "35", "correct": false },
+      { "text": "45", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-014",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 28 ÷ 7?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "6", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-015",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 2/3 + 1/6?",
+    "answers": [
+      { "text": "5/6", "correct": true },
+      { "text": "1/2", "correct": false },
+      { "text": "7/9", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-016",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["4", "5"],
+    "question": "How many sides does a square have?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "3", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-017",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 12 + 9?",
+    "answers": [
+      { "text": "21", "correct": true },
+      { "text": "18", "correct": false },
+      { "text": "20", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-018",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 25 - 12?",
+    "answers": [
+      { "text": "13", "correct": true },
+      { "text": "10", "correct": false },
+      { "text": "15", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-019",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 9 × 7?",
+    "answers": [
+      { "text": "63", "correct": true },
+      { "text": "56", "correct": false },
+      { "text": "72", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-020",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["5", "6"],
+    "question": "What is 48 ÷ 6?",
+    "answers": [
+      { "text": "8", "correct": true },
+      { "text": "7", "correct": false },
+      { "text": "9", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-021",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["5", "6"],
+    "question": "What is 3/4 - 1/4?",
+    "answers": [
+      { "text": "1/2", "correct": true },
+      { "text": "1/4", "correct": false },
+      { "text": "3/8", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-022",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["5", "6"],
+    "question": "How many sides does a pentagon have?",
+    "answers": [
+      { "text": "5", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "6", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-023",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["K", "1"],
+    "question": "What is 6 + 1?",
+    "answers": [
+      { "text": "7", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "8", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-024",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 8 - 2?",
+    "answers": [
+      { "text": "6", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-025",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 6 × 9?",
+    "answers": [
+      { "text": "54", "correct": true },
+      { "text": "48", "correct": false },
+      { "text": "60", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-026",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 32 ÷ 8?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "3", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-027",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 1/3 + 2/6?",
+    "answers": [
+      { "text": "5/6", "correct": true },
+      { "text": "1/2", "correct": false },
+      { "text": "7/9", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-028",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["4", "5"],
+    "question": "How many sides does a hexagon have?",
+    "answers": [
+      { "text": "6", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-029",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 7 + 6?",
+    "answers": [
+      { "text": "13", "correct": true },
+      { "text": "10", "correct": false },
+      { "text": "9", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-030",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 14 - 5?",
+    "answers": [
+      { "text": "9", "correct": true },
+      { "text": "8", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-031",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 4 × 7?",
+    "answers": [
+      { "text": "28", "correct": true },
+      { "text": "21", "correct": false },
+      { "text": "35", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-032",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 21 ÷ 7?",
+    "answers": [
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-033",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 1/2 + 1/8?",
+    "answers": [
+      { "text": "5/8", "correct": true },
+      { "text": "3/4", "correct": false },
+      { "text": "7/8", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-034",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["5", "6"],
+    "question": "How many sides does a rectangle have?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "3", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-035",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["K", "1"],
+    "question": "What is 5 + 2?",
+    "answers": [
+      { "text": "7", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "8", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-036",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 9 - 4?",
+    "answers": [
+      { "text": "5", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "7", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-037",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 8 × 5?",
+    "answers": [
+      { "text": "40", "correct": true },
+      { "text": "32", "correct": false },
+      { "text": "45", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-038",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 27 ÷ 9?",
+    "answers": [
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-039",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 2/4 + 1/8?",
+    "answers": [
+      { "text": "5/8", "correct": true },
+      { "text": "3/4", "correct": false },
+      { "text": "7/8", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-040",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["5", "6"],
+    "question": "How many sides does a heptagon have?",
+    "answers": [
+      { "text": "7", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "8", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-041",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 11 + 8?",
+    "answers": [
+      { "text": "19", "correct": true },
+      { "text": "16", "correct": false },
+      { "text": "20", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-042",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 18 - 7?",
+    "answers": [
+      { "text": "11", "correct": true },
+      { "text": "9", "correct": false },
+      { "text": "10", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-043",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 7 × 8?",
+    "answers": [
+      { "text": "56", "correct": true },
+      { "text": "49", "correct": false },
+      { "text": "63", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-044",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["4", "5"],
+    "question": "What is 35 ÷ 7?",
+    "answers": [
+      { "text": "5", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "4", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  },
+  {
+    "id": "math-045",
+    "subject": "Math",
+    "topic": "Fractions",
+    "gradeLevel": ["5", "6"],
+    "question": "What is 3/8 + 1/8?",
+    "answers": [
+      { "text": "1/2", "correct": true },
+      { "text": "1/4", "correct": false },
+      { "text": "7/8", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["fractions"]
+  },
+  {
+    "id": "math-046",
+    "subject": "Math",
+    "topic": "Geometry",
+    "gradeLevel": ["5", "6"],
+    "question": "How many sides does an octagon have?",
+    "answers": [
+      { "text": "8", "correct": true },
+      { "text": "7", "correct": false },
+      { "text": "9", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["geometry"]
+  },
+  {
+    "id": "math-047",
+    "subject": "Math",
+    "topic": "Addition",
+    "gradeLevel": ["K", "1"],
+    "question": "What is 3 + 4?",
+    "answers": [
+      { "text": "7", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "8", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["addition"]
+  },
+  {
+    "id": "math-048",
+    "subject": "Math",
+    "topic": "Subtraction",
+    "gradeLevel": ["1", "2"],
+    "question": "What is 6 - 3?",
+    "answers": [
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["subtraction"]
+  },
+  {
+    "id": "math-049",
+    "subject": "Math",
+    "topic": "Multiplication",
+    "gradeLevel": ["2", "3"],
+    "question": "What is 6 × 7?",
+    "answers": [
+      { "text": "42", "correct": true },
+      { "text": "35", "correct": false },
+      { "text": "49", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["multiplication"]
+  },
+  {
+    "id": "math-050",
+    "subject": "Math",
+    "topic": "Division",
+    "gradeLevel": ["3", "4"],
+    "question": "What is 24 ÷ 6?",
+    "answers": [
+      { "text": "4", "correct": true },
+      { "text": "5", "correct": false },
+      { "text": "3", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["division"]
+  }
+]
+

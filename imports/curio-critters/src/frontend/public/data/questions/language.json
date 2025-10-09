@@ -1,0 +1,147 @@
+
+
+
+[
+  {
+    "id": "language-001",
+    "subject": "Language Arts",
+    "topic": "Grammar",
+    "gradeLevel": ["2", "3"],
+    "question": "What is the correct plural form of 'mouse'?",
+    "answers": [
+      { "text": "mice", "correct": true },
+      { "text": "mouses", "correct": false },
+      { "text": "mices", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["grammar"]
+  },
+  {
+    "id": "language-002",
+    "subject": "Language Arts",
+    "topic": "Vocabulary",
+    "gradeLevel": ["3", "4"],
+    "question": "What does 'serendipity' mean?",
+    "answers": [
+      { "text": "Making pleasant discoveries by accident", "correct": true },
+      { "text": "Being very serious", "correct": false },
+      { "text": "Feeling sad", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["vocabulary"]
+  },
+  {
+    "id": "language-003",
+    "subject": "Language Arts",
+    "topic": "Punctuation",
+    "gradeLevel": ["4", "5"],
+    "question": "Which sentence is punctuated correctly?",
+    "answers": [
+      { "text": "I went to the store, and bought apples.", "correct": true },
+      { "text": "I went to the store and bought apples", "correct": false },
+      { "text": "I went to the store; and bought apples.", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["punctuation"]
+  },
+  {
+    "id": "language-004",
+    "subject": "Language Arts",
+    "topic": "Reading Comprehension",
+    "gradeLevel": ["3", "4"],
+    "question": "What is the main idea of a story?",
+    "answers": [
+      { "text": "The most important point or message", "correct": true },
+      { "text": "The first sentence", "correct": false },
+      { "text": "The last paragraph", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["reading_comprehension"]
+  },
+  {
+    "id": "language-005",
+    "subject": "Language Arts",
+    "topic": "Spelling",
+    "gradeLevel": ["2", "3"],
+    "question": "How do you spell the word for a flying insect that makes honey?",
+    "answers": [
+      { "text": "bee", "correct": true },
+      { "text": "be", "correct": false },
+      { "text": "bie", "correct": false }
+    ],
+    "difficulty": "easy",
+    "tags": ["spelling"]
+  },
+  {
+    "id": "language-006",
+    "subject": "Language Arts",
+    "topic": "Synonyms",
+    "gradeLevel": ["4", "5"],
+    "question": "What is a synonym for 'happy'?",
+    "answers": [
+      { "text": "joyful", "correct": true },
+      { "text": "sad", "correct": false },
+      { "text": "angry", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["synonyms"]
+  },
+  {
+    "id": "language-007",
+    "subject": "Language Arts",
+    "topic": "Antonyms",
+    "gradeLevel": ["4", "5"],
+    "question": "What is an antonym for 'big'?",
+    "answers": [
+      { "text": "small", "correct": true },
+      { "text": "large", "correct": false },
+      { "text": "huge", "correct": false }
+    ],
+    "difficulty": "medium",
+    "tags": ["antonyms"]
+  },
+  {
+    "id": "language-008",
+    "subject": "Language Arts",
+    "topic": "Parts of Speech",
+    "gradeLevel": ["5", "6"],
+    "question": "Which word is a verb?",
+    "answers": [
+      { "text": "running", "correct": true },
+      { "text": "happiness", "correct": false },
+      { "text": "quickly", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["parts_of_speech"]
+  },
+  {
+    "id": "language-009",
+    "subject": "Language Arts",
+    "topic": "Sentence Structure",
+    "gradeLevel": ["4", "5"],
+    "question": "Which sentence is written correctly?",
+    "answers": [
+      { "text": "She quickly ran to the store.", "correct": true },
+      { "text": "Quickly she ran to the store.", "correct": false },
+      { "text": "Ran she quickly to the store.", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["sentence_structure"]
+  },
+  {
+    "id": "language-010",
+    "subject": "Language Arts",
+    "topic": "Homophones",
+    "gradeLevel": ["5", "6"],
+    "question": "Which word sounds the same but has a different meaning?",
+    "answers": [
+      { "text": "knight - night", "correct": true },
+      { "text": "cat - dog", "correct": false },
+      { "text": "big - small", "correct": false }
+    ],
+    "difficulty": "hard",
+    "tags": ["homophones"]
+  }
+]
+
+

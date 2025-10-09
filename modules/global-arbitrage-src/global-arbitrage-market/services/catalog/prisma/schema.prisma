@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Supplier {
+  id              String   @id @default(uuid())
+  name            String
+  country         String
+  lead_time_days  Int      @default(7)
+  policy_url      String?
+  contact_email   String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  supplier_products SupplierProduct[]
+
+  @@map("suppliers")
+}
+
+model SupplierProduct {
+  id           String   @id @default(uuid())
+  supplier_id  String
+  sku          String
+  name         String
+  brand        String?
+  category     String?
+  base_price   Float
+  currency     String   @default("USD")
+  moq          Int      @default(1)
+  pack_qty     Int      @default(1)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  supplier Supplier @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+  offers    Offer[]
+
+  @@unique([supplier_id, sku])
+  @@map("supplier_products")
+}
+
+model Product {
+  id             String   @id @default(uuid())
+  canonical_sku  String   @unique
+  title          String
+  brand          String?
+  category       String?
+  quality_score  Float    @default(0.0)
+  status         String   @default("DRAFT") // DRAFT, ACTIVE, INACTIVE
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  offers  Offer[]
+  listings Listing[]
+
+  @@map("products")
+}
+
+model Offer {
+  id                  String   @id @default(uuid())
+  product_id          String
+  supplier_product_id String
+  region              String   @default("US")
+  landed_cost         Float
+  currency            String   @default("USD")
+  shipping_days       Int
+  available_qty       Int
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  product         Product         @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  supplier_product SupplierProduct @relation(fields: [supplier_product_id], references: [id], onDelete: Cascade)
+
+  @@map("offers")
+}
+
+model Listing {
+  id          String   @id @default(uuid())
+  product_id  String
+  marketplace String   @default("GAM")
+  title       String
+  description_md String?
+  price       Float
+  currency    String   @default("USD")
+  status      String   @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@map("listings")
+}
+
+// Pricing-related models
+model FeeSchedule {
+  id           String @id @default(uuid())
+  platform_pct Float  @default(0.10)
+  payment_pct  Float  @default(0.029)
+  fixed_fee    Float  @default(0.30)
+  region       String @default("US")
+  created_at   DateTime @default(now())
+
+  @@unique([region])
+  @@map("fee_schedules")
+}
+
+model FXRate {
+  id      String   @id @default(uuid())
+  base    String   @default("USD")
+  quote   String
+  rate    Float
+  as_of   DateTime @default(now())
+
+  @@unique([base, quote])
+  @@map("fx_rates")
+}
+
+model DutyRule {
+  id       String @id @default(uuid())
+  hs_code  String?
+  origin   String
+  dest     String
+  duty_pct Float
+
+  @@unique([origin, dest, hs_code])
+  @@map("duty_rules")
+}

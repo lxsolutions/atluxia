@@ -1,0 +1,28 @@
+{
+  "name": "global-arbitrage-market",
+  "version": "1.0.0",
+  "description": "Global Arbitrage Marketplace Monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter @gam/market-web dev\" \"pnpm --filter @gam/admin-console dev\" \"pnpm --filter @gam/api-gateway start:dev\" \"pnpm --filter @gam/catalog start:dev\" \"pnpm --filter @gam/orders start:dev\" \"pnpm --filter @gam/fulfillment start:dev\" \"pnpm --filter @gam/risk start:dev\" \"pnpm --filter @gam/search start:dev\"",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "seed": "tsx scripts/seed.ts",
+    "test-arbitrage": "tsx scripts/test-arbitrage.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0",
+    "@faker-js/faker": "^8.3.1",
+    "dotenv": "^16.4.5"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

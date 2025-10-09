@@ -1,0 +1,241 @@
+version: '3.8'
+
+services:
+  # Database
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: atluxia
+      POSTGRES_USER: atluxia
+      POSTGRES_PASSWORD: atluxia123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - lite
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    profiles:
+      - dev
+      - lite
+
+  # MinIO (S3-compatible storage)
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: atluxia
+      MINIO_ROOT_PASSWORD: atluxia123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    profiles:
+      - dev
+
+  # NATS (for polyverse services)
+  nats:
+    image: nats:2.9
+    ports:
+      - "4222:4222"
+    profiles:
+      - dev
+
+  # Web Applications
+  nomad-web:
+    build:
+      context: ../../apps/nomad-web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  polyverse-web:
+    build:
+      context: ../../apps/polyverse-web
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3001
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  everpath-web:
+    build:
+      context: ../../apps/everpath-web
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3003
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  critters-web:
+    build:
+      context: ../../apps/critters-web
+      dockerfile: Dockerfile
+    ports:
+      - "3005:50390"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3005
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  # Services
+  booking:
+    build:
+      context: ../../services/booking
+      dockerfile: Dockerfile
+    ports:
+      - "3101:3001"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  drivers:
+    build:
+      context: ../../services/drivers
+      dockerfile: Dockerfile
+    ports:
+      - "3102:3001"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  vehicles:
+    build:
+      context: ../../services/vehicles
+      dockerfile: Dockerfile
+    ports:
+      - "3103:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  immigration:
+    build:
+      context: ../../services/immigration
+      dockerfile: Dockerfile
+    ports:
+      - "3104:3003"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  activitypub-bridge:
+    build:
+      context: ../../services/activitypub-bridge
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      - postgres
+      - redis
+      - nats
+    profiles:
+      - dev
+
+  opengrid:
+    build:
+      context: ../../services/opengrid/coordinator
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3001"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - dev
+
+  everpath-api:
+    build:
+      context: ../../services/everpath-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+    depends_on:
+      - postgres
+    profiles:
+      - dev
+
+  critters-api:
+    build:
+      context: ../../services/critters-api
+      dockerfile: Dockerfile
+    ports:
+      - "56456:56456"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+    depends_on:
+      - postgres
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+  minio_data:

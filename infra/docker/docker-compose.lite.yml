@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # Database
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: atluxia
+      POSTGRES_USER: atluxia
+      POSTGRES_PASSWORD: atluxia123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - lite
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    profiles:
+      - dev
+      - lite
+
+  # Web Applications (lite selection)
+  nomad-web:
+    build:
+      context: ../../apps/nomad-web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - lite
+
+  everpath-web:
+    build:
+      context: ../../apps/everpath-web
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3003
+      - NEXTAUTH_SECRET=atluxia-dev-secret
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - lite
+
+  # Services (lite selection)
+  booking:
+    build:
+      context: ../../services/booking
+      dockerfile: Dockerfile
+    ports:
+      - "3101:3001"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - lite
+
+  everpath-api:
+    build:
+      context: ../../services/everpath-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://atluxia:atluxia123@postgres:5432/atluxia
+    depends_on:
+      - postgres
+    profiles:
+      - lite
+
+volumes:
+  postgres_data:

@@ -1,0 +1,22 @@
+{
+  "name": "@atluxia/auth",
+  "version": "1.0.0",
+  "description": "Shared authentication configuration for Atluxia platform",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf .turbo node_modules dist"
+  },
+  "dependencies": {
+    "@atluxia/db": "workspace:*",
+    "@auth/prisma-adapter": "^2.9.0",
+    "next-auth": "^5.0.0-beta.25"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -2,7 +2,7 @@
 
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { prisma } from '@nomad-life/db'
+import { prisma } from '@atluxia/db'
 import { UserRole } from '@nomad-life/contracts'
 import Google from 'next-auth/providers/google'
 import Apple from 'next-auth/providers/apple'

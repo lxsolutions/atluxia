@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import type { ShareEvent } from '@atluxia/contracts';
 
 export interface FamilyIntegration {
   id: string;
@@ -249,5 +250,23 @@ export class IntegrationController {
     if (age <= 6) return 'beginner';
     if (age <= 8) return 'intermediate';
     return 'advanced';
+  }
+
+  @Post('events/share')
+  async handleShareEvent(@Body() shareEvent: ShareEvent) {
+    console.log('Received share event:', shareEvent);
+    
+    // In a real implementation, this would:
+    // 1. Store the share event in the database
+    // 2. Process it for the Polyverse feed
+    // 3. Trigger any downstream integrations
+    
+    // For now, just log it and return success
+    return { 
+      success: true, 
+      message: 'Share event received successfully',
+      eventId: `share_${Date.now()}`,
+      timestamp: new Date().toISOString()
+    };
   }
 }

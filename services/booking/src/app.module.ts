@@ -7,6 +7,7 @@ import { HealthController } from './health/health.controller';
 import { BookingController } from './booking/booking.controller';
 import { PaymentsModule } from './payments/payments.module';
 import { PrismaService } from './prisma/prisma.service';
+import { StaysModule } from './stays/stays.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PrismaService } from './prisma/prisma.service';
       envFilePath: '.env',
     }),
     PaymentsModule,
+    StaysModule,
   ],
   controllers: [HealthController, BookingController],
   providers: [PrismaService],

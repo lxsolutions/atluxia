@@ -1,0 +1,439 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Atluxia API",
+    "version": "1.0.0",
+    "description": "Atluxia unified platform API for stays, sharing, and Polyverse integration"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/stays/search": {
+      "get": {
+        "summary": "Search for stays",
+        "description": "Search for stays based on location, dates, and guest count",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Location to search for stays"
+          },
+          {
+            "name": "checkIn",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Check-in date"
+          },
+          {
+            "name": "checkOut",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Check-out date"
+          },
+          {
+            "name": "guests",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Number of guests"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful search response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "listings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StayListing"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/events/share": {
+      "post": {
+        "summary": "Share an item to Polyverse",
+        "description": "Share a stay, flight, vehicle, or other item to the Polyverse platform",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Share event processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "eventId": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid share event data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/pvp/feed": {
+      "get": {
+        "summary": "Get Polyverse feed",
+        "description": "Get Polyverse feed with algorithm selection",
+        "parameters": [
+          {
+            "name": "algo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["recency_follow", "multipolar_diversity", "locality_first"]
+            },
+            "description": "Algorithm to use for feed generation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feed events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "number"
+                      },
+                      "author_did": {
+                        "type": "string"
+                      },
+                      "body": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "stayData": {
+                            "type": "object"
+                          },
+                          "rankingReasons": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/RankingReason"
+                            }
+                          }
+                        }
+                      },
+                      "refs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "sig": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StaySearchQuery": {
+        "type": "object",
+        "required": ["location", "checkIn", "checkOut", "guests"],
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "checkIn": {
+            "type": "string",
+            "format": "date"
+          },
+          "checkOut": {
+            "type": "string",
+            "format": "date"
+          },
+          "guests": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "minPrice": {
+                "type": "number",
+                "minimum": 0
+              },
+              "maxPrice": {
+                "type": "number",
+                "minimum": 0
+              },
+              "amenities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["wifi", "kitchen", "laundry", "air_conditioning", "heating", "tv", "workspace", "parking", "pool", "gym", "elevator", "security", "pet_friendly"]
+                }
+              },
+              "propertyTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["apartment", "house", "condo", "villa", "studio", "loft", "guesthouse", "hotel"]
+                }
+              },
+              "hasWorkspace": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "StayListing": {
+        "type": "object",
+        "required": ["id", "title", "priceTotal", "priceNightly", "currency", "provider", "score", "reasons"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priceTotal": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              }
+            }
+          },
+          "priceNightly": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              }
+            }
+          },
+          "currency": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingReason"
+            }
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lng": {
+                "type": "number"
+              }
+            }
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["wifi", "kitchen", "laundry", "air_conditioning", "heating", "tv", "workspace", "parking", "pool", "gym", "elevator", "security", "pet_friendly"]
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "maxGuests": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "bedrooms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bathrooms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "hasDedicatedWorkspace": {
+            "type": "boolean"
+          },
+          "trustScore": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          }
+        }
+      },
+      "RankingReason": {
+        "type": "object",
+        "required": ["feature", "weight", "value"],
+        "properties": {
+          "feature": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "value": {
+            "type": "any"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ShareEvent": {
+        "type": "object",
+        "required": ["userId", "platform", "type", "itemId", "itemData"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["nomad", "polyverse", "everpath"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["stay", "flight", "vehicle", "driver", "visa"]
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "itemData": {
+            "type": "object"
+          },
+          "rankingReasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingReason"
+            }
+          },
+          "searchQuery": {
+            "$ref": "#/components/schemas/StaySearchQuery"
+          },
+          "sharedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

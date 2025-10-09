@@ -120,6 +120,78 @@ export const SearchParamsSchema = z.object({
 
 export type SearchParams = z.infer<typeof SearchParamsSchema>;
 
+// Nomad Stays Search Types for Polyverse Integration
+export const StaySearchQuerySchema = z.object({
+  location: z.string(),
+  checkIn: z.date(),
+  checkOut: z.date(),
+  guests: z.number().min(1),
+  filters: z.object({
+    minPrice: z.number().min(0).optional(),
+    maxPrice: z.number().min(0).optional(),
+    amenities: z.array(PropertyAmenitySchema).optional(),
+    propertyTypes: z.array(PropertyTypeSchema).optional(),
+    hasWorkspace: z.boolean().optional(),
+  }).optional(),
+});
+
+export type StaySearchQuery = z.infer<typeof StaySearchQuerySchema>;
+
+export const RankingReasonSchema = z.object({
+  feature: z.string(),
+  weight: z.number().min(0).max(1),
+  value: z.any(),
+  description: z.string().optional(),
+});
+
+export type RankingReason = z.infer<typeof RankingReasonSchema>;
+
+export const StayListingSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  priceTotal: MoneySchema,
+  priceNightly: MoneySchema,
+  currency: z.string(),
+  provider: z.string(),
+  score: z.number().min(0).max(100),
+  reasons: z.array(RankingReasonSchema),
+  location: LocationSchema,
+  amenities: z.array(PropertyAmenitySchema),
+  images: z.array(z.string().url()),
+  maxGuests: z.number().min(1),
+  bedrooms: z.number().min(0),
+  bathrooms: z.number().min(0),
+  hasDedicatedWorkspace: z.boolean().default(false),
+  trustScore: z.number().min(0).max(5).optional(),
+});
+
+export type StayListing = z.infer<typeof StayListingSchema>;
+
+export const StaySearchResponseSchema = z.object({
+  listings: z.array(StayListingSchema),
+  totalCount: z.number(),
+  query: StaySearchQuerySchema,
+  rankingAlgorithm: z.string().optional(),
+});
+
+export type StaySearchResponse = z.infer<typeof StaySearchResponseSchema>;
+
+// Polyverse Share Event Types
+export const ShareEventSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  platform: z.enum(['nomad', 'polyverse', 'everpath']),
+  type: z.enum(['stay', 'flight', 'vehicle', 'driver', 'visa']),
+  itemId: z.string(),
+  itemData: z.record(z.any()),
+  rankingReasons: z.array(RankingReasonSchema),
+  searchQuery: StaySearchQuerySchema.optional(),
+  sharedAt: z.date(),
+});
+
+export type ShareEvent = z.infer<typeof ShareEventSchema>;
+
 export const AvailabilitySchema = z.object({
   unitId: z.string(),
   available: z.boolean(),
@@ -177,6 +249,11 @@ export const StaysSchemas = {
   BookingStatusSchema,
   BookingSchema,
   SearchParamsSchema,
+  StaySearchQuerySchema,
+  RankingReasonSchema,
+  StayListingSchema,
+  StaySearchResponseSchema,
+  ShareEventSchema,
   AvailabilitySchema,
   PriceBreakdownSchema,
   CreateBookingRequestSchema,

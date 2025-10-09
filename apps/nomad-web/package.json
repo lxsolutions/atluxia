@@ -20,7 +20,8 @@
     "react-dom": "^18.0.0",
     "stripe": "^18.5.0",
     "@atluxia/db": "workspace:*",
-    "@atluxia/ui": "workspace:*"
+    "@atluxia/ui": "workspace:*",
+    "@atluxia/contracts": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

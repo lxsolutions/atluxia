@@ -1,0 +1,77 @@
+# Default values for PolyVerse
+# This is a basic configuration for development purposes
+
+# Global configuration
+global:
+  env: development
+  domain: localhost
+
+# Service configurations
+relay:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: polyverse/relay
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3000
+
+indexer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: polyverse/indexer
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3001
+
+aiRouter:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: polyverse/ai-router
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+
+web:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: polyverse/web
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3002
+  ingress:
+    enabled: false
+
+# External dependencies
+postgresql:
+  enabled: true
+  auth:
+    username: polyverse
+    password: polyverse
+    database: polyverse
+
+redis:
+  enabled: true
+  auth:
+    enabled: false
+
+opensearch:
+  enabled: true
+  config:
+    opensearch.yml: |
+      cluster.name: polyverse-cluster
+      network.host: 0.0.0.0
+      discovery.type: single-node
+  auth:
+    enabled: false

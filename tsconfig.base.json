@@ -1,0 +1,24 @@
+
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@polyverse/app/*": ["apps/polyverse/*"],
+      "@polyverse/opengrid/*": ["services/opengrid/*"],
+      "@polyverse/truth-archive/*": ["packages/truth-archive/*"],
+      "@polyverse/aegisgov/*": ["packages/aegisgov/*"],
+      "@polyverse/schemas/*": ["packages/schemas/*"],
+      "@polyverse/pvp-sdk-js/*": ["packages/pvp-sdk-js/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build"]
+}

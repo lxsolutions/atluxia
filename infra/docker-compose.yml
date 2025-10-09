@@ -1,0 +1,519 @@
+
+
+version: '3.8'
+
+services:
+  relay:
+    image: golang:1.20-alpine
+    working_dir: /app
+    volumes:
+      - ../services/relay:/app
+    environment:
+      - JWT_SECRET=your-polyverse-jwt-secret-change-in-production
+      - JWT_ALGORITHM=HS256
+    command: sh -c "go mod tidy && go run main.go"
+    ports:
+      - "8080:8080"
+
+  indexer:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ../services/indexer:/app
+    environment:
+      - PORT=3002
+      - NATS_URL=nats://nats:4222
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+    command: sh -c "npm install && npm run build && npm start"
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      opensearch:
+        condition: service_started
+
+  ai-router:
+    image: python:3.9-slim
+    working_dir: /app
+    volumes:
+      - ../services/ai-router:/app
+    command: sh -c "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+
+  bridge-apub:
+    build: ../services/bridge-apub
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - MASTODON_BASE_URL=https://mastodon.social
+      - ENABLE_APUB_INGEST=false
+
+  media:
+    build: ../services/media
+    ports:
+      - "3006:3006"
+    environment:
+      - PORT=3006
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=minioadmin
+      - S3_BUCKET=media
+      - NATS_URL=nats://nats:4222
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      nats:
+        condition: service_started
+
+  media-worker:
+    build: ../services/media-worker
+    environment:
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=minioadmin
+      - S3_BUCKET=media
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      minio:
+        condition: service_started
+      nats:
+        condition: service_started
+    volumes:
+      - /tmp:/tmp
+
+  web:
+    image: node:16-alpine
+    working_dir: /app
+    volumes:
+      - ../apps/web:/app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+
+  truth-graph:
+    build: ../services/truth-graph
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  reputation-lenses:
+    build: ../services/reputation-lenses
+    ports:
+      - "3008:3008"
+    environment:
+      - PORT=3008
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  truth-agent:
+    build: ../services/truth-agent
+    ports:
+      - "3009:3009"
+    environment:
+      - PORT=3009
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  consensus:
+    build: ../services/consensus
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - TRUTH_GRAPH_URL=http://truth-graph:3003
+      - REPUTATION_URL=http://reputation:3004
+    depends_on:
+      postgres:
+        condition: service_healthy
+      truth-graph:
+        condition: service_started
+      reputation:
+        condition: service_started
+
+  reputation:
+    build: ../services/reputation
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  games-api:
+    build: ../services/games-api
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - STRIPE_SECRET_KEY=sk_test_mock
+      - STRIPE_WEBHOOK_SECRET=whsec_mock
+      - USDC_CONTRACT_ADDRESS=0xMock
+      - ETHEREUM_RPC_URL=http://hardhat:8545
+      - POLYVERSE_JWT_SECRET=your-polyverse-jwt-secret-change-in-production
+      - POLYVERSE_JWT_ALGORITHM=HS256
+      - TRUTH_GRAPH_URL=http://truth-graph:3003
+      - INDEXER_URL=http://indexer:3002
+      - POLYVERSE_INTEGRATION_ENABLED=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  payments:
+    build: ../services/payments
+    ports:
+      - "3007:3007"
+    environment:
+      - PAYMENTS_PORT=3007
+      - STRIPE_SECRET_KEY=sk_test_mock
+      - STRIPE_WEBHOOK_SECRET=whsec_mock
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  federation:
+    build: ../services/federation
+    ports:
+      - "3008:3008"
+    environment:
+      - FEDERATION_PORT=3008
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - FEDERATION_ENABLED=false
+      - INSTANCE_DOMAIN=localhost:3008
+      - INSTANCE_PRIVATE_KEY=mock-private-key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  truth-notary:
+    build: ../services/truth-notary
+    ports:
+      - "3010:3010"
+    environment:
+      - PORT=3010
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - ETHEREUM_RPC_URL=http://hardhat:8545
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      hardhat:
+        condition: service_started
+
+  truth-jury:
+    build: ../services/truth-jury
+    ports:
+      - "3011:3011"
+    environment:
+      - PORT=3011
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - TRUTH_GRAPH_URL=http://truth-graph:3003
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      truth-graph:
+        condition: service_started
+
+  truth-bundles:
+    build: ../services/truth-bundles
+    ports:
+      - "3012:3012"
+    environment:
+      - PORT=3012
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - TRUTH_GRAPH_URL=http://truth-graph:3003
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_started
+      truth-graph:
+        condition: service_started
+
+  arena-escrow:
+    build: ../services/arena-escrow
+    ports:
+      - "3013:3013"
+    environment:
+      - PORT=3013
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - ETHEREUM_RPC_URL=http://hardhat:8545
+      - GAMES_API_URL=http://games-api:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      hardhat:
+        condition: service_started
+      games-api:
+        condition: service_started
+
+  arena-review:
+    build: ../services/arena-review
+    ports:
+      - "3014:3014"
+    environment:
+      - PORT=3014
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - MEDIA_URL=http://media:3006
+      - GAMES_API_URL=http://games-api:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      media:
+        condition: service_started
+      games-api:
+        condition: service_started
+
+  recommenders:
+    build: ../services/recommenders
+    ports:
+      - "3015:3015"
+    environment:
+      - PORT=3015
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_started
+      nats:
+        condition: service_started
+
+  moderation:
+    build: ../services/moderation
+    ports:
+      - "3016:3016"
+    environment:
+      - PORT=3016
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - INDEXER_URL=http://indexer:3002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      indexer:
+        condition: service_started
+
+  creator:
+    build: ../services/creator
+    ports:
+      - "3017:3017"
+    environment:
+      - PORT=3017
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - PAYMENTS_URL=http://payments:3007
+      - STRIPE_SECRET_KEY=sk_test_mock
+    depends_on:
+      postgres:
+        condition: service_healthy
+      payments:
+        condition: service_started
+
+  observability:
+    build: ../services/observability
+    ports:
+      - "3018:3018"
+    environment:
+      - PORT=3018
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_started
+      nats:
+        condition: service_started
+
+  communities:
+    build: ../services/communities
+    ports:
+      - "3019:3019"
+    environment:
+      - PORT=3019
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  rooms:
+    build: ../services/rooms
+    ports:
+      - "3020:3020"
+    environment:
+      - PORT=3020
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  discovery:
+    build: ../services/discovery
+    ports:
+      - "3021:3021"
+    environment:
+      - PORT=3021
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_started
+      nats:
+        condition: service_started
+
+  live-stream:
+    build: ../services/live-stream
+    ports:
+      - "3022:3022"
+    environment:
+      - PORT=3022
+      - DATABASE_URL=postgres://polyverse:polyverse@postgres:5432/polyverse
+      - NATS_URL=nats://nats:4222
+      - REDIS_URL=redis://redis:6379
+      - MEDIA_URL=http://media:3006
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      redis:
+        condition: service_started
+      media:
+        condition: service_started
+
+  hardhat:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ../contracts:/app
+    command: sh -c "npm install && npx hardhat node --hostname 0.0.0.0"
+    ports:
+      - "8545:8545"
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  nginx-rtmp:
+    image: tiangolo/nginx-rtmp
+    ports:
+      - "1935:1935"  # RTMP
+      - "8080:8080"  # HLS/statistics
+    volumes:
+      - ./nginx-rtmp.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - media
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.1
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
+  meilisearch:
+    image: getmeili/meilisearch:v0.24.0
+    ports:
+      - "7700:7700"
+
+  nats:
+    image: nats:latest
+    command: ["nats", "-js"]
+    ports:
+      - "4222:4222"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: polyverse
+      POSTGRES_USER: polyverse
+      POSTGRES_PASSWORD: polyverse
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U polyverse -d polyverse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  opensearch_data:

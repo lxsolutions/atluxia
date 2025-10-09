@@ -1,0 +1,9 @@
+
+# Core dependencies
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+networkx>=3.2.1
+
+# Optional dependencies for development
+pytest>=8.0.0
+pytest-mock>=3.12.0

@@ -1,0 +1,404 @@
+openapi: 3.0.3
+info:
+  title: PolyVerse Media Service API
+  description: |
+    Enhanced Media Service with Cloudflare Stream integration for VOD, Shorts, and Live streaming.
+    Supports both S3/MinIO and Cloudflare Stream providers with feature flagging.
+  version: 1.0.0
+  contact:
+    name: PolyVerse Team
+    email: team@polyverse.social
+
+servers:
+  - url: http://localhost:3006
+    description: Development server
+  - url: https://media.polyverse.social
+    description: Production server
+
+paths:
+  /media/upload-url:
+    post:
+      summary: Get upload URL for media
+      description: |
+        Returns a direct upload URL for client-side uploads. Supports both S3/MinIO and Cloudflare Stream
+        providers based on feature flags and availability.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - filename
+                - contentType
+                - fileSize
+              properties:
+                filename:
+                  type: string
+                  example: "my-video.mp4"
+                contentType:
+                  type: string
+                  enum:
+                    - video/mp4
+                    - video/quicktime
+                    - video/x-msvideo
+                    - video/x-matroska
+                    - video/webm
+                    - image/jpeg
+                    - image/png
+                    - image/gif
+                    - image/webp
+                  example: "video/mp4"
+                fileSize:
+                  type: integer
+                  maximum: 104857600
+                  description: File size in bytes (max 100MB)
+                  example: 52428800
+      responses:
+        '200':
+          description: Upload URL generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mediaId:
+                    type: string
+                    description: Unique media identifier
+                    example: "abc123def456"
+                  uploadUrl:
+                    type: string
+                    description: Direct upload URL
+                    example: "https://upload.cloudflare.com/direct_upload/..."
+                  provider:
+                    type: string
+                    enum: ["cloudflare-stream", "s3"]
+                    description: Upload provider used
+                  uid:
+                    type: string
+                    description: Cloudflare Stream UID (if using Cloudflare)
+                    example: "abc123def456"
+                  metadata:
+                    $ref: '#/components/schemas/MediaAsset'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /media/stream/webhook:
+    post:
+      summary: Cloudflare Stream webhook handler
+      description: |
+        Receives webhook notifications from Cloudflare Stream when media processing completes.
+        Requires webhook signature verification.
+      security:
+        - WebhookSignature: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamWebhookPayload'
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /media/{id}/manifest.m3u8:
+    get:
+      summary: Get HLS manifest for media
+      description: |
+        Returns HLS manifest for media playback. For Cloudflare Stream assets, redirects to
+        Cloudflare's HLS endpoint. For S3/MinIO assets, generates a manifest from available renditions.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Media asset ID
+      responses:
+        '200':
+          description: HLS manifest
+          content:
+            application/vnd.apple.mpegurl:
+              schema:
+                type: string
+                example: |
+                  #EXTM3U
+                  #EXT-X-VERSION:3
+                  #EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=640x360
+                  360p.m3u8
+                  #EXT-X-ENDLIST
+        '302':
+          description: Redirect to Cloudflare Stream HLS manifest
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /media/{id}/meta:
+    get:
+      summary: Get media metadata
+      description: Returns metadata for a media asset including renditions and status.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Media asset ID
+      responses:
+        '200':
+          description: Media metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaMetadata'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /media/live/create:
+    post:
+      summary: Create live input for streaming
+      description: Creates a Cloudflare Stream live input for real-time streaming.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Live stream title
+                  example: "My Live Stream"
+                description:
+                  type: string
+                  description: Live stream description
+                  example: "Join me for a live session!"
+      responses:
+        '200':
+          description: Live input created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mediaId:
+                    type: string
+                    description: Media asset ID for the live stream
+                  liveInput:
+                    type: object
+                    properties:
+                      uid:
+                        type: string
+                        description: Cloudflare Stream live input UID
+                      rtmpUrl:
+                        type: string
+                        description: RTMP(S) ingest URL
+                      streamKey:
+                        type: string
+                        description: Stream key for RTMP ingest
+                      playbackUrl:
+                        type: string
+                        description: HLS playback URL
+                  metadata:
+                    $ref: '#/components/schemas/MediaAsset'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns service health status
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2023-10-01T12:00:00Z"
+
+components:
+  schemas:
+    MediaAsset:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        originalName:
+          type: string
+        mimeType:
+          type: string
+        fileSize:
+          type: integer
+        bucket:
+          type: string
+        s3Key:
+          type: string
+        status:
+          type: string
+          enum: ["uploading", "processing", "ready", "failed"]
+        metadata:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    MediaMetadata:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        contentType:
+          type: string
+        fileSize:
+          type: integer
+        status:
+          type: string
+          enum: ["uploading", "processing", "ready", "failed"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        provider:
+          type: string
+          enum: ["cloudflare-stream", "s3"]
+        renditions:
+          type: array
+          items:
+            type: object
+            properties:
+              quality:
+                type: string
+              width:
+                type: integer
+              height:
+                type: integer
+              bitrate:
+                type: integer
+              manifestUrl:
+                type: string
+                format: uri
+
+    StreamWebhookPayload:
+      type: object
+      properties:
+        uid:
+          type: string
+          description: Cloudflare Stream video UID
+        status:
+          type: string
+          enum: ["ready", "failed"]
+        meta:
+          type: object
+          properties:
+            name:
+              type: string
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        duration:
+          type: number
+        thumbnail:
+          type: string
+          format: uri
+        playback:
+          type: object
+          properties:
+            hls:
+              type: string
+              format: uri
+            dash:
+              type: string
+              format: uri
+        error:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: object
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  securitySchemes:
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: cf-webhook-signature
+      description: Cloudflare Stream webhook signature for verification

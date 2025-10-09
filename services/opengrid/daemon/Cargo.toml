@@ -1,0 +1,25 @@
+
+
+[package]
+name = "opengrid-daemon"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+libp2p = { version = "0.53", features = ["dht", "pubsub", "tcp-tokio", "websocket", "macros", "noise", "yamux"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+log = "0.4"
+env_logger = "0.9"
+containerd = "0.2"
+nvidia-smi = "0.3"
+ed25519-dalek = "1.0"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+

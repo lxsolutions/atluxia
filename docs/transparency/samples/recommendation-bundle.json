@@ -1,0 +1,99 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_recommendation_bundle_generated_abc123",
+    "type": "recommendation_bundle_generated",
+    "timestamp": "2023-10-01T15:00:00Z",
+    "actor": {
+      "id": "discovery_service",
+      "type": "service"
+    },
+    "action": "recommendation_bundle_generated",
+    "resource": {
+      "id": "bundle_trending",
+      "type": "recommendation_bundle"
+    },
+    "context": {
+      "userId": "user_123",
+      "context": "home",
+      "bundlesCount": 3,
+      "totalItems": 9,
+      "algorithms": ["popularity_weighted", "collaborative_filtering", "voice_balance_v1"],
+      "bundleTypes": ["trending", "personalized", "voice_balance"]
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": null
+  },
+  "recommendationBundles": [
+    {
+      "id": "bundle_trending",
+      "name": "Trending Now",
+      "type": "trending",
+      "algorithm": "popularity_weighted",
+      "items": [
+        {
+          "id": "content_1",
+          "type": "video",
+          "title": "Introduction to PolyVerse",
+          "creator": "polyverse_team",
+          "views": 1500,
+          "likes": 120
+        }
+      ],
+      "metadata": {
+        "totalItems": 3,
+        "freshness": "high",
+        "diversity": "medium"
+      }
+    },
+    {
+      "id": "bundle_personalized",
+      "name": "For You",
+      "type": "personalized",
+      "algorithm": "collaborative_filtering",
+      "items": [
+        {
+          "id": "content_2",
+          "type": "article",
+          "title": "Building Trust in Digital Communities",
+          "creator": "trust_researcher",
+          "views": 800,
+          "likes": 95
+        }
+      ],
+      "metadata": {
+        "totalItems": 3,
+        "personalizationScore": 0.85,
+        "freshness": "medium"
+      }
+    },
+    {
+      "id": "bundle_voice_balance",
+      "name": "Diverse Voices",
+      "type": "voice_balance",
+      "algorithm": "voice_balance_v1",
+      "items": [
+        {
+          "id": "content_3",
+          "type": "audio",
+          "title": "The Future of Social Media",
+          "creator": "future_thinker",
+          "views": 1200,
+          "likes": 150
+        }
+      ],
+      "metadata": {
+        "totalItems": 3,
+        "diversityScore": 0.92,
+        "exposureQuotas": {
+          "underrepresented": 2,
+          "mainstream": 1
+        }
+      }
+    }
+  ],
+  "userContext": {
+    "userId": "user_123",
+    "context": "home",
+    "requestTimestamp": "2023-10-01T15:00:00Z"
+  }
+}

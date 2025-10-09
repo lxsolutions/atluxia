@@ -1,0 +1,36 @@
+{{- if .Values.relay.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-relay
+  labels:
+    app: {{ .Release.Name }}-relay
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.relay.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-relay
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-relay
+    spec:
+      containers:
+        - name: relay
+          image: "{{ .Values.relay.image.repository }}:{{ .Values.relay.image.tag }}"
+          imagePullPolicy: {{ .Values.relay.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.relay.service.port }}
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.auth.database }}"
+            - name: REDIS_URL
+              value: "redis://{{ .Release.Name }}-redis-master:6379"
+            - name: OPENSEARCH_URL
+              value: "http://{{ .Release.Name }}-opensearch:9200"
+          resources:
+            {{- toYaml .Values.relay.resources | nindent 12 }}
+{{- end }}

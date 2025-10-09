@@ -1,0 +1,51 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Job
+name: llm-inference-sample
+resources:
+  gpu: 0 # CPU-only for this example
+  vram_gb: 4
+  cpu_cores: 2
+  ram_gb: 8
+  disk_gb: 10
+privacy:
+  mode: "public"
+image: "ghcr.io/opengrid/examples/llm-infer:latest"
+cmd: ["python", "run.py", "--prompt", "Explain quantum computing in simple terms"]
+inputs:
+  artifacts:
+    - ipfs://<cid_of_model_or_loras>
+outputs:
+  to: ipfs
+billing:
+  max_price_per_hour_usd: 0.50
+  payment: "stream"
+  verifier: quorum
+  redundancy: 2
+  deadline_s: 600
+
+
+
+
+
+
+
+
+
+
+
+

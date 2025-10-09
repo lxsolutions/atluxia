@@ -1,0 +1,100 @@
+
+
+
+
+
+
+
+
+name: OpenGrid CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        component: [daemon, coordinator, verifier]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Rust
+      if: matrix.component == 'daemon'
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Build daemon
+      if: matrix.component == 'daemon'
+      working-directory: ./daemon
+      run: cargo build --release
+
+    - name: Set up Node.js
+      if: matrix.component == 'coordinator'
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install coordinator dependencies
+      if: matrix.component == 'coordinator'
+      working-directory: ./coordinator
+      run: npm install
+
+    - name: Build coordinator
+      if: matrix.component == 'coordinator'
+      working-directory: ./coordinator
+      run: npm run build
+
+    - name: Set up Go
+      if: matrix.component == 'verifier'
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.20
+
+    - name: Build verifier
+      if: matrix.component == 'verifier'
+      working-directory: ./verifier
+      run: go build .
+
+    - name: Set up Python
+      if: matrix.component == 'cli'
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+
+    - name: Install CLI dependencies
+      if: matrix.component == 'cli'
+      working-directory: ./cli
+      run: pip install poetry && poetry install
+
+    - name: Lint Python code
+      if: matrix.component == 'cli'
+      working-directory: ./cli
+      run: poetry run black . && poetry run isort .
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Foundry
+      uses: foundry-rs/foundry-toolchain@v1
+
+    - name: Install dependencies
+      working-directory: ./contracts
+      run: forge install
+
+    - name: Build contracts
+      working-directory: ./contracts
+      run: forge build
+
+
+

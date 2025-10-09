@@ -1,0 +1,94 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+version: '3.8'
+
+services:
+  ipfs:
+    image: ipfs/go-ipfs:v0.19.0
+    ports:
+      - "5001:5001"
+      - "4001:4001"
+      - "8080:8080"
+    volumes:
+      - ./data/ipfs:/data/ipfs
+
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:v0.2.1
+    command: anvil --fork-url https://sepolia.base.org --block-time 5
+    ports:
+      - "8545:8545"
+
+  daemon1:
+    build:
+      context: ./daemon
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ID=1
+      - COORDINATOR_URL=http://coordinator:3001
+
+  daemon2:
+    build:
+      context: ./daemon
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ID=2
+      - COORDINATOR_URL=http://coordinator:3001
+
+  coordinator:
+    build:
+      context: ./coordinator
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    environment:
+      - IPFS_API=http://ipfs:5001
+      - CHAIN_RPC=http://anvil:8545
+
+  verifier:
+    build:
+      context: ./verifier
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - coordinator
+
+  cli:
+    build:
+      context: ./cli
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/workspace/opengrid
+    command: /bin/sh -c "sleep infinity"
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://coordinator:3001
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+
+
+apiVersion: v1
+kind: Job
+name: sdxl-sample
+resources:
+  gpu: 1
+  vram_gb: 12
+  cpu_cores: 6
+  ram_gb: 16
+  disk_gb: 20
+privacy:
+  mode: "public"
+image: "ghcr.io/opengrid/examples/sdxl:latest"
+cmd: ["python", "run.py", "--prompt", "sunset over fjords"]
+inputs:
+  artifacts:
+    - ipfs://<cid_of_model_or_loras>
+outputs:
+  to: ipfs
+billing:
+  max_price_per_hour_usd: 1.50
+  payment: "stream"
+  verifier: quorum
+  redundancy: 2
+  deadline_s: 1200
+

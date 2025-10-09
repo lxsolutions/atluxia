@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: 'polyverse-services'
+    static_configs:
+      - targets: ['relay:3000', 'indexer:3001', 'web:3002', 'media:3003', 'truth-graph:3004', 'consensus:3005', 'reputation:3006', 'ai-router:3007', 'games-api:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'polyverse-database'
+    static_configs:
+      - targets: ['postgres:9187']
+    scrape_interval: 60s
+
+  - job_name: 'polyverse-redis'
+    static_configs:
+      - targets: ['redis:9121']
+    scrape_interval: 60s
+
+  - job_name: 'polyverse-nats'
+    static_configs:
+      - targets: ['nats:7777']
+    scrape_interval: 60s

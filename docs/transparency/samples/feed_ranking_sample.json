@@ -1,0 +1,48 @@
+{
+  "id": "trans_rec_feed_001",
+  "timestamp": "2025-09-16T10:30:45.123Z",
+  "actorId": "did:web:indexer.polyverse.example",
+  "context": {
+    "system": "social",
+    "operation": "feed_ranking",
+    "targetId": "post_abc123"
+  },
+  "inputs": {
+    "userId": "user_789",
+    "algorithmBundle": "truth_informed",
+    "postFeatures": {
+      "engagementScore": 0.85,
+      "freshnessHours": 2.5,
+      "authorReputation": 0.92,
+      "truthConfidence": 0.76
+    },
+    "userPreferences": {
+      "diversityWeight": 0.7,
+      "freshnessWeight": 0.8,
+      "truthWeight": 0.9
+    }
+  },
+  "computation": {
+    "method": "weighted_linear_combination",
+    "parameters": {
+      "engagementWeight": 0.4,
+      "freshnessWeight": 0.3,
+      "diversityWeight": 0.2,
+      "truthWeight": 0.1
+    },
+    "features": {
+      "engagementContribution": 0.34,
+      "freshnessContribution": 0.24,
+      "diversityContribution": 0.18,
+      "truthContribution": 0.076,
+      "finalScore": 0.836
+    }
+  },
+  "output": {
+    "rankingScore": 0.836,
+    "feedPosition": 3,
+    "explanation": "High engagement and strong truth confidence placed this post in top position"
+  },
+  "signature": "ed25519:abc123def456...",
+  "previousRecordId": "trans_rec_user_789_profile"
+}

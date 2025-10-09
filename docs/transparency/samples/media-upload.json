@@ -1,0 +1,73 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_media_upload_abc123",
+    "type": "media_upload",
+    "timestamp": "2023-10-01T12:00:00Z",
+    "actor": {
+      "id": "user_123",
+      "type": "user"
+    },
+    "action": "media_upload_initiated",
+    "resource": {
+      "id": "media_abc123def456",
+      "type": "media_asset",
+      "provider": "cloudflare-stream"
+    },
+    "context": {
+      "uploadMethod": "direct_upload",
+      "fileSize": 52428800,
+      "contentType": "video/mp4",
+      "filename": "my-video.mp4",
+      "provider": "cloudflare-stream",
+      "uid": "abc123def456",
+      "maxDurationSeconds": 3600,
+      "allowedOrigins": ["*"]
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": null
+  },
+  "mediaAsset": {
+    "id": "media_abc123def456",
+    "originalName": "my-video.mp4",
+    "mimeType": "video/mp4",
+    "fileSize": 52428800,
+    "bucket": "cloudflare-stream",
+    "s3Key": "abc123def456",
+    "status": "uploading",
+    "metadata": {
+      "mediaId": "abc123def456",
+      "filename": "my-video.mp4",
+      "contentType": "video/mp4",
+      "fileSize": 52428800,
+      "cloudflareUid": "abc123def456",
+      "provider": "cloudflare-stream"
+    },
+    "createdAt": "2023-10-01T12:00:00Z",
+    "updatedAt": "2023-10-01T12:00:00Z"
+  },
+  "uploadResponse": {
+    "mediaId": "media_abc123def456",
+    "uploadUrl": "https://upload.cloudflare.com/direct_upload/abc123def456",
+    "provider": "cloudflare-stream",
+    "uid": "abc123def456",
+    "metadata": {
+      "id": "media_abc123def456",
+      "originalName": "my-video.mp4",
+      "mimeType": "video/mp4",
+      "fileSize": 52428800,
+      "bucket": "cloudflare-stream",
+      "s3Key": "abc123def456",
+      "status": "uploading",
+      "metadata": {
+        "mediaId": "abc123def456",
+        "filename": "my-video.mp4",
+        "contentType": "video/mp4",
+        "fileSize": 52428800,
+        "cloudflareUid": "abc123def456",
+        "provider": "cloudflare-stream"
+      },
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2023-10-01T12:00:00Z"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "transparencyRecord": {
+    "id": "transparency_chat_message_abc123",
+    "type": "chat_message_sent",
+    "timestamp": "2023-10-01T14:05:00Z",
+    "actor": {
+      "id": "user_456",
+      "type": "user"
+    },
+    "action": "chat_message_sent",
+    "resource": {
+      "id": "message_abc123",
+      "type": "chat_message"
+    },
+    "context": {
+      "streamId": "live_abc123def456",
+      "userId": "user_456",
+      "username": "viewer123",
+      "message": "Great stream! Thanks for sharing!",
+      "messageType": "message"
+    },
+    "signature": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "previousRecordId": null
+  },
+  "chatMessage": {
+    "id": "message_abc123",
+    "streamId": "live_abc123def456",
+    "userId": "user_456",
+    "username": "viewer123",
+    "message": "Great stream! Thanks for sharing!",
+    "type": "message",
+    "metadata": {
+      "messageId": "message_abc123",
+      "streamId": "live_abc123def456",
+      "userId": "user_456",
+      "username": "viewer123"
+    },
+    "createdAt": "2023-10-01T14:05:00Z"
+  },
+  "broadcastInfo": {
+    "streamId": "live_abc123def456",
+    "recipientCount": 42,
+    "broadcastTimestamp": "2023-10-01T14:05:00Z"
+  }
+}

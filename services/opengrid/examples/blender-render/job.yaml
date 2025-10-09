@@ -1,0 +1,29 @@
+
+
+
+apiVersion: v1
+kind: Job
+name: blender-sample
+resources:
+  gpu: 0  # CPU-only for this example
+  vram_gb: 0
+  cpu_cores: 4
+  ram_gb: 8
+  disk_gb: 15
+privacy:
+  mode: "public"
+image: "ghcr.io/opengrid/examples/blender-render:latest"
+cmd: ["blender", "-b", "scene.blend", "-o", "/output/output_#.png", "-F", "PNG", "-x", "1"]
+inputs:
+  artifacts:
+    - ipfs://<cid_of_blender_scene>
+outputs:
+  to: ipfs
+billing:
+  max_price_per_hour_usd: 0.85
+  payment: "stream"
+  verifier: quorum
+  redundancy: 2
+  deadline_s: 1800
+
+

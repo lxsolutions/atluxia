@@ -1,0 +1,36 @@
+
+
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hypothesis",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "description": { "type": "string" },
+    "related_claim_ids": { "type": "array", "items": { "type": "string" } },
+    "competing_hypothesis_ids": { "type": "array", "items": { "type": "string" } },
+    "prior_log_odds": { "type": "number" },
+    "posterior_log_odds": { "type": "number" },
+    "update_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "evidence_id": { "type": "string" },
+          "likelihood_ratio": { "type": "number" },
+          "weight": { "type": "number" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["evidence_id", "likelihood_ratio", "weight"]
+      }
+    }
+  },
+  "required": [
+    "id", "description",
+    "prior_log_odds", "posterior_log_odds"
+  ]
+}
+
+
+

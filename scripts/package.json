@@ -1,0 +1,20 @@
+{
+  "name": "@polyverse/scripts",
+  "version": "1.0.0",
+  "description": "PolyVerse seed and utility scripts",
+  "type": "module",
+  "scripts": {
+    "seed": "tsx seed.ts",
+    "seed-truth": "tsx seed-truth.ts",
+    "seed-tribute": "tsx seed-tribute.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.0",
+    "drizzle-orm": "^0.28.6",
+    "pg": "^8.11.3",
+    "tsx": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.7"
+  }
+}

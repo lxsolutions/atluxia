@@ -1,0 +1,217 @@
+
+// SQLite-compatible schema for development/testing
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Users & Authentication (simplified for SQLite)
+model User {
+  id          String    @id @default(cuid())
+  email       String?   @unique
+  phone       String?   @unique
+  name        String?
+  role        String    @default("guest")
+  kycStatus   String    @default("not_started")
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  profile           Profile?
+  visaApplications  VisaApplication[]
+  reminders         Reminder[]
+  documentVault     DocumentVaultItem[]
+  properties        Property[]
+  bookings          Booking[]
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  dateOfBirth DateTime?
+  nationality String?
+  documentId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Immigration Models
+model VisaApplication {
+  id             String       @id @default(cuid())
+  userId         String
+  visaPathId     String
+  nationality    String
+  destination    String
+  purpose        String       // tourism, business, study, work, remote_work, family, other
+  stayLengthDays Int
+  hasDependents  Boolean      @default(false)
+  currentResidence String?
+  status         String       @default("draft") // draft, submitted, processing, approved, rejected, withdrawn
+  submittedAt    DateTime?
+  approvedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checklist ChecklistItem[]
+  reminders Reminder[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ChecklistItem {
+  id                   String   @id @default(cuid())
+  applicationId        String
+  title                String
+  description          String?
+  priority             String   // critical, high, medium, low
+  completed            Boolean  @default(false)
+  completedAt          DateTime?
+  estimatedTimeMinutes Int?
+  dependencies         String?  // JSON string of dependency IDs
+  formId               String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  application VisaApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([completed])
+}
+
+model DocumentVaultItem {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // passport, photo, bank_statement, proof_of_funds, employment_letter, invitation_letter, other
+  title       String
+  description String?
+  filePath    String?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+}
+
+model Reminder {
+  id            String   @id @default(cuid())
+  userId        String
+  applicationId String?
+  type          String   // ninety_day_report, tm30, visa_renewal, extension, appointment, document_expiry
+  title         String
+  description   String?
+  dueDate       DateTime
+  completed     Boolean  @default(false)
+  completedAt   DateTime?
+  recurrence    String   // once, daily, weekly, monthly, quarterly, yearly
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application VisaApplication? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([dueDate])
+  @@index([completed])
+}
+
+// Booking & Payment Models
+// SQLite doesn't support enums, using string types instead
+
+model Property {
+  id                  String   @id @default(cuid())
+  title               String
+  description         String
+  city                String
+  country             String
+  address             String?
+  latitude            Float?
+  longitude           Float?
+  maxGuests           Int
+  bedrooms            Int
+  bathrooms           Float
+  hasDedicatedWorkspace Boolean @default(false)
+  wifiSpeed           Int?
+  hasKitchen          Boolean @default(false)
+  hasLaundry          Boolean @default(false)
+  monthlyPrice        Decimal
+  nightlyPrice        Decimal
+  available           Boolean @default(true)
+  trustScore          Float?  @default(0.0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  host   User   @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  hostId String
+  units  Unit[]
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  propertyId  String
+  name        String?
+  sleeps      Int
+  bedrooms    Int
+  bathrooms   Float
+  sqft        Int?
+  floor       Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  unitId      String
+  userId      String
+  checkin     DateTime
+  checkout    DateTime
+  status      String @default("pending") // pending, confirmed, cancelled, completed
+  currency    String   @default("USD")
+  subtotal    Decimal
+  fees        Decimal   @default(0)
+  taxes       Decimal   @default(0)
+  deposit     Decimal?
+  total       Decimal
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  unit    Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  bookingId        String
+  stripePaymentIntent String?
+  amount           Decimal
+  status           String @default("pending") // pending, succeeded, failed, refunded
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}

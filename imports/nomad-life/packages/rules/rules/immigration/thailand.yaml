@@ -1,0 +1,167 @@
+
+
+
+version: "1.0.0"
+effectiveDate: "2025-01-01"
+countries:
+  US:
+    - destination: "TH"
+      purpose: "tourism"
+      stayLength:
+        min: 1
+        max: 90
+        unit: "days"
+      visaPaths:
+        - id: "th-visa-exempt"
+          name: "Visa Exemption"
+          type: "visa_exempt"
+          stayLimit:
+            value: 30
+            unit: "days"
+          extensions:
+            - type: "tourist_extension"
+              limit:
+                value: 30
+                unit: "days"
+              requirements:
+                - "Passport with at least 6 months validity"
+                - "Completed TM.7 form"
+                - "Passport-sized photo"
+                - "1900 THB fee"
+          requirements:
+            - "Passport valid for at least 6 months"
+            - "Proof of onward travel"
+            - "Proof of sufficient funds (20,000 THB)"
+          documents:
+            - type: "passport"
+              description: "Valid passport"
+            - type: "flight_ticket"
+              description: "Onward flight ticket"
+            - type: "funds_proof"
+              description: "Proof of sufficient funds"
+              optional: true
+          processingTime:
+            min: 0
+            max: 0
+            unit: "days"
+          fees:
+            government: 0
+            currency: "THB"
+          confidence: "high"
+          notes:
+            - "30-day exemption extendable once for 30 days"
+            - "Maximum 90 days in 6-month period"
+          
+        - id: "th-visa-on-arrival"
+          name: "Visa on Arrival"
+          type: "visa_on_arrival"
+          stayLimit:
+            value: 15
+            unit: "days"
+          requirements:
+            - "Passport valid for at least 30 days"
+            - "Proof of onward travel within 15 days"
+            - "Proof of sufficient funds (10,000 THB per person)"
+            - "Passport-sized photo"
+          documents:
+            - type: "passport"
+              description: "Valid passport"
+            - type: "photo"
+              description: "Passport-sized photo (4x6cm)"
+            - type: "flight_ticket"
+              description: "Onward flight ticket"
+            - type: "funds_proof"
+              description: "Proof of sufficient funds"
+          processingTime:
+            min: 0
+            max: 0
+            unit: "days"
+          fees:
+            government: 2000
+            currency: "THB"
+          confidence: "high"
+          notes:
+            - "Available at designated airports only"
+            - "Not extendable"
+
+  GB:
+    - destination: "TH"
+      purpose: "tourism"
+      stayLength:
+        min: 1
+        max: 90
+        unit: "days"
+      visaPaths:
+        - id: "th-visa-exempt-gb"
+          name: "Visa Exemption"
+          type: "visa_exempt"
+          stayLimit:
+            value: 30
+            unit: "days"
+          extensions:
+            - type: "tourist_extension"
+              limit:
+                value: 30
+                unit: "days"
+              requirements:
+                - "Passport with at least 6 months validity"
+                - "Completed TM.7 form"
+                - "Passport-sized photo"
+                - "1900 THB fee"
+          requirements:
+            - "Passport valid for at least 6 months"
+            - "Proof of onward travel"
+          documents:
+            - type: "passport"
+              description: "Valid passport"
+            - type: "flight_ticket"
+              description: "Onward flight ticket"
+          processingTime:
+            min: 0
+            max: 0
+            unit: "days"
+          fees:
+            government: 0
+            currency: "THB"
+          confidence: "high"
+
+thailandSpecific:
+  tm30:
+    required: true
+    deadlineHours: 24
+    fine: 2000
+    onlineSubmission: true
+  ninetyDayReport:
+    required: true
+    gracePeriodDays: 7
+    finePerDay: 500
+    onlineSubmission: true
+  reEntryPermit:
+    required: true
+    singleEntryFee: 1000
+    multipleEntryFee: 3800
+    validity:
+      value: 1
+      unit: "years"
+  extensionRequirements:
+    - type: "tourist"
+      financialRequirements:
+        minBalance: 20000
+        currency: "THB"
+      documents:
+        - "TM.7 form"
+        - "Passport copy"
+        - "Photo 4x6cm"
+        - "1900 THB fee"
+    - type: "education"
+      financialRequirements:
+        minBalance: 50000
+        currency: "THB"
+      documents:
+        - "TM.7 form"
+        - "Passport copy"
+        - "Photo 4x6cm"
+        - "School documents"
+        - "1900 THB fee"
+
+

@@ -1,0 +1,30 @@
+{
+  "name": "@nomad-life/db",
+  "version": "1.0.0",
+  "description": "Shared database client and schema for Nomad Life platform",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules dist",
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx seed.ts",
+    "db:seed:sqlite": "DATABASE_URL=file:./dev.db tsx seed-sqlite.ts",
+    "db:generate:sqlite": "DATABASE_URL=file:./dev.db prisma generate --schema=./prisma/schema.sqlite.prisma",
+    "lint": "echo 'No linting needed for db package'"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "@nomad-life/config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "prisma": "^5.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

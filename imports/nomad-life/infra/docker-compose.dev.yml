@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: nomad_life_db
+    environment:
+      POSTGRES_USER: nomaduser
+      POSTGRES_PASSWORD: nomadpassword
+      POSTGRES_DB: nomad_life
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nomaduser -d nomad_life"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: nomad_life_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  minio:
+    image: minio/minio
+    container_name: nomad_life_minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  api-booking:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.api-booking
+    container_name: nomad_life_api_booking
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://nomaduser:nomadpassword@db:5432/nomad_life
+      - REDIS_URL=redis://redis:6379
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_CONNECT_CLIENT_ID=${STRIPE_CONNECT_CLIENT_ID}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ../services/api-booking:/app/services/api-booking
+      - ../packages:/app/packages
+    working_dir: /app/services/api-booking
+    command: pnpm run start:dev
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.web
+    container_name: nomad_life_web
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://nomaduser:nomadpassword@db:5432/nomad_life
+      - REDIS_URL=redis://redis:6379
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_CONNECT_CLIENT_ID=${STRIPE_CONNECT_CLIENT_ID}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      api-booking:
+        condition: service_started
+    volumes:
+      - ../apps/web:/app/apps/web
+      - ../packages:/app/packages
+    working_dir: /app/apps/web
+    command: pnpm run dev
+
+  seed:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.seed
+    container_name: nomad_life_seed
+    environment:
+      - DATABASE_URL=postgresql://nomaduser:nomadpassword@db:5432/nomad_life
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../packages/db:/app/packages/db
+    working_dir: /app/packages/db
+    command: pnpm run seed
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

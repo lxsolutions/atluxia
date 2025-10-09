@@ -1,0 +1,54 @@
+
+
+// Minimal schema for development
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String?  @unique
+  phone       String?  @unique
+  name        String?
+  avatar      String?
+  role        String   @default("guest")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  properties Property[]
+}
+
+model Property {
+  id                  String   @id @default(cuid())
+  title               String
+  description         String
+  city                String
+  country             String
+  address             String?
+  latitude            Float?
+  longitude           Float?
+  amenities           String  // Comma-separated
+  images              String  // Comma-separated
+  maxGuests           Int
+  bedrooms            Int
+  bathrooms           Float
+  hasDedicatedWorkspace Boolean @default(false)
+  wifiSpeed           Int?
+  hasKitchen          Boolean @default(false)
+  hasLaundry          Boolean @default(false)
+  monthlyPrice        Decimal
+  nightlyPrice        Decimal
+  available           Boolean @default(true)
+  trustScore          Float?  @default(0.0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  host   User   @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  hostId String
+}
+

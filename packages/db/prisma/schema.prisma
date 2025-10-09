@@ -42,6 +42,8 @@ model User {
   critters         Critter[]
   accounts         Account[]
   sessions         Session[]
+  userLists        UserList[]
+  shares           Share[]
 }
 
 model Profile {
@@ -670,4 +672,88 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// Nomad Stays Search & Polyverse Integration Models
+model StaysCache {
+  id          String   @id @default(cuid())
+  searchQuery String   // JSON string of StaySearchQuery
+  provider    String   // airbnb, booking, mock, etc.
+  listings    String   // JSON string of StayListing[]
+  totalCount  Int
+  cachedAt    DateTime @default(now())
+  expiresAt   DateTime
+  
+  @@index([provider])
+  @@index([cachedAt])
+  @@index([expiresAt])
+}
+
+model UserList {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listItems ListItem[]
+  
+  @@index([userId])
+  @@index([isPublic])
+}
+
+model ListItem {
+  id        String   @id @default(cuid())
+  listId    String
+  itemId    String   // ID of the stay/listing
+  itemType  String   @default("stay") // stay, flight, vehicle, driver, visa
+  itemData  String   // JSON string of the item data
+  addedAt   DateTime @default(now())
+  
+  // Relations
+  userList UserList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  
+  @@index([listId])
+  @@index([itemId])
+  @@index([itemType])
+}
+
+model Share {
+  id             String   @id @default(cuid())
+  userId         String
+  platform       String   @default("nomad") // nomad, polyverse, everpath
+  type           String   @default("stay") // stay, flight, vehicle, driver, visa
+  itemId         String
+  itemData       String   // JSON string of the item data
+  rankingReasons String   // JSON string of RankingReason[]
+  searchQuery    String?  // JSON string of StaySearchQuery
+  sharedAt       DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([platform])
+  @@index([type])
+  @@index([sharedAt])
+}
+
+model RankingLog {
+  id             String   @id @default(cuid())
+  searchQuery    String   // JSON string of StaySearchQuery
+  algorithm      String   // weighted_linear, popularity, price, etc.
+  listingId      String
+  provider       String
+  score          Float
+  rankingReasons String   // JSON string of RankingReason[]
+  rankedAt       DateTime @default(now())
+  
+  @@index([algorithm])
+  @@index([provider])
+  @@index([rankedAt])
+  @@index([score])
 }

@@ -15,27 +15,53 @@ The Atluxia unified web application has been successfully developed and is ready
 - **Cross-module search** with real-time results
 - **Notification system** with module-specific alerts
 - **User profile management** with unified identity
+- **Nomad Stays search** with transparent ranking algorithms
+- **Polyverse sharing** with algorithm explainability
+- **Stay listing save** to user lists
+- **Share events** to Polyverse feed
 
 ### 3. Data Integration
 - **Mock API endpoints** for all modules with realistic data
 - **API client** with fallback to mock data in development
 - **Health monitoring** endpoints for system status
+- **Booking service** with hexagonal architecture
+- **Relay service** for Polyverse integration
+- **Database migrations** for stays, shares, and ranking logs
 
 ### 4. Production Infrastructure
 - **Docker containerization** with multi-stage builds
 - **Production docker-compose** with full service stack
 - **Environment configuration** with comprehensive .env.example
 - **Next.js optimization** for production deployment
+- **Development lite stack** with docker-compose.dev-lite.yml
 
 ### 5. Monitoring & Observability
 - **Comprehensive logging** system with module tracking
 - **Performance metrics** collection and monitoring
 - **Admin dashboard** for real-time system monitoring
 - **Error tracking** and alerting capabilities
+- **OpenTelemetry** integration for distributed tracing
+- **Jaeger** for trace visualization
+- **Rate limiting** and input validation
 
 ## 🚀 Production Deployment
 
-### Quick Start
+### Quick Start - Nomad Stays Vertical Slice
+```bash
+# Clone and setup
+cd /workspace/atluxia
+cp .env.example .env
+pnpm install
+
+# Setup database
+pnpm db:migrate
+pnpm db:seed
+
+# Start development stack
+pnpm dev:lite
+```
+
+### Quick Start - Full Application
 ```bash
 # Clone and setup
 cd /workspace/atluxia/apps/unified-webapp
@@ -79,6 +105,9 @@ Key environment variables configured:
 - **Authentication** with NextAuth.js
 - **Database** with PostgreSQL
 - **Caching** with Redis
+- **Booking service** with hexagonal architecture
+- **Relay service** for Polyverse integration
+- **Shared contracts** with TypeScript and Zod validation
 
 ### Infrastructure
 - **Docker** containerization
@@ -107,10 +136,19 @@ Key environment variables configured:
 - **Consistent UI/UX** patterns
 
 ### Module-Specific Features
-- **Nomad Life**: Travel booking, visa applications
-- **Polyverse**: Social connections, content sharing
+- **Nomad Life**: Travel booking, visa applications, stays search with transparent ranking
+- **Polyverse**: Social connections, content sharing, algorithm explainability
 - **Everpath**: Learning courses, career tracking
 - **Curio Critters**: Educational gaming, quests
+
+### Nomad Stays Vertical Slice Features
+- **Stay search** with location, dates, and guest filters
+- **Transparent ranking** with algorithm explainability
+- **Save to lists** functionality
+- **Share to Polyverse** with ranking reasons
+- **Polyverse feed** with multiple algorithm options
+- **Rate limiting** and input validation
+- **OpenAPI specification** for API contracts
 
 ## 🔒 Security & Authentication
 
@@ -128,6 +166,7 @@ Key environment variables configured:
 
 ## 🚨 Production Checklist
 
+### Core Application
 - [x] Application builds successfully
 - [x] Docker container builds and runs
 - [x] Health endpoints respond correctly
@@ -136,6 +175,16 @@ Key environment variables configured:
 - [x] Monitoring and logging implemented
 - [x] Cross-module features functional
 - [x] Responsive design tested
+
+### Nomad Stays Vertical Slice
+- [x] Stay search functionality working
+- [x] Transparent ranking with explainability
+- [x] Save to lists functionality
+- [x] Share to Polyverse integration
+- [x] Polyverse feed generation
+- [x] Rate limiting and input validation
+- [x] Database migrations and seeding
+- [x] OpenAPI specification generated
 
 ## 🔄 Next Steps for Production
 

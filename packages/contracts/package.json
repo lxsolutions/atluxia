@@ -9,18 +9,21 @@
     "clean": "rm -rf .turbo node_modules dist",
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
+    "openapi": "ts-node src/generate-openapi.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.1.0",
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@atluxia/nomad-config": "workspace:*",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
-    "typescript": "^5.0.0",
-    "@atluxia/nomad-config": "workspace:*"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=20",

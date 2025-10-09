@@ -28,17 +28,17 @@ export default async function StaysPage() {
 
       {/* Search Form */}
       <div className="bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto mb-12">
-        <form action="/api/search" method="get" className="space-y-4">
+        <form action="/stays/search" method="get" className="space-y-4">
 
           {/* Destination */}
           <div>
-            <label htmlFor="city" className="block text-sm font-medium mb-1">Destination</label>
+            <label htmlFor="location" className="block text-sm font-medium mb-1">Destination</label>
             <input
               type="text"
-              id="city"
-              name="city"
-              placeholder="Bangkok, Chiang Mai, Bali..."
-              defaultValue="Bangkok"
+              id="location"
+              name="location"
+              placeholder="San Francisco, New York, London..."
+              defaultValue="San Francisco"
               required
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
@@ -90,15 +90,15 @@ export default async function StaysPage() {
 
           {/* Budget */}
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium mb-1">Monthly Budget (USD)</label>
+            <label htmlFor="maxPrice" className="block text-sm font-medium mb-1">Max Price per Night (USD)</label>
             <input
               type="number"
-              id="budget"
-              name="budget"
-              placeholder="e.g., 2000"
-              min={500}
-              max={10000}
-              defaultValue={3000}
+              id="maxPrice"
+              name="maxPrice"
+              placeholder="e.g., 500"
+              min={50}
+              max={2000}
+              defaultValue={500}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>

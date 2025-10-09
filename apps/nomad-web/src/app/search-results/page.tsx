@@ -3,7 +3,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-// import { prisma } from '@nomad-life/db';
+// import { prisma } from '@atluxia/db';
 
 interface Property {
   id: string;
